@@ -23,6 +23,9 @@
  --color-fitness: #ee3124;
  --color-fuel: #018542;
  --color-recover: #44697d;
+ --color-magazine: #000;
+
+ --accent-color: 606163;
 
 
   /* fonts */
@@ -50,7 +53,7 @@
    --heading-font-size-h6: 12px;
 
   /* nav height */
-  --nav-height: 74px;
+  --nav-height: 49px;
 }
 
 /* TODO */
@@ -250,6 +253,23 @@ main .section {
     max-width: 1200px;
     margin: auto;
   }
+}
+
+
+.color-focus {
+    --accent-color: var(--color-focus);
+}
+.color-fitness {
+    --accent-color: var(--color-fitness);
+}
+.color-fuel {
+    --accent-color: var(--color-fuel);
+}
+.color-recover {
+    --accent-color: var(--color-recover);
+}
+.color-magazine {
+    --accent-color: var(--color-magazine);
 }
 
 /* section metadata */
