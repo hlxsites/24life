@@ -10,10 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
- :root {
+:root {
   /* colors */
-  --link-color: #dd3333;
-  --link-hover-color: #136ff6;
+  --link-color: #292929;
+  --link-color-default-content: #dd3333;
+  --link-hover-color: #494949;
   --background-color: #fff;
   --overlay-background-color: #eee;
   --footer-background-color: #292929;
@@ -22,13 +23,13 @@
   --text-color-on-black-background: #fefefe;
 
 
- --color-focus: #3cb6ce;
- --color-fitness: #ee3124;
- --color-fuel: #018542;
- --color-recover: #44697d;
- --color-magazine: #000;
+  --color-focus: #3cb6ce;
+  --color-fitness: #ee3124;
+  --color-fuel: #018542;
+  --color-recover: #44697d;
+  --color-magazine: #000;
 
- --accent-color: 606163;
+  --accent-color: 606163;
 
 
   /* fonts */
@@ -38,24 +39,27 @@
 
   /* body sizes */
   --body-font-size-text: 16px;
+  --body-font-size-category-subtitle: 11px;
+  --body-font-size-author: 13px;
+  --body-font-size-card-header: 20px;
   --body-font-size-hero-tag: 11px;
 
-   --nav-font-size: 13px;
+  --nav-font-size: 13px;
 
-   --footer-font-size-slogan: 24px;
-   --footer-font-size-posts: 14px;
-   --footer-font-size-pages: 13px;
-   --footer-font-size-copyright: 12px;
+  --footer-font-size-slogan: 24px;
+  --footer-font-size-posts: 14px;
+  --footer-font-size-pages: 13px;
+  --footer-font-size-copyright: 12px;
 
   /* heading sizes */
   --heading-font-size-hero: 36px;
   --heading-font-size-article: 32px;
-   --heading-font-size-h1: 36px;
-   --heading-font-size-h2: 40px;
-   --heading-font-size-h3: 32px;
-   --heading-font-size-h4: 24px;
-   --heading-font-size-h5: 16px;
-   --heading-font-size-h6: 12px;
+  --heading-font-size-h1: 36px;
+  --heading-font-size-h2: 40px;
+  --heading-font-size-h3: 32px;
+  --heading-font-size-h4: 24px;
+  --heading-font-size-h5: 16px;
+  --heading-font-size-h6: 12px;
 
   /* nav height */
   --nav-height: 49px;
@@ -72,7 +76,7 @@
 
 @media (min-width: 900px) {
   :root {
-  /*TODO */
+    /*TODO */
   }
 }
 
@@ -104,12 +108,29 @@ h4, h5, h6 {
   scroll-margin: calc(var(--nav-height) + 1em);
 }
 
-h1 { font-size: var(--heading-font-size-h1) }
-h2 { font-size: var(--heading-font-size-h2) }
-h3 { font-size: var(--heading-font-size-h3) }
-h4 { font-size: var(--heading-font-size-h4) }
-h5 { font-size: var(--heading-font-size-h5) }
-h6 { font-size: var(--heading-font-size-h6) }
+h1 {
+  font-size: var(--heading-font-size-h1)
+}
+
+h2 {
+  font-size: var(--heading-font-size-h2)
+}
+
+h3 {
+  font-size: var(--heading-font-size-h3)
+}
+
+h4 {
+  font-size: var(--heading-font-size-h4)
+}
+
+h5 {
+  font-size: var(--heading-font-size-h5)
+}
+
+h6 {
+  font-size: var(--heading-font-size-h6)
+}
 
 p, dl, ol, ul, pre, blockquote {
   margin-top: 1em;
@@ -150,7 +171,6 @@ a:any-link {
 }
 
 a:hover {
-  text-decoration: underline;
   color: var(--link-hover-color);
 }
 
@@ -175,7 +195,7 @@ a.button:any-link, button {
   border-radius: 30px;
 }
 
-a.button:hover, a.button:focus, button:hover, button:focus  {
+a.button:hover, a.button:focus, button:hover, button:focus {
   background-color: var(--link-hover-color);
   cursor: pointer;
 }
@@ -262,19 +282,23 @@ main .section {
 
 
 .color-focus {
-    --accent-color: var(--color-focus);
+  --accent-color: var(--color-focus);
 }
+
 .color-fitness {
-    --accent-color: var(--color-fitness);
+  --accent-color: var(--color-fitness);
 }
+
 .color-fuel {
-    --accent-color: var(--color-fuel);
+  --accent-color: var(--color-fuel);
 }
+
 .color-recover {
-    --accent-color: var(--color-recover);
+  --accent-color: var(--color-recover);
 }
+
 .color-magazine {
-    --accent-color: var(--color-magazine);
+  --accent-color: var(--color-magazine);
 }
 
 /* section metadata */
