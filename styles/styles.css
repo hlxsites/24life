@@ -16,8 +16,11 @@
   --link-hover-color: #136ff6;
   --background-color: #fff;
   --overlay-background-color: #eee;
+  --footer-background-color: #292929;
   --highlight-background-color: #ccc;
   --text-color: #444;
+  --text-color-on-black-background: #fefefe;
+
 
  --color-focus: #3cb6ce;
  --color-fitness: #ee3124;
@@ -36,6 +39,8 @@
   /* body sizes */
   --body-font-size-text: 16px;
   --body-font-size-hero-tag: 11px;
+
+   --nav-font-size: 13px;
 
    --footer-font-size-slogan: 24px;
    --footer-font-size-posts: 14px;

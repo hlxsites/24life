@@ -199,6 +199,7 @@ header nav .nav-sections ul > li > ul > li {
     position: relative;
     padding-right: 16px;
     cursor: pointer;
+    text-transform: uppercase;
   }
 
   header nav .nav-sections .nav-drop:hover {
@@ -209,27 +210,23 @@ header nav .nav-sections ul > li > ul > li {
   header nav .nav-sections .icon-arrow-down {
     width: 12px;
     height: 12px;
-    fill: red;
-    color: blue;
-    /*height: 6px;*/
   }
 
   header nav .nav-sections .icon-arrow-down svg {
-    stroke: currentColor;
-    color: var(--accent-color);
+    stroke: var(--accent-color);
   }
 
   header nav .nav-sections ul {
     display: flex;
     gap: 2em;
     margin: 0;
-    font-size: var(--body-font-size-text);
+    font-size: var(--nav-font-size);
   }
 
   header nav .nav-sections > ul > li {
     flex: 0 1 auto;
     position: relative;
-    font-weight: 500;
+    font-weight: 600;
   }
 
   header nav .nav-sections > ul > li > ul {

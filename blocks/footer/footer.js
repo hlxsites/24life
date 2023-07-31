@@ -19,6 +19,8 @@ export default async function decorate(block) {
     const footer = document.createElement('div');
     footer.innerHTML = html;
 
+    footer.querySelector('p:nth-child(2)').classList.add('footer-slogan');
+
     decorateIcons(footer);
     block.append(footer);
   }
