@@ -85,6 +85,14 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
   }
 }
 
+function linkBrand(nav) {
+  const navBrand = nav.querySelector('.nav-brand')
+  const homeLink = document.createElement('a');
+  homeLink.href = '/';
+  homeLink.append(...navBrand.childNodes);
+  navBrand.append(homeLink);
+}
+
 /**
  * decorates the header, mainly the nav
  * @param {Element} block The header block element
@@ -108,11 +116,23 @@ export default async function decorate(block) {
       const section = nav.children[i];
       if (section) section.classList.add(`nav-${c}`);
     });
+    linkBrand(nav);
 
     const navSections = nav.querySelector('.nav-sections');
     if (navSections) {
-      navSections.querySelectorAll(':scope > ul > li').forEach((navSection) => {
-        if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
+      navSections.querySelectorAll(':scope > ul > li').forEach((navSection, index) => {
+        if (navSection.querySelector('ul')) {
+          navSection.classList.add('nav-drop');
+          const icon = document.createElement('span');
+          icon.classList.add('icon', 'icon-arrow-down');
+          if( index === 0) navSection.classList.add('color-focus');
+          else if( index === 1) navSection.classList.add('color-fitness');
+          else if( index === 2) navSection.classList.add('color-fuel');
+          else if( index === 3) navSection.classList.add('color-recover');
+          else if( index === 4) navSection.classList.add('color-magazine');
+
+          navSection.append(icon);
+        }
         navSection.addEventListener('click', () => {
           if (isDesktop.matches) {
             const expanded = navSection.getAttribute('aria-expanded') === 'true';
