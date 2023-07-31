@@ -19,6 +19,12 @@
   --highlight-background-color: #ccc;
   --text-color: #444;
 
+ --color-focus: #3cb6ce;
+ --color-fitness: #ee3124;
+ --color-fuel: #018542;
+ --color-recover: #44697d;
+
+
   /* fonts */
   --body-font-family: "Open Sans", sans-serif;
   --heading-font-family: 'din-2014', 'sans-serif';
