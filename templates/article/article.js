@@ -1,7 +1,16 @@
-import { decorateIcons } from '../../scripts/lib-franklin.js';
+import {buildBlock, decorateBlock, decorateIcons} from '../../scripts/lib-franklin.js';
+
+function createHeroBlock() {
+  const container = document.createElement('div');
+  const postSidebar = buildBlock('article-hero', '');
+  container.append(postSidebar);
+  decorateBlock(postSidebar);
+  return container;
+}
 
 export default async function decorate(doc) {
   const firstContent = doc.querySelector('main .section .default-content-wrapper');
+  firstContent.before(createHeroBlock());
   firstContent.before(createSocialMediaButtons());
 
   const lastContent = doc.querySelector('main .section:last-child .default-content-wrapper');
