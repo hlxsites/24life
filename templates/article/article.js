@@ -1,11 +1,28 @@
 import { buildBlock, decorateBlock, decorateIcons } from '../../scripts/lib-franklin.js';
 
-function createHeroBlock() {
+export default async function decorate(doc) {
+  const firstSection = doc.querySelector('main .section');
+  firstSection.before(createSectionWithHeroBlock());
+
+  const firstContent = doc.querySelector('main .section .default-content-wrapper');
+  firstContent.before(createSocialMediaButtons());
+
+  const lastContent = doc.querySelector('main .section:last-child .default-content-wrapper');
+  lastContent.after(createAuthorBlock());
+  lastContent.after(createSocialMediaButtons());
+}
+
+function createSectionWithHeroBlock() {
+  const section = document.createElement('div');
+  section.classList.add('section', 'article-hero-container');
+
   const container = document.createElement('div');
   const postSidebar = buildBlock('article-hero', '');
   container.append(postSidebar);
   decorateBlock(postSidebar);
-  return container;
+
+  section.append(container);
+  return section;
 }
 
 function createAuthorBlock() {
@@ -14,16 +31,6 @@ function createAuthorBlock() {
   container.append(postSidebar);
   decorateBlock(postSidebar);
   return container;
-}
-
-export default async function decorate(doc) {
-  const firstContent = doc.querySelector('main .section .default-content-wrapper');
-  firstContent.before(createHeroBlock());
-  firstContent.before(createSocialMediaButtons());
-
-  const lastContent = doc.querySelector('main .section:last-child .default-content-wrapper');
-  lastContent.after(createAuthorBlock());
-  lastContent.after(createSocialMediaButtons());
 }
 
 function createSocialMediaButtons() {

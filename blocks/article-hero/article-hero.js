@@ -13,7 +13,7 @@ export default function decorate(block) {
   const collections = document.createElement('div');
   collections.classList.add('hero-collections');
   // todo: add links to collections
-  collections.append(getMetadata('collections').split(','));
+  collections.append(getMetadata('collections')?.split(','));
   overlay.append(collections);
 
   const h1 = document.createElement('h1');
