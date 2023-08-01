@@ -1,4 +1,4 @@
-import {buildBlock, decorateBlock, decorateIcons} from '../../scripts/lib-franklin.js';
+import { buildBlock, decorateBlock, decorateIcons } from '../../scripts/lib-franklin.js';
 
 function createHeroBlock() {
   const container = document.createElement('div');
