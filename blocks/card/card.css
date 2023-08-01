@@ -51,6 +51,7 @@
   font-size: var(--body-font-size-author);
 }
 
+/* cards in the same section are automatically shown side by side. */
 .section.card-container {
   display: flex;
   gap: 2em;
@@ -61,4 +62,38 @@
   flex-grow: 1;
   flex-basis: 0;
   margin: 0;
+}
+
+/* variation: if there is card with the 'large' variant, show it large on the left side,
+   and the other cards will be in a column on the right. */
+.card-container.has-large-card {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+}
+
+.card-container.has-large-card .card-wrapper {
+  grid-column: 2;
+}
+
+.card-container.has-large-card .card-wrapper.large {
+  grid-column: 1;
+  grid-row: 1 / 3;
+}
+
+.card-container.has-large-card .card.large .card-image img {
+  aspect-ratio: 750/500;
+}
+.card-container.has-large-card .card.large .card-title {
+  margin-top: 0.75em;
+}
+.card-container.has-large-card .card.large .card-title a {
+  font-size:var(--heading-font-size-h3);
+}
+
+/* on smaller screens, show everything in a single column. */
+@media (max-width: 900px) {
+  .section.card-container {
+    display: flex;
+    flex-direction: column;
+  }
 }

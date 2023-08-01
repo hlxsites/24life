@@ -6,7 +6,7 @@ import {toClassName} from '../../scripts/lib-franklin.js';
  *  - image
  *  - CATEGORY (optional)
  *  - title as linked h1, h2, h3, h4, h5, or h6
- *  - author with link
+ *  - author with link (optional)
  */
 export default function decorate(block) {
   let firstCell = block.firstElementChild.firstElementChild;
@@ -20,7 +20,9 @@ export default function decorate(block) {
   link.classList.add('card-image');
   pictureParagraph.replaceWith(link);
 
-  firstCell.lastElementChild.classList.add('card-author');
+  if(firstCell.lastElementChild.classList.length === 0) {
+    firstCell.lastElementChild.classList.add('card-author');
+  }
 
   // often there is a category like SUCCESS STORIES or GET STARTED. Multiple categories
   // can be comma separated.
@@ -46,6 +48,12 @@ export default function decorate(block) {
   } else {
     block.style.setProperty('--accent-color', `var(--color-default-card)`);
     block.style.setProperty('--category-text-color', `var(--color-default-card-text)`);
+  }
+
+  if(block.classList.contains('large')){
+    // create separate column for large image
+    block.closest('.card-wrapper').classList.add('large');
+    block.closest('.card-container').classList.add('has-large-card');
   }
 
 }
