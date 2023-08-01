@@ -7,16 +7,22 @@ export default function decorate(block) {
     true,
   ));
 
+  const overlay = document.createElement('div');
+    overlay.classList.add('hero-overlay');
+
+
   const collections = document.createElement('div');
   collections.classList.add('hero-collections');
   // todo: add links to collections
   collections.append(getMetadata('collections').split(','));
-  block.append(collections);
+    overlay.append(collections);
 
   const h1 = document.createElement('h1');
   h1.append(getMetadata('og:title'));
-  block.append(h1);
+    overlay.append(h1);
 
   // TODO: add author link
-  block.append(getMetadata('author'));
+    overlay.append(getMetadata('author'));
+
+    block.append(overlay);
 }
