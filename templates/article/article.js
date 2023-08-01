@@ -8,12 +8,21 @@ function createHeroBlock() {
   return container;
 }
 
+function createAuthorBlock() {
+  const container = document.createElement('div');
+  const postSidebar = buildBlock('article-author', '');
+  container.append(postSidebar);
+  decorateBlock(postSidebar);
+  return container;
+}
+
 export default async function decorate(doc) {
   const firstContent = doc.querySelector('main .section .default-content-wrapper');
   firstContent.before(createHeroBlock());
   firstContent.before(createSocialMediaButtons());
 
   const lastContent = doc.querySelector('main .section:last-child .default-content-wrapper');
+  lastContent.after(createAuthorBlock());
   lastContent.after(createSocialMediaButtons());
 }
 

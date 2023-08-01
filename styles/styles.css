@@ -20,7 +20,9 @@
   --footer-background-color: #292929;
   --highlight-background-color: #ccc;
   --text-color: #444;
+  --text-color-secondary: #606060;
   --text-color-on-black-background: #fefefe;
+  --label-text-color: #a0a0a0;
   --accent-color: #606163;
 
   /* topic based colors/accent */
@@ -46,6 +48,7 @@
   --body-font-size-author: 13px;
   --body-font-size-card-header: 20px;
   --body-font-size-hero-tag: 11px;
+  --body-font-size-author-label: 18px;
 
   /* nav sizes */
   --nav-font-size: 13px;
