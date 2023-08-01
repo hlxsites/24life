@@ -12,8 +12,9 @@
 .card .card-image img {
   width: 100%;
   transition: .7s ease-in-out;
-  aspect-ratio: 16/9;
+  aspect-ratio: 410/220;
   object-fit: cover;
+  object-position: top;
 }
 
 .card .card-image img:hover {
