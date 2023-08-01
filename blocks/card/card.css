@@ -21,13 +21,14 @@
   transform: scale(1.075);
 }
 
-.card a.card-category:any-link {
+.card .card-categories a:any-link {
   font-size: var(--body-font-size-category-subtitle);
   font-weight: 600;
   color: var(--category-text-color);
+  margin-right: 1.1em;
 }
 
-.card a.card-category:hover {
+.card .card-category a:hover {
   color: var(--link-hover-color);
 }
 

@@ -22,14 +22,20 @@ export default function decorate(block) {
 
   firstCell.lastElementChild.classList.add('card-author');
 
-  // often there is a category like SUCCESS STORIES or GET STARTED.
+  // often there is a category like SUCCESS STORIES or GET STARTED. Multiple categories
+  // can be comma separated.
   let category = firstCell.querySelector('p:not([class])');
   if(category){
-    const link = document.createElement('a');
-    link.href = `/collections/${toClassName(category.textContent)}`;
-    link.classList.add('card-category');
-    link.append(...category.childNodes);
-    category.replaceWith(link);
+    category.classList.add('card-categories');
+    const links = category.textContent.split(',')
+      .map(categoryText => {
+      const link = document.createElement('a');
+      link.href = `/collections/${toClassName(categoryText.trim())}`;
+      link.append(categoryText.trim());
+      return link;
+    });
+    category.innerHTML = '';
+    category.append(...links);
   }
 
   const accentColor = ['focus','fitness', 'fuel', 'recover']
