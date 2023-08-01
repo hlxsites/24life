@@ -2,6 +2,10 @@
     position: relative;
 }
 
+.article-hero img {
+    filter: brightness(70%);
+}
+
 .article-hero .hero-overlay  {
     position: absolute;
     bottom: 80px;

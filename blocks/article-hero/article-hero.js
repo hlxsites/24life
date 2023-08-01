@@ -1,6 +1,7 @@
 import { createOptimizedPicture, getMetadata } from '../../scripts/lib-franklin.js';
 
 export default function decorate(block) {
+  block.innerText = '';
   block.append(createOptimizedPicture(
     getMetadata('og:image'),
     getMetadata('og:title'),
