@@ -144,16 +144,16 @@ async function loadTemplate(doc, templateName) {
   try {
     const cssLoaded = loadCSS(`${window.hlx.codeBasePath}/templates/${templateName}/${templateName}.css`);
     const decorationComplete = (async () => {
-        try {
-          const mod = await import(`../templates/${templateName}/${templateName}.js`);
-          if (mod.default) {
-            await mod.default(doc);
-          }
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.log(`failed to load module for ${templateName}`, error);
+      try {
+        const mod = await import(`../templates/${templateName}/${templateName}.js`);
+        if (mod.default) {
+          await mod.default(doc);
         }
-      })();
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(`failed to load module for ${templateName}`, error);
+      }
+    })();
 
     await Promise.all([cssLoaded, decorationComplete]);
   } catch (error) {

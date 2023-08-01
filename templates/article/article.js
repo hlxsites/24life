@@ -1,16 +1,15 @@
-import {decorateIcons} from "../../scripts/lib-franklin.js";
+import { decorateIcons } from '../../scripts/lib-franklin.js';
 
 export default async function decorate(doc) {
-  const firstContent = doc.querySelector('main .section .default-content-wrapper')
+  const firstContent = doc.querySelector('main .section .default-content-wrapper');
   firstContent.before(createSocialMediaButtons());
 
   const lastContent = doc.querySelector('main .section:last-child .default-content-wrapper');
-  firstContent.after(createSocialMediaButtons());
+  lastContent.after(createSocialMediaButtons());
 }
 
-
 function createSocialMediaButtons() {
-  const socialMediaButtons = document.createElement('div')
+  const socialMediaButtons = document.createElement('div');
   socialMediaButtons.innerHTML = `
   <div class="article-social-media-buttons">
           <a aria-label="share this page on twitter"  target="_blank" href="https://twitter.com/share?url=">
@@ -25,7 +24,7 @@ function createSocialMediaButtons() {
               <span class="icon icon-pinterest"></span>
           </a>
   </div>`;
-  socialMediaButtons.querySelectorAll('a').forEach(a => {
+  socialMediaButtons.querySelectorAll('a').forEach((a) => {
     a.href += window.location.href;
   });
   // noinspection JSIgnoredPromiseFromCall
