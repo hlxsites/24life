@@ -9,6 +9,8 @@
 .card .card-image img {
   width: 100%;
   transition: .7s ease-in-out;
+  aspect-ratio: 16/9;
+  object-fit: cover;
 }
 
 .card .card-image img:hover {
@@ -42,4 +44,14 @@
   font-size: var(--body-font-size-author);
 }
 
+.section.card-container {
+  display: flex;
+  gap: 2em;
+}
 
+.card-container .card-wrapper {
+  /* make sure all the cards have the same width */
+  flex-grow: 1;
+  flex-basis: 0;
+  margin: 0;
+}
