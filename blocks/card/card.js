@@ -33,7 +33,13 @@ export default function decorate(block) {
   }
 
   const accentColor = ['focus','fitness', 'fuel', 'recover']
-    .find(category => block.classList.contains(category));
-  block.style.setProperty('--accent-color', `var(--color-${accentColor})`);
+    .find(category => block.classList.contains(category))
+  if(accentColor){
+    block.style.setProperty('--accent-color', `var(--color-${accentColor})`);
+    block.style.setProperty('--category-text-color', `var(--color-${accentColor})`);
+  } else {
+    block.style.setProperty('--accent-color', `var(--color-default-card)`);
+    block.style.setProperty('--category-text-color', `var(--color-default-card-text)`);
+  }
 
 }

@@ -1,3 +1,6 @@
+.card {
+  --category-text-color: --accent-color;
+}
 .card .card-image {
   display: block;
   overflow: hidden;
@@ -20,7 +23,7 @@
 .card a.card-category:any-link {
   font-size: var(--body-font-size-category-subtitle);
   font-weight: 600;
-  color: var(--accent-color);
+  color: var(--category-text-color);
 }
 
 .card a.card-category:hover {

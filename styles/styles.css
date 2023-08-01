@@ -29,7 +29,11 @@
   --color-recover: #44697d;
   --color-magazine: #000;
 
-  --accent-color: 606163;
+  --accent-color: #606163;
+
+  /* cards have different fallback color, and the text uses a darker shade. */
+  --color-default-card: #cbcdcf;
+  --color-default-card-text: #666;
 
 
   /* fonts */
