@@ -1,4 +1,4 @@
-
+import {decorateIcons} from "../../scripts/lib-franklin.js";
 
 export default async function decorate(doc) {
   const firstContent = doc.querySelector('main .section .default-content-wrapper')
@@ -12,25 +12,23 @@ export default async function decorate(doc) {
 function createSocialMediaButtons() {
   const socialMediaButtons = document.createElement('div')
   socialMediaButtons.innerHTML = `
-  <ul class="article-social-media-buttons">
-      <li>
-          <a class="" target="_blank" href="https://twitter.com/share?url=" onclick="return ebor_tweet_21622()">
+  <div class="article-social-media-buttons">
+          <a aria-label="share this page on twitter"  target="_blank" href="https://twitter.com/share?url=">
               <span class="icon icon-twitter-alt"></span>
           </a>
-      </li>
-      <li>
-          <a class="btn btn-sm btn-icon" target="_blank" href="http://www.facebook.com/share.php?u=" onclick="return ebor_fb_like_21622()">
+      
+          <a aria-label="share this page on facebook" target="_blank" href="http://www.facebook.com/share.php?u=">
               <span class="icon icon-facebook"></span>
           </a>
-      </li>
-      <li>
-          <a class="btn btn-sm btn-icon" target="_blank" href="http://pinterest.com/pin/create/button/?url=" onclick="return ebor_pin_21622()">
+      
+          <a aria-label="share this page on pinterest" target="_blank" href="http://pinterest.com/pin/create/button/?url=">
               <span class="icon icon-pinterest"></span>
           </a>
-      </li>
-  </ul>`;
+  </div>`;
   socialMediaButtons.querySelectorAll('a').forEach(a => {
     a.href += window.location.href;
   });
+  // noinspection JSIgnoredPromiseFromCall
+  decorateIcons(socialMediaButtons);
   return socialMediaButtons;
 }
