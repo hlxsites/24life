@@ -19,11 +19,9 @@
 
 .section.article-hero-container {
     max-width: unset;
-    width: unset;
     padding: unset;
 }
 
 .section > div.article-hero-wrapper {
-    width: unset;
     max-width: unset;
 }
