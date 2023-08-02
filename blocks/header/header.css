@@ -19,7 +19,7 @@ header nav {
   height: var(--nav-height);
   padding: 0 1rem;
   font-family: var(--heading-font-family);
-  border-bottom: 6px solid #606163;
+  border-bottom: 6px solid var(--accent-color);
 }
 
 header nav[aria-expanded="true"] {

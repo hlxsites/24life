@@ -1,0 +1,16 @@
+.article-social-media-buttons {
+  display: flex;
+  justify-content: center;
+  margin: 1em;
+  gap: 1em;
+}
+
+.article-social-media-buttons svg {
+  fill: var(--link-color-default-content);
+  transition: all 0.3s ease;
+}
+
+.article-social-media-buttons a:hover svg {
+  fill: white;
+  background-color: var(--link-color-default-content);
+}

@@ -1,0 +1,38 @@
+.article-author {
+    display: flex;
+    gap: 3em;
+}
+
+
+.article-author .brand {
+    max-width: 20%;
+}
+
+.article-author .author-label {
+    text-transform: uppercase;
+    font-family: var(--heading-font-family);
+    font-size: var(--body-font-size-author-label);
+    color: var(--label-text-color);
+    font-weight: 400;
+    font-style: italic;
+    margin-bottom: 0;
+    line-height: 1;
+}
+
+.article-author .author-name {
+    margin-top: 0;
+}
+
+.article-author .author-name a:any-link {
+    color: var(--link-color-default-content);
+    font-family: var(--heading-font-family);
+    font-size: var(--heading-font-size-h3);
+}
+
+.article-author .author-name a:hover {
+    color: var(--link-hover-color);
+}
+
+.article-author .author-description {
+    color: var(--text-color-secondary);
+}

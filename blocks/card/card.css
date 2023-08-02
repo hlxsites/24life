@@ -1,6 +1,7 @@
 .card {
   --category-text-color: --accent-color;
 }
+
 .card .card-image {
   display: block;
   overflow: hidden;
@@ -28,7 +29,7 @@
   margin-right: 1.1em;
 }
 
-.card .card-category a:hover {
+.card .card-categories a:hover {
   color: var(--link-hover-color);
 }
 
@@ -38,6 +39,7 @@
   margin-bottom: 0.5em;
 }
 
+/* stylelint-disable-next-line no-descending-specificity */
 .card .card-title a {
   font-size: var(--body-font-size-card-header);
 }
@@ -83,9 +85,11 @@
 .card-container.has-large-card .card.large .card-image img {
   aspect-ratio: 750/500;
 }
+
 .card-container.has-large-card .card.large .card-title {
   margin-top: 0.75em;
 }
+
 .card-container.has-large-card .card.large .card-title a {
   font-size:var(--heading-font-size-h3);
 }

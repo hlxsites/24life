@@ -86,7 +86,7 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
 }
 
 function linkBrand(nav) {
-  const navBrand = nav.querySelector('.nav-brand')
+  const navBrand = nav.querySelector('.nav-brand');
   const homeLink = document.createElement('a');
   homeLink.href = '/';
   homeLink.append(...navBrand.childNodes);
@@ -125,11 +125,11 @@ export default async function decorate(block) {
           navSection.classList.add('nav-drop');
           const icon = document.createElement('span');
           icon.classList.add('icon', 'icon-arrow-down');
-          if( index === 0) navSection.classList.add('color-focus');
-          else if( index === 1) navSection.classList.add('color-fitness');
-          else if( index === 2) navSection.classList.add('color-fuel');
-          else if( index === 3) navSection.classList.add('color-recover');
-          else if( index === 4) navSection.classList.add('color-magazine');
+          if (index === 0) navSection.classList.add('color-focus');
+          else if (index === 1) navSection.classList.add('color-fitness');
+          else if (index === 2) navSection.classList.add('color-fuel');
+          else if (index === 3) navSection.classList.add('color-recover');
+          else if (index === 4) navSection.classList.add('color-magazine');
 
           navSection.append(icon);
         }

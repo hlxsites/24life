@@ -10,7 +10,7 @@ import {
   decorateTemplateAndTheme,
   waitForLCP,
   loadBlocks,
-  loadCSS,
+  loadCSS, getMetadata,
 } from './lib-franklin.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
@@ -98,6 +98,11 @@ async function loadEager(doc) {
  * @param {Element} doc The container element
  */
 async function loadLazy(doc) {
+  const templateName = getMetadata('template');
+  if (templateName) {
+    await loadTemplate(doc, templateName);
+  }
+
   const main = doc.querySelector('main');
   await loadBlocks(main);
 
@@ -114,6 +119,14 @@ async function loadLazy(doc) {
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
   sampleRUM.observe(main.querySelectorAll('picture > img'));
+
+  // set global accent color
+  const section = getMetadata('section')?.toLowerCase();
+  if (section) {
+    document.body.style.setProperty('--accent-color', `var(--color-${section})`);
+  } else {
+    document.body.style.setProperty('--accent-color', 'var(--color-default-card)');
+  }
 }
 
 /**
@@ -133,3 +146,26 @@ async function loadPage() {
 }
 
 loadPage();
+
+// from https://www.hlx.live/developer/block-collection
+async function loadTemplate(doc, templateName) {
+  try {
+    const cssLoaded = loadCSS(`${window.hlx.codeBasePath}/templates/${templateName}/${templateName}.css`);
+    const decorationComplete = (async () => {
+      try {
+        const mod = await import(`../templates/${templateName}/${templateName}.js`);
+        if (mod.default) {
+          await mod.default(doc);
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(`failed to load module for ${templateName}`, error);
+      }
+    })();
+
+    await Promise.all([cssLoaded, decorationComplete]);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log(`failed to load block ${templateName}`, error);
+  }
+}

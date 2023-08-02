@@ -13,23 +13,24 @@
 :root {
   /* colors */
   --link-color: #292929;
-  --link-color-default-content: #dd3333;
+  --link-color-default-content: #d33;
   --link-hover-color: #494949;
   --background-color: #fff;
   --overlay-background-color: #eee;
   --footer-background-color: #292929;
   --highlight-background-color: #ccc;
   --text-color: #444;
+  --text-color-secondary: #606060;
   --text-color-on-black-background: #fefefe;
+  --label-text-color: #a0a0a0;
+  --accent-color: #606163;
 
-
+  /* topic based colors/accent */
   --color-focus: #3cb6ce;
   --color-fitness: #ee3124;
   --color-fuel: #018542;
   --color-recover: #44697d;
   --color-magazine: #000;
-
-  --accent-color: #606163;
 
   /* cards have different fallback color, and the text uses a darker shade. */
   --color-default-card: #cbcdcf;
@@ -47,9 +48,12 @@
   --body-font-size-author: 13px;
   --body-font-size-card-header: 20px;
   --body-font-size-hero-tag: 11px;
+  --body-font-size-author-label: 18px;
 
+  /* nav sizes */
   --nav-font-size: 13px;
 
+  /* footer sizes */
   --footer-font-size-slogan: 24px;
   --footer-font-size-posts: 14px;
   --footer-font-size-pages: 13px;
@@ -69,18 +73,19 @@
   --nav-height: 49px;
 }
 
-/* TODO */
-/*@font-face {*/
-/*  font-family: roboto-fallback;*/
-/*  size-adjust: 100.06%;*/
-/*  ascent-override: 95%;*/
-/*  src: local('Arial');*/
-/*}*/
+/* TODO
+@font-face {
+  font-family: roboto-fallback;
+  size-adjust: 100.06%;
+  ascent-override: 95%;
+  src: local('Arial');
+}
+ */
 
 
 @media (min-width: 900px) {
   :root {
-    /*TODO */
+    /* TODO */
   }
 }
 
