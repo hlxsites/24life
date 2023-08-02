@@ -1,5 +1,11 @@
 import { createOptimizedPicture, toClassName } from '../../scripts/lib-franklin.js';
 
+function replacePictureSizes(image, imageSizes) {
+  image.closest('picture').replaceWith(
+    createOptimizedPicture(image.src, image.alt, image.loading === 'eager', imageSizes),
+  );
+}
+
 /**
  * parameters: any of 'focus','fitness', 'fuel', 'recover', or 'large'
  * content structure: in first cell:
@@ -20,17 +26,16 @@ export default function decorate(block) {
   link.classList.add('card-image');
   pictureParagraph.replaceWith(link);
 
-  // reduce image size: on desktop the images are smaller than on mobile.
-  // Because on mobile they are full width and need to be larger.
+  // reduce image size: on desktop the images are small, and on mobile they fill the screen width.
   const image = link.querySelector('img');
-  const imageSizes = [
-    { media: '(min-width: 900px)', width: '650' },
-    { media: '(min-width: 500px)', width: '500' },
-    { media: '(min-width: 400px)', width: '400' },
-    { width: '300' },
-  ];
-  image.closest('picture').replaceWith(
-    createOptimizedPicture(image.src, image.alt, false, imageSizes),
+  replacePictureSizes(
+    image,
+    [
+      { media: '(min-width: 900px)', width: '650' },
+      { media: '(min-width: 500px)', width: '500' },
+      { media: '(min-width: 400px)', width: '400' },
+      { width: '300' },
+    ],
   );
 
   if (firstCell.lastElementChild.classList.length === 0) {
