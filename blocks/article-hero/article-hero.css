@@ -4,6 +4,7 @@
 
 .article-hero img {
     filter: brightness(70%);
+    width: 100%;
 }
 
 .article-hero .hero-overlay  {
@@ -19,4 +20,8 @@
 .section.article-hero-container {
     max-width: unset;
     padding: unset;
+}
+
+.section > div.article-hero-wrapper {
+    max-width: unset;
 }

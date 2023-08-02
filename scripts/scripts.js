@@ -146,7 +146,7 @@ async function loadLazy(doc) {
   if (section) {
     document.body.style.setProperty('--accent-color', `var(--color-${section})`);
   } else {
-    document.body.setProperty('--accent-color', 'var(--color-default-card)');
+    document.body.style.setProperty('--accent-color', 'var(--color-default-card)');
   }
 }
 
