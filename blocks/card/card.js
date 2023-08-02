@@ -1,4 +1,4 @@
-import { toClassName } from '../../scripts/lib-franklin.js';
+import { createOptimizedPicture, toClassName } from '../../scripts/lib-franklin.js';
 
 /**
  * parameters: any of 'focus','fitness', 'fuel', 'recover', or 'large'
@@ -19,6 +19,17 @@ export default function decorate(block) {
   link.append(...pictureParagraph.childNodes);
   link.classList.add('card-image');
   pictureParagraph.replaceWith(link);
+
+  // reduce image size: on desktop the images are smaller than on mobile.
+  // Because on mobile they are full width and need to be larger.
+  const image = link.querySelector('img');
+  const imageSizes = [
+    { media: '(min-width: 900px)', width: '650' },
+    { width: '900' },
+  ];
+  image.closest('picture').replaceWith(
+    createOptimizedPicture(image.src, image.alt, false, imageSizes),
+  );
 
   if (firstCell.lastElementChild.classList.length === 0) {
     firstCell.lastElementChild.classList.add('card-author');
