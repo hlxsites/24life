@@ -25,7 +25,9 @@ export default function decorate(block) {
   const image = link.querySelector('img');
   const imageSizes = [
     { media: '(min-width: 900px)', width: '650' },
-    { width: '900' },
+    { media: '(min-width: 500px)', width: '500' },
+    { media: '(min-width: 400px)', width: '400' },
+    { width: '300' },
   ];
   image.closest('picture').replaceWith(
     createOptimizedPicture(image.src, image.alt, false, imageSizes),
