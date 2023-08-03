@@ -68,7 +68,7 @@ indices:
         value: textContent(el)
       image:
         select: body > main img
-        value: attribute(el, "src")
+        value: match(attribute(el, "src"), "[.]?(/.*)")
       descriptionHtml:
         select: body > main p
         value: innerHTML(el)
