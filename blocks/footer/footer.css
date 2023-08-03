@@ -32,3 +32,8 @@ footer li a:any-link {
   justify-content: space-between;
   align-items: center;
 }
+
+.footer-container .rightSide .icon{
+  fill: #949494;!important
+  transition: all 0.3s ease;
+}

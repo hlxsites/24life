@@ -26,7 +26,7 @@ export default async function decorate(block) {
       .forEach((list) => {
         list.classList.add('footer-menu-list');
       });
-    const rightSide = document.querySelector('div:nth-child(3)');
+    const rightSide = footerContainer.querySelector('div:nth-child(3)');
     rightSide.classList.add('rightSide');
     decorateIcons(footerContainer);
     block.append(footerContainer);
