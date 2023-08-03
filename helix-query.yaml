@@ -68,7 +68,7 @@ indices:
         value: textContent(el)
       image:
         select: head > meta[property="og:image"]
-        value: match(attribute(el, "content"), "https:\/\/[^/]+(/.*)")
+        value: match(attribute(el, "content"), "https:\/\/[^/]+(/.*media_.*)")
       descriptionHtml:
         select: body > main p
         value: innerHTML(el)
