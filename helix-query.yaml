@@ -75,3 +75,6 @@ indices:
       links:
         select: head > meta[name="links"]
         values: attribute(el, "content")
+      role:
+        select: head > meta[name="role"]
+        value: attribute(el, "content")
