@@ -46,13 +46,18 @@ function decorateVideoLinks(main) {
   [...main.querySelectorAll('a')]
     .filter(({ href }) => !!href)
     .forEach((link) => {
-      if (link.href.includes('youtube.com/embed/') || link.href.includes('youtu.be/')) {
-        const videoId = new URL(link.href).pathname.split('/').pop();
+      let youtubeVideoId = '';
+      if (link.href.includes('youtube.com/watch?v=')) {
+        youtubeVideoId = new URL(link.href).searchParams.get('v');
+      } else if (link.href.includes('youtube.com/embed/') || link.href.includes('youtu.be/')) {
+        youtubeVideoId = new URL(link.href).pathname.split('/').pop();
+      }
+      if (youtubeVideoId) {
         const iframe = document.createElement('iframe');
         iframe.classList.add('youtube-video');
         iframe.width = 560;
         iframe.height = 315;
-        iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0`;
+        iframe.src = `https://www.youtube-nocookie.com/embed/${youtubeVideoId}?rel=0`;
         iframe.title = 'YouTube video player';
         iframe.frameborder = 0;
         iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
