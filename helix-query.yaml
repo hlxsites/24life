@@ -53,3 +53,14 @@ indices:
       image:
         select: head > meta[property="og:image"]
         value: match(attribute(el, "content"), "https:\/\/[^/]+(/.*)")
+  authors:
+    include:
+      - /author/**
+    target: /authors.json
+    properties:
+      lastModified:
+        select: none
+        value: parseTimestamp(headers["last-modified"], "ddd, DD MMM YYYY hh:mm:ss GMT")
+      name:
+        select: head > meta[name="name"]
+        value: attribute(el, "content")
