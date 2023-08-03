@@ -67,9 +67,8 @@ indices:
         select: main h1
         value: textContent(el)
       image:
-        select: head > meta[property="og:image"]
-        value: match(attribute(el, "content"), "https:\/\/[^/]+(/.*)")
+        select: body > main img
+        value: attribute(el, "src")
       descriptionHtml:
-        # exclude the first paragraph, which is the author's image
-        select: body > main p:not(:first-of-type)
+        select: body > main p
         value: innerHTML(el)
