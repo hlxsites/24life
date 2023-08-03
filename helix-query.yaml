@@ -1,0 +1,55 @@
+version: 1
+auto-generated: true
+indices:
+  default:
+    include:
+      - /**
+    target: /query-index.json
+    properties:
+      lastModified:
+        select: none
+        value: parseTimestamp(headers["last-modified"], "ddd, DD MMM YYYY hh:mm:ss GMT")
+      template:
+        select: head > meta[name="template"]
+        value: attribute(el, "content")
+      title:
+        select: head > meta[property="og:title"]
+        value: attribute(el, "content")
+      collections:
+        select: head > meta[name="collections"]
+        value: attribute(el, "content")
+      section:
+        select: head > meta[name="section"]
+        value: attribute(el, "content")
+      author:
+        select: head > meta[name="author"]
+        value: attribute(el, "content")
+      image:
+        select: head > meta[property="og:image"]
+        value: match(attribute(el, "content"), "https:\/\/[^/]+(/.*)")
+  articles:
+    include:
+      - /**
+    target: /articles.json
+    properties:
+      lastModified:
+        select: none
+        value: parseTimestamp(headers["last-modified"], "ddd, DD MMM YYYY hh:mm:ss GMT")
+      template:
+        select: head > meta[name="template"]
+        value: attribute(el, "content")
+      title:
+        select: head > meta[property="og:title"]
+        value: attribute(el, "content")
+      collections:
+        select: head > meta[name="collections"]
+        value: attribute(el, "content")
+      section:
+        select: head > meta[name="section"]
+        value: attribute(el, "content")
+      author:
+        select: head > meta[name="author"]
+        value: attribute(el, "content")
+      image:
+        select: head > meta[property="og:image"]
+        value: match(attribute(el, "content"), "https:\/\/[^/]+(/.*)")
