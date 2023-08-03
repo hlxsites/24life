@@ -52,6 +52,9 @@ indices:
       author:
         select: head > meta[name="author"]
         value: attribute(el, "content")
+      author-id:
+        select: head > meta[name="author-id"]
+        value: attribute(el, "content")
       image:
         select: head > meta[property="og:image"]
         value: match(attribute(el, "content"), "https:\/\/[^/]+(/.*)")
