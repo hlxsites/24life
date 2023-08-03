@@ -14,13 +14,10 @@ export default async function decorate(block) {
 
   if (resp.ok) {
     const html = await resp.text();
-
     // decorate footer DOM
     const footer = document.createElement('div');
     footer.innerHTML = html;
-
     footer.querySelector('p:nth-child(2)').classList.add('footer-slogan');
-
     decorateIcons(footer);
     block.append(footer);
   }

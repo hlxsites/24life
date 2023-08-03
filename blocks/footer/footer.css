@@ -16,5 +16,10 @@ footer .footer p {
 
 footer .footer-slogan {
   font-size: var(--footer-font-size-slogan);
-
 }
+
+footer li {
+  display: inline-block;
+  margin-right: 1rem;
+}
+
