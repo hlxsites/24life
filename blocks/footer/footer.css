@@ -23,3 +23,12 @@ footer li {
   margin-right: 1rem;
 }
 
+footer li a:any-link {
+  color: white;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

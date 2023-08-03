@@ -14,11 +14,21 @@ export default async function decorate(block) {
 
   if (resp.ok) {
     const html = await resp.text();
-    // decorate footer DOM
-    const footer = document.createElement('div');
-    footer.innerHTML = html;
-    footer.querySelector('p:nth-child(2)').classList.add('footer-slogan');
-    decorateIcons(footer);
-    block.append(footer);
+
+    // Create container for footer
+    const footerContainer = document.createElement('div');
+    footerContainer.classList.add('footer-container');
+    footerContainer.innerHTML = html;
+
+    const slogan = footerContainer.querySelector('div:nth-child(2) > p:nth-child(1)');
+    slogan.classList.add('footer-slogan');
+    footerContainer.querySelectorAll('ul')
+      .forEach((list) => {
+        list.classList.add('footer-menu-list');
+      });
+    const rightSide = document.querySelector('div:nth-child(3)');
+    rightSide.classList.add('rightSide');
+    decorateIcons(footerContainer);
+    block.append(footerContainer);
   }
 }
