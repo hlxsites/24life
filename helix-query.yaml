@@ -30,6 +30,8 @@ indices:
   articles:
     include:
       - /**
+    exclude:
+      - /authors/**
     target: /articles.json
     properties:
       lastModified:
