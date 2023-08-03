@@ -57,7 +57,7 @@ indices:
         value: match(attribute(el, "content"), "https:\/\/[^/]+(/.*)")
   authors:
     include:
-      - /author/**
+      - /authors/**
     target: /authors.json
     properties:
       lastModified:
@@ -66,3 +66,10 @@ indices:
       name:
         select: head > meta[name="name"]
         value: attribute(el, "content")
+      image:
+        select: body > main img
+        value: attribute(el, "src")
+      descriptionHtml:
+        # exclude the first paragraph, which is the author's image
+        select: body > main p:not(:first-of-type)
+        value: innerHTML(el)
