@@ -121,7 +121,7 @@ async function loadEager(doc) {
 async function loadLazy(doc) {
   const templateName = getMetadata('template');
   if (templateName) {
-    await loadTemplate(doc, templateName);
+    await loadTemplate(doc, templateName.toLowerCase());
   }
 
   const main = doc.querySelector('main');

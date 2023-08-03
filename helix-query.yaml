@@ -31,7 +31,7 @@ indices:
     include:
       - /**
     exclude:
-      - /authors/**
+      - /author/**
     target: /articles.json
     properties:
       lastModified:
@@ -57,7 +57,7 @@ indices:
         value: match(attribute(el, "content"), "https:\/\/[^/]+(/.*)")
   authors:
     include:
-      - /authors/**
+      - /author/**
     target: /authors.json
     properties:
       lastModified:
