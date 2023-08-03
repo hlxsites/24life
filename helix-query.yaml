@@ -67,8 +67,8 @@ indices:
         select: head > meta[name="name"]
         value: attribute(el, "content")
       image:
-        select: body > main img
-        value: attribute(el, "src")
+        select: head > meta[property="og:image"]
+        value: match(attribute(el, "content"), "https:\/\/[^/]+(/.*)")
       descriptionHtml:
         # exclude the first paragraph, which is the author's image
         select: body > main p:not(:first-of-type)
