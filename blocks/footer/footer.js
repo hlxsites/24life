@@ -39,7 +39,8 @@ export default async function decorate(block) {
 
     footerContainer.querySelectorAll('ul')
       .forEach((list, index) => {
-        list.classList.add(`footer-menu-list-${index}`);
+        list.classList.add(`footer-menu-list-${index + 1}`);
+
       });
 
     // add horizontal line
