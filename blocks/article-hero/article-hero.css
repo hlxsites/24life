@@ -7,6 +7,11 @@
     width: 100%;
 }
 
+.article-hero .hero-collections {
+    display: flex;
+    gap: 30px;
+}
+
 .article-hero .hero-overlay  {
     position: absolute;
     bottom: 80px;
