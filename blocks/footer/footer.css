@@ -1,8 +1,10 @@
 footer {
-  padding: 2rem;
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
   background-color: var(--footer-background-color);
   font-size: var(--footer-font-size-copyright);
   color: var(--text-color-on-black-background);
+
 }
 
 footer .footer {
@@ -16,11 +18,17 @@ footer .footer p {
 
 footer .footer-slogan {
   font-size: var(--footer-font-size-slogan);
+  padding-bottom: 40px;
+  font-style: italic;
 }
 
 footer li {
   display: inline-block;
   margin-right: 1rem;
+}
+
+footer a {
+  color: #fff;
 }
 
 footer li a:any-link {
@@ -33,7 +41,112 @@ footer li a:any-link {
   align-items: center;
 }
 
-.footer-container .rightSide .icon{
-  fill: #949494;!important
+.footer-container .right-side .icon{
+  fill: #949494;
   transition: all 0.3s ease;
+  line-height: 1.6;
+  width: 32px;
+  height: 32px;
+  margin-bottom: 19px;
+}
+
+.footer-container [class^="footer-menu-list-"]{
+    padding-left:0;
+}
+
+.footer-container ul.footer-menu-list-0 li a {
+  font-size: 14px;
+  letter-spacing: 3px;
+}
+
+.footer-container ul.footer-menu-list-1 li a {
+  font-size: 14px;
+  opacity: 0.5;
+}
+
+.footer-container ul.footer-menu-list-1 li a:hover {
+  opacity: 1 !important;
+}
+
+.footer-container .middle-div .trademark-container .trade-mark a {
+  color: #fff;
+  opacity: 0.5;
+}
+
+.footer-container .middle-div .trademark-container .trade-mark a:hover {
+  opacity: 1 !important;
+}
+
+.footer-container .right-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.footer-container .right-side img {
+  width: 200px;
+  height: auto;
+}
+
+.footer-container .right-side > p:nth-child(7) > a {
+ opacity: 0.5; 
+ color: #fff;
+}
+
+.footer-container .right-side > p:nth-child(7) > a:hover {
+  opacity: 1 !important; 
+ }
+
+ .trademark-container{
+  display: flex;
+  justify-content: center;
+  height: 100px;
+  align-items: flex-end;
+ }
+
+
+
+@media (max-width: 991px) {
+  footer .footer {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  footer hr{
+    display: none;
+  }
+}
+
+.top-btn-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.top-btn {
+  height: 30px;
+  font-size: 11px;
+  line-height: 27px;
+  min-width: 0;
+  opacity: 0.5;
+  border: 2px solid #fff;
+  color: #fff !important;
+  padding: 0 26px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 0;
+  text-align: center;
+  transition: all 0.3s ease;
+  background: none;
+}
+
+.top-btn:hover {
+  color: #fff;
+  opacity: 1 !important;
+}
+
+.left-side{
+  align-self: flex-start;
 }
