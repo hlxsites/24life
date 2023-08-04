@@ -122,7 +122,7 @@ footer li a:any-link {
   margin-top: 50px;
 }
 
-.top-btn {
+footer a.button.jump-to-top:any-link {
   height: 30px;
   font-size: 11px;
   line-height: 27px;
