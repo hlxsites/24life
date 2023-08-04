@@ -4,6 +4,8 @@ indices:
   default:
     include:
       - /**
+    exclude:
+      - /drafts/**
     target: /query-index.json
     properties:
       lastModified:
@@ -32,6 +34,7 @@ indices:
       - /**
     exclude:
       - /author/**
+      - /drafts/**
     target: /articles.json
     properties:
       lastModified:
