@@ -1,20 +1,10 @@
-/*
- * Copyright 2023 Adobe. All rights reserved.
- * This file is licensed to you under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License. You may obtain a copy
- * of the License at http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under
- * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
- * OF ANY KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
- */
+/* eslint-disable no-restricted-syntax,  no-await-in-loop */
 
 async function* request(url, context) {
-  const { chunks, sheet, fetch } = context;
-  for (let offset = 0, total = Infinity; offset < total; offset += chunks) {
-    const params = new URLSearchParams(`offset=${offset}&limit=${chunks}`);
-    if (sheet) params.append(`sheet`, sheet);
+  const { chunkSize, sheetName, fetch } = context;
+  for (let offset = 0, total = Infinity; offset < total; offset += chunkSize) {
+    const params = new URLSearchParams(`offset=${offset}&limit=${chunkSize}`);
+    if (sheetName) params.append('sheet', sheetName);
     const resp = await fetch(`${url}?${params.toString()}`);
     if (resp.ok) {
       const json = await resp.json();
@@ -38,20 +28,20 @@ function withHtmlParser(upstream, context, parseHtml) {
   return upstream;
 }
 
-function chunks(upstream, context, chunks) {
-  context.chunks = chunks;
+function chunks(upstream, context, chunkSize) {
+  context.chunkSize = chunkSize;
   return upstream;
 }
 
-function sheet(upstream, context, sheet) {
-  context.sheet = sheet;
+function sheet(upstream, context, sheetName) {
+  context.sheetName = sheetName;
   return upstream;
 }
 
-async function* skip(upstream, context, skip) {
+async function* skip(upstream, context, from) {
   let skipped = 0;
   for await (const entry of upstream) {
-    if (skipped < skip) {
+    if (skipped < from) {
       skipped += 1;
     } else {
       yield entry;
@@ -59,12 +49,12 @@ async function* skip(upstream, context, skip) {
   }
 }
 
-async function* limit(upstream, context, limit) {
+async function* limit(upstream, context, aLimit) {
   let yielded = 0;
   for await (const entry of upstream) {
     yield entry;
     yielded += 1;
-    if (yielded === limit) {
+    if (yielded === aLimit) {
       return;
     }
   }
@@ -158,18 +148,18 @@ function assignOperations(generator, context) {
 }
 
 export default function ffetch(url) {
-  let chunks = 255;
+  let chunkSize = 255;
   const fetch = (...rest) => window.fetch.apply(null, rest);
   const parseHtml = (html) => new window.DOMParser().parseFromString(html, 'text/html');
 
   try {
     if ('connection' in window.navigator && window.navigator.connection.saveData === true) {
       // request smaller chunks in save data mode
-      chunks = 64;
+      chunkSize = 64;
     }
   } catch (e) { /* ignore */ }
 
-  const context = { chunks, fetch, parseHtml };
+  const context = { chunkSize, fetch, parseHtml };
   const generator = request(url, context);
 
   return assignOperations(generator, context);
