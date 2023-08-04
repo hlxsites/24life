@@ -1,4 +1,6 @@
-import { createOptimizedPicture, toClassName } from '../../scripts/lib-franklin.js';
+import {
+  buildBlock, createOptimizedPicture, decorateBlock, toClassName,
+} from '../../scripts/lib-franklin.js';
 
 function replacePictureSizes(image, imageSizes) {
   image.closest('picture').replaceWith(
@@ -6,22 +8,62 @@ function replacePictureSizes(image, imageSizes) {
   );
 }
 
+export function createCardBlock(articleInfo) {
+  const wrapper = document.createElement('div');
+  const firstCell = document.createElement('div');
+  firstCell.append(articleInfo.title);
+
+  function p(content) {
+    const result = document.createElement('p');
+    result.append(content);
+    return result;
+  }
+
+  const picture = createOptimizedPicture(articleInfo.image);
+
+  const heading = document.createElement('h3');
+  const link = document.createElement('a');
+  link.href = articleInfo.path;
+  link.textContent = articleInfo.title;
+  heading.append(link);
+
+  const author = document.createElement('p');
+  const authorLink = document.createElement('a');
+  authorLink.href = `/author/${articleInfo.authorId}`;
+  authorLink.textContent = articleInfo.author;
+  author.append('By ');
+  author.append(authorLink);
+
+  const newBlock = buildBlock('card', {
+    elems: [
+      p(picture),
+      p(articleInfo.collections),
+      heading,
+      author],
+  });
+
+  wrapper.append(newBlock);
+  decorateBlock(newBlock);
+
+  return wrapper;
+}
+
 /**
  * parameters: any of 'focus','fitness', 'fuel', 'recover', or 'large'
  * content structure: in first cell:
- *  - image
- *  - CATEGORY (optional)
+ *  - p > image
+ *  - p > COLLECTIONS (optional)
  *  - title as linked h1, h2, h3, h4, h5, or h6
- *  - author with link (optional)
+ *  - p > author with link (optional)
  */
 export default function decorate(block) {
   const firstCell = block.firstElementChild.firstElementChild;
   firstCell.querySelector('h1, h2, h3, h4, h5, h6').classList.add('card-title');
 
   // link the image
-  const pictureParagraph = firstCell.querySelector('picture').parentElement;
+  const pictureParagraph = firstCell.querySelector('img').closest('p');
   const link = document.createElement('a');
-  link.href = block.querySelector('.card-title a').href;
+  link.href = block.querySelector('.card-title a')?.href;
   link.append(...pictureParagraph.childNodes);
   link.classList.add('card-image');
   pictureParagraph.replaceWith(link);
@@ -42,20 +84,20 @@ export default function decorate(block) {
     firstCell.lastElementChild.classList.add('card-author');
   }
 
-  // often there is a category like SUCCESS STORIES or GET STARTED. Multiple categories
+  // often there is a collection like SUCCESS STORIES or GET STARTED. Multiple categories
   // can be comma separated.
-  const category = firstCell.querySelector('p:not([class])');
-  if (category) {
-    category.classList.add('card-categories');
-    const links = category.textContent.split(',')
-      .map((categoryText) => {
+  const collections = firstCell.querySelector('p:not([class])');
+  if (collections) {
+    collections.classList.add('card-collections');
+    const links = collections.textContent.split(',')
+      .map((collectionText) => {
         const a = document.createElement('a');
-        a.href = `/collections/${toClassName(categoryText.trim())}`;
-        a.append(categoryText.trim());
+        a.href = `/collections/${toClassName(collectionText.trim())}`;
+        a.append(collectionText.trim());
         return a;
       });
-    category.innerHTML = '';
-    category.append(...links);
+    collections.innerHTML = '';
+    collections.append(...links);
   }
 
   const accentColor = ['focus', 'fitness', 'fuel', 'recover']

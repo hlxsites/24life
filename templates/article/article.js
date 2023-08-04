@@ -17,9 +17,9 @@ function createSectionWithHeroBlock() {
   section.classList.add('section', 'article-hero-container');
 
   const container = document.createElement('div');
-  const postSidebar = buildBlock('article-hero', '');
-  container.append(postSidebar);
-  decorateBlock(postSidebar);
+  const newBlock = buildBlock('article-hero', '');
+  container.append(newBlock);
+  decorateBlock(newBlock);
 
   section.append(container);
   return section;
@@ -27,9 +27,9 @@ function createSectionWithHeroBlock() {
 
 function createAuthorBlock() {
   const container = document.createElement('div');
-  const postSidebar = buildBlock('article-author', '');
-  container.append(postSidebar);
-  decorateBlock(postSidebar);
+  const newBlock = buildBlock('article-author', '');
+  container.append(newBlock);
+  decorateBlock(newBlock);
   return container;
 }
 
