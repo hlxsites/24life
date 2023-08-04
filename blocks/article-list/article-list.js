@@ -10,6 +10,7 @@ export default function decorate(block) {
   }
   block.textContent = '';
   block.classList.add('card-container');
+  // eslint-disable-next-line no-console
   fetchArticlesAndAddCards(by, block).catch((e) => console.log(e));
 }
 
