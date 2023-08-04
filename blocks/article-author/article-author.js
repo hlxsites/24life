@@ -34,7 +34,7 @@ export default function decorate(block) {
       const authorInfo = json.data
         .find((author) => author.name.toLowerCase() === getMetadata('author').toLowerCase());
       if (authorInfo) {
-        authorDescription.innerHTML = authorInfo.descriptionHtml;
+        authorDescription.innerText = authorInfo.description;
         if (authorInfo.image) {
           leftSide.innerHTML = '';
           leftSide.append(createOptimizedPicture(authorInfo.image, authorInfo.name, false, [{ width: '300' }]));

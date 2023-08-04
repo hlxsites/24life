@@ -75,9 +75,9 @@ indices:
       image:
         select: head > meta[property="og:image"]
         value: match(attribute(el, "content"), "https:\/\/[^/]+(/.*media_.*)")
-      descriptionHtml:
-        select: body > main p
-        value: innerHTML(el)
+      description:
+        select: head > meta[name="description"]
+        value: attribute(el, "content")
       links:
         select: head > meta[name="links"]
         values: attribute(el, "content")
