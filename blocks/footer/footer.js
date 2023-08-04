@@ -6,7 +6,6 @@ import { readBlockConfig, decorateIcons } from '../../scripts/lib-franklin.js';
  * @param {string} link
  * @returns {HTMLAnchorElement} anchor
  */
-
 function createImageLink(img, link) {
   const anchor = document.createElement('a');
   anchor.href = link;
