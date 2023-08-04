@@ -40,6 +40,20 @@ footer li a:hover {
   align-items: center;
 }
 
+
+.footer-container .left-side {
+  align-self: flex-start;
+}
+
+.footer-container .right-side {
+  text-align: right;
+  margin: 0 20px;
+}
+
+.footer-container .right-side img {
+  width: 200px;
+  height: auto;
+}
 .footer-container .right-side .icon{
   fill: #949494;
   transition: all 0.3s ease;
