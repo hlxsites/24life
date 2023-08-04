@@ -1,10 +1,9 @@
 footer {
   padding-top: 3.5rem;
-  padding-bottom: 3.5rem;
+  padding-bottom: 2.5rem;
   background-color: var(--footer-background-color);
   font-size: var(--footer-font-size-copyright);
   color: var(--text-color-on-black-background);
-
 }
 
 footer .footer {
@@ -71,7 +70,7 @@ footer li a:any-link {
  }
 
 .footer-container ul.footer-menu-list-1 li a:hover {
-  opacity: 1 !important;
+  opacity: 1;
 }
 
 .footer-container .middle-div .trademark-container .trade-mark a {
@@ -80,11 +79,11 @@ footer li a:any-link {
 }
 
 .footer-container .right-side > p:nth-child(7) > a:hover {
-  opacity: 1 !important; 
+  opacity: 1;
  }
 
 .footer-container .middle-div .trademark-container .trade-mark a:hover {
-  opacity: 1 !important;
+  opacity: 1;
 }
 
 .footer-container .right-side {
