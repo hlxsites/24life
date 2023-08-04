@@ -2,52 +2,6 @@ import {
   buildBlock, createOptimizedPicture, decorateBlock, toClassName,
 } from '../../scripts/lib-franklin.js';
 
-function replacePictureSizes(image, imageSizes) {
-  image.closest('picture').replaceWith(
-    createOptimizedPicture(image.src, image.alt, image.loading === 'eager', imageSizes),
-  );
-}
-
-export function createCardBlock(articleInfo) {
-  const wrapper = document.createElement('div');
-  const firstCell = document.createElement('div');
-  firstCell.append(articleInfo.title);
-
-  function p(content) {
-    const result = document.createElement('p');
-    result.append(content);
-    return result;
-  }
-
-  const picture = createOptimizedPicture(articleInfo.image);
-
-  const heading = document.createElement('h3');
-  const link = document.createElement('a');
-  link.href = articleInfo.path;
-  link.textContent = articleInfo.title;
-  heading.append(link);
-
-  const author = document.createElement('p');
-  const authorLink = document.createElement('a');
-  authorLink.href = `/author/${articleInfo.authorId}`;
-  authorLink.textContent = articleInfo.author;
-  author.append('By ');
-  author.append(authorLink);
-
-  const newBlock = buildBlock('card', {
-    elems: [
-      p(picture),
-      p(articleInfo.collections),
-      heading,
-      author],
-  });
-
-  wrapper.append(newBlock);
-  decorateBlock(newBlock);
-
-  return wrapper;
-}
-
 /**
  * parameters: any of 'focus','fitness', 'fuel', 'recover', or 'large'
  * content structure: in first cell:
@@ -115,4 +69,51 @@ export default function decorate(block) {
     block.closest('.card-wrapper').classList.add('large');
     block.closest('.card-container').classList.add('has-large-card');
   }
+}
+
+/* convenience function to create a block from a JSON object from articles.json */
+export function createCardBlock(articleInfo) {
+  const wrapper = document.createElement('div');
+  const firstCell = document.createElement('div');
+  firstCell.append(articleInfo.title);
+
+  function p(content) {
+    const result = document.createElement('p');
+    result.append(content);
+    return result;
+  }
+
+  const picture = createOptimizedPicture(articleInfo.image);
+
+  const heading = document.createElement('h3');
+  const link = document.createElement('a');
+  link.href = articleInfo.path;
+  link.textContent = articleInfo.title;
+  heading.append(link);
+
+  const author = document.createElement('p');
+  const authorLink = document.createElement('a');
+  authorLink.href = `/author/${articleInfo.authorId}`;
+  authorLink.textContent = articleInfo.author;
+  author.append('By ');
+  author.append(authorLink);
+
+  const newBlock = buildBlock('card', {
+    elems: [
+      p(picture),
+      p(articleInfo.collections),
+      heading,
+      author],
+  });
+
+  wrapper.append(newBlock);
+  decorateBlock(newBlock);
+
+  return wrapper;
+}
+
+function replacePictureSizes(image, imageSizes) {
+  image.closest('picture').replaceWith(
+    createOptimizedPicture(image.src, image.alt, image.loading === 'eager', imageSizes),
+  );
 }

@@ -16,13 +16,8 @@ export default function decorate(block) {
 async function fetchArticlesAndAddCards(by, block) {
   const articles = await ffetch('/articles.json').all();
 
-  // TODO: remove
-  articles.push(...articles); // double the articles to make the list longer (for testing
-  articles.push(...articles); // double the articles to make the list longer (for testing
-
   articles
-    // TODO: remove
-    // .filter((article) => article['author-id'] === by)
+    .filter((article) => article['author-id'] === by)
     .filter(({ template }) => template === 'article')
     .forEach((article) => {
       const newBlock = createCardBlock(article);
