@@ -49,9 +49,11 @@ footer li a:hover {
   margin-bottom: 19px;
 }
 
-.footer-container [class^="footer-menu-list-"]{
-    padding-left:0;
+.footer-container :is(.footer-menu-list-1, .footer-menu-list-2 ) {
+  padding-left: 0;
+  letter-spacing: 1px;
 }
+
 
 .footer-container .footer-menu-list-1 li a {
   font-size: var(--footer-font-size-posts);
