@@ -137,5 +137,5 @@ footer a.button.jump-to-top:any-link {
 
 .top-btn:hover {
   color: #fff;
-  opacity: 1 !important;
+  opacity: 1;
 }
