@@ -59,12 +59,16 @@
   font-size: var(--body-font-size-author);
 }
 
-/* cards in the same section are automatically shown side by side. */
 .card-container {
   display: grid;
   gap: 2em;
   grid-template-columns: repeat(3, 1fr);
 }
+
+.card-container.two-columns {
+  grid-template-columns: repeat(2, 1fr);
+}
+
 
 .card-container .card-wrapper {
   /* make sure all the cards have the same width */
