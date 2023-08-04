@@ -48,6 +48,10 @@ export default async function decorate(block) {
     list.after(horizontalLine);
 
     const rightSide = footerContainer.querySelector('div:nth-child(3)');
+    // add target="_blank" to all links in right side
+    rightSide.querySelectorAll('a').forEach((link) => {
+      link.target = '_blank';
+    });
     rightSide.classList.add('right-side');
 
     // Create link for powered by fitness logo
