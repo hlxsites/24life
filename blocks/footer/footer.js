@@ -1,20 +1,6 @@
 import { readBlockConfig, decorateIcons } from '../../scripts/lib-franklin.js';
 
 /**
- * Creates an anchor element with the given image as its child
- * @param img
- * @param {string} link
- * @returns {HTMLAnchorElement} anchor
- */
-function createImageLink(img, link) {
-  const anchor = document.createElement('a');
-  anchor.href = link;
-  anchor.target = '_blank';
-  anchor.appendChild(img);
-  return anchor;
-}
-
-/**
  * loads and decorates the footer
  * @param {Element} block The footer block element
  */
@@ -40,7 +26,6 @@ export default async function decorate(block) {
     footerContainer.querySelectorAll('ul')
       .forEach((list, index) => {
         list.classList.add(`footer-menu-list-${index + 1}`);
-
       });
 
     // add horizontal line
@@ -98,4 +83,18 @@ export default async function decorate(block) {
     decorateIcons(footerContainer);
     block.append(footerContainer);
   }
+}
+
+/**
+ * Creates an anchor element with the given image as its child
+ * @param img
+ * @param {string} link
+ * @returns {HTMLAnchorElement} anchor
+ */
+function createImageLink(img, link) {
+  const anchor = document.createElement('a');
+  anchor.href = link;
+  anchor.target = '_blank';
+  anchor.appendChild(img);
+  return anchor;
 }
