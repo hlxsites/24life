@@ -86,10 +86,10 @@ export default async function decorate(block) {
 
     // Top button
     const topBtnContainer = document.createElement('div');
-    topBtnContainer.classList.add('top-btn-container');
+    topBtnContainer.classList.add('button-container', 'jump-to-top-container');
     const topBtn = document.createElement('a');
     topBtn.href = '#top';
-    topBtn.className = 'top-btn';
+    topBtn.className = 'button primary jump-to-top';
     topBtn.textContent = 'Top';
     topBtnContainer.append(topBtn);
     middleDiv.appendChild(topBtnContainer);
