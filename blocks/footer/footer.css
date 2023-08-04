@@ -26,12 +26,12 @@ footer li {
   margin-right: 1rem;
 }
 
-footer a {
-  color: #fff;
+footer li a:any-link {
+  color: var(--text-color-on-black-background);
 }
 
-footer li a:any-link {
-  color: white;
+footer li a:hover {
+  color: var(--link-hover-color);
 }
 
 .footer-container {
