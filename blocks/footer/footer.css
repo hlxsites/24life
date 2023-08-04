@@ -115,7 +115,7 @@ footer li a:any-link {
   }
 }
 
-.top-btn-container{
+footer .jump-to-top-container {
   display: flex;
   justify-content: center;
   align-items: center;
