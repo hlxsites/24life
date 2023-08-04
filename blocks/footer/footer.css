@@ -64,6 +64,12 @@ footer li a:any-link {
   opacity: 0.5;
 }
 
+
+.footer-container .right-side > p:nth-child(7) > a {
+  opacity: 0.5; 
+  color: #fff;
+ }
+
 .footer-container ul.footer-menu-list-1 li a:hover {
   opacity: 1 !important;
 }
@@ -72,6 +78,10 @@ footer li a:any-link {
   color: #fff;
   opacity: 0.5;
 }
+
+.footer-container .right-side > p:nth-child(7) > a:hover {
+  opacity: 1 !important; 
+ }
 
 .footer-container .middle-div .trademark-container .trade-mark a:hover {
   opacity: 1 !important;
@@ -88,23 +98,12 @@ footer li a:any-link {
   height: auto;
 }
 
-.footer-container .right-side > p:nth-child(7) > a {
- opacity: 0.5; 
- color: #fff;
-}
-
-.footer-container .right-side > p:nth-child(7) > a:hover {
-  opacity: 1 !important; 
- }
-
  .trademark-container{
   display: flex;
   justify-content: center;
   height: 100px;
   align-items: flex-end;
  }
-
-
 
 @media (max-width: 991px) {
   footer .footer {
