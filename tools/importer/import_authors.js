@@ -80,17 +80,19 @@ export default {
 
     return authors
       .filter((author) => author.querySelector('h3'))
-      // .filter((author, index) => index > 2 && index <= 3)
+      .filter((author, index) => index > 6 && index <= 7)
       .map((author) => {
         const title = author.querySelector('h3');
         const description = author.querySelector('.tf-author-description');
         const image = author.querySelector('.tfl-author-image');
 
         const socialIconsLinks = [...author.querySelectorAll('.btn-icon')]
-          .map((icon) => icon.href);
+          .map((icon) => icon.href) || [];
 
         const extraLinks = [...author.querySelectorAll('.tfl-author-url')]
-          .map((link) => link.href);
+          .map((link) => link.textContent) || [];
+
+        console.log([author.querySelector('.tfl-author-url').outerHTML]);
         const authorId = getAuthorId(title);
 
         const result = document.createElement('div');
