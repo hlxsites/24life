@@ -80,19 +80,33 @@ export default {
 
     return authors
       .filter((author) => author.querySelector('h3'))
-      .filter((author, index) => index > 6 && index <= 7)
+      // .filter((author) => author.querySelector('h3').textContent.includes('Braz'))
+      // .filter((author, index) => index > 6 && index <= 7)
       .map((author) => {
         const title = author.querySelector('h3');
         const description = author.querySelector('.tf-author-description');
         const image = author.querySelector('.tfl-author-image');
 
-        const socialIconsLinks = [...author.querySelectorAll('.btn-icon')]
-          .map((icon) => icon.href) || [];
+        const allLinks = document.createElement('div');
+        [...author.querySelectorAll('.btn-icon')]
+          .forEach((icon) => {
+            icon.textContent = icon.href;
+            // const a = document.createElement('a');
+            // a.href = icon.href;
+            // a.textContent = `X${icon.href}`;
+            const p = document.createElement('p');
+            p.append(icon);
+            allLinks.append(p);
+          });
 
-        const extraLinks = [...author.querySelectorAll('.tfl-author-url')]
-          .map((link) => link.textContent) || [];
+        [...author.querySelectorAll('.tfl-author-url')]
+          .forEach((link) => {
+            link.textContent = link.href;
+            const p = document.createElement('p');
+            p.append(link);
+            allLinks.append(p);
+          });
 
-        console.log([author.querySelector('.tfl-author-url').outerHTML]);
         const authorId = getAuthorId(title);
 
         const result = document.createElement('div');
@@ -107,7 +121,7 @@ export default {
         const meta = {};
         meta.Image = image;
         meta.Description = description;
-        meta.Links = [...socialIconsLinks, ...extraLinks];
+        meta.Links = allLinks;
         meta.Role = findRole(author);
         meta.Template = 'author';
         const metadataBlock = WebImporter.Blocks.getMetadataBlock(document, meta);
