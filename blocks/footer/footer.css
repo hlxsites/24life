@@ -69,7 +69,6 @@ footer li a:hover {
   letter-spacing: 1px;
 }
 
-
 .footer-container .footer-menu-list-1 li a {
   font-size: var(--footer-font-size-posts);
 }
@@ -77,6 +76,10 @@ footer li a:hover {
 .footer-container .footer-menu-list-2 li a {
   font-size: var(--footer-font-size-pages);
   opacity: 0.5;
+}
+
+.footer-container .right-side :is(.icon-facebook, .icon-instagram, .icon-email, .icon-twitter):hover {
+  fill: var(--background-color);
 }
 
 .footer-container .footer-menu-list-2 li a:hover {
@@ -93,12 +96,10 @@ footer li a:hover {
   opacity: 1;
 }
 
-
 footer .trademark-container {
   text-align: center;
   margin-top: 100px;
 }
-
 
 @media (max-width: 991px) {
   footer .footer {
@@ -136,7 +137,6 @@ footer a.button.jump-to-top:any-link {
 }
 
 footer a.button.jump-to-top:hover {
-
   color: #fff;
   opacity: 1;
 }
