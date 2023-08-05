@@ -65,7 +65,7 @@ indices:
   authors:
     include:
       - /author/**
-    exclude
+    exclude:
       - /author/_template*
     target: /authors.json
     properties:
