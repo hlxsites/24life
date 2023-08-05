@@ -7,33 +7,6 @@
 /* eslint-disable no-console, class-methods-use-this */
 
 // import { toClassName } from '../../scripts/lib-franklin';
-
-const createMetadata = (main, document) => {
-  const meta = {};
-
-  const title = document.querySelector('title');
-  if (title) {
-    meta.Title = title.textContent.replace(/[\n\t]/gm, '');
-  }
-
-  const desc = document.querySelector('[property="og:description"]');
-  if (desc) {
-    meta.Description = desc.content;
-  }
-
-  const img = document.querySelector('[property="og:image"]');
-  if (img && img.content) {
-    const el = document.createElement('img');
-    el.src = img.content;
-    meta.Image = el;
-  }
-
-  const block = WebImporter.Blocks.getMetadataBlock(document, meta);
-  main.append(block);
-
-  return meta;
-};
-
 /**
  * Sanitizes a string for use as class name.
  * @param {string} name The unsanitized string
@@ -53,6 +26,25 @@ function getAuthorId(title) {
   // remove trailing slash from url
   url = url.replace(/\/$/, '');
   return url.split('/').pop();
+}
+
+function findRole(author) {
+  // get any h2 that comes before the current section
+  const el = author.closest('section');
+  while (el.previousElementSibling) {
+    if (el.previousElementSibling.tagName === 'H2') {
+      const fullRole = el.previousElementSibling.textContent;
+      if (fullRole.includes('Experts')) {
+        return 'Expert';
+      } if (fullRole.includes('Staff')) {
+        return 'Staff';
+      } if (fullRole.includes('Writers')) {
+        return 'Writer';
+      }
+      throw new Error(`Unknown role: ${fullRole}`);
+    }
+  }
+  throw new Error(`no role found for ${author.textContent}`);
 }
 
 export default {
@@ -81,33 +73,44 @@ export default {
       '.breadcrumb',
     ]);
 
-    // create the metadata block and append it to the main element
-    createMetadata(main, document);
-
     const authors = [...document.querySelectorAll('.wpb_column')];
     // const authors = [document.querySelector('.wpb_column')];
 
     return authors
       .filter((author) => author.querySelector('h3'))
+      // .filter((author, index) => index < 1)
       .map((author) => {
-        // console.log('author', author.outerHTML);
         const title = author.querySelector('h3');
-        const imageSrc = author.querySelector('.tfl-author-image')?.src;
+        const description = author.querySelector('.tf-author-description');
+        const image = author.querySelector('.tfl-author-image');
 
-        console.log('icons', author.querySelectorAll('.tfl-social-icons'));
-        const socialIcons = [...author.querySelectorAll('.btn-icon')]
+        const socialIconsLinks = [...author.querySelectorAll('.btn-icon')]
           .map((icon) => icon.href);
 
         const extraLinks = [...author.querySelectorAll('.tfl-author-url')]
           .map((link) => link.href);
         const authorId = getAuthorId(title);
 
-        console.log({
-          title, url, authorId, imageSrc, socialIcons, extraLinks,
-        });
-
         const result = document.createElement('div');
-        result.append([title.textContent, authorId, imageSrc, socialIcons, extraLinks]);
+        const h1 = document.createElement('h1');
+        h1.textContent = title.textContent;
+        result.append(h1);
+
+        const emptyLine = document.createElement('p');
+        emptyLine.textContent = ' ';
+        result.append(emptyLine);
+
+        const meta = {};
+        meta.Image = image;
+        meta.Description = description;
+        meta.Links = [...socialIconsLinks, ...extraLinks];
+        meta.Role = findRole(author);
+        meta.Template = 'author';
+        const metadataBlock = WebImporter.Blocks.getMetadataBlock(document, meta);
+        result.append(metadataBlock);
+
+        const articleListBlock = [['Article List '], ['']];
+        result.append(WebImporter.DOMUtils.createTable(articleListBlock, document));
 
         return ({
           element: result,
