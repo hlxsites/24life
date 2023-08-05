@@ -80,7 +80,7 @@ export default {
 
     return authors
       .filter((author) => author.querySelector('h3'))
-      // .filter((author) => author.querySelector('h3').textContent.includes('Braz'))
+      // .filter((author) => author.querySelector('h3').textContent.includes('Di'))
       // .filter((author, index) => index > 6 && index <= 7)
       .map((author) => {
         const title = author.querySelector('h3');
@@ -91,15 +91,12 @@ export default {
         [...author.querySelectorAll('.btn-icon')]
           .forEach((icon) => {
             icon.textContent = icon.href;
-            // const a = document.createElement('a');
-            // a.href = icon.href;
-            // a.textContent = `X${icon.href}`;
             const p = document.createElement('p');
             p.append(icon);
             allLinks.append(p);
           });
 
-        [...author.querySelectorAll('.tfl-author-url')]
+        [...author.querySelectorAll('.tfl-author-url a')]
           .forEach((link) => {
             link.textContent = link.href;
             const p = document.createElement('p');
