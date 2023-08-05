@@ -30,7 +30,7 @@ function getAuthorId(title) {
 
 function findRole(author) {
   // get any h2 that comes before the current section
-  const el = author.closest('section');
+  let el = author.closest('section');
   while (el.previousElementSibling) {
     if (el.previousElementSibling.tagName === 'H2') {
       const fullRole = el.previousElementSibling.textContent;
@@ -42,6 +42,8 @@ function findRole(author) {
         return 'Writer';
       }
       throw new Error(`Unknown role: ${fullRole}`);
+    } else {
+      el = el.previousElementSibling;
     }
   }
   throw new Error(`no role found for ${author.textContent}`);
@@ -78,7 +80,7 @@ export default {
 
     return authors
       .filter((author) => author.querySelector('h3'))
-      // .filter((author, index) => index < 1)
+      // .filter((author, index) => index > 2 && index <= 3)
       .map((author) => {
         const title = author.querySelector('h3');
         const description = author.querySelector('.tf-author-description');
