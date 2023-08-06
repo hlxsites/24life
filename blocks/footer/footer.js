@@ -20,55 +20,79 @@ export default async function decorate(block) {
     footerContainer.classList.add('footer-container');
     footerContainer.innerHTML = html;
 
-    const slogan = footerContainer.querySelector('div:nth-child(2) > p:nth-child(1)');
+    const row1 = footerContainer.querySelector('div:nth-child(1)');
+    row1.classList.add('row-1');
+    
+    const row2 = footerContainer.querySelector('div:nth-child(2)');
+    row2.classList.add('row-2');
+    
+    // Create link for Brand logo
+    const brandImgContainer = document.createElement('div');
+    brandImgContainer.classList.add('brand-img-container');
+    const brandImg = row1.querySelector('p:nth-child(1)');
+    const brandImgLink = createImageLink(brandImg, '/');
+    brandImgContainer.append(brandImgLink);
+    row1.prepend(brandImgContainer);
+    
+    // row1 slogan and lists container
+    const row1MiddleContainer = document.createElement('div');
+    row1MiddleContainer.classList.add('row-1-middle-container');
+    const slogan = row1.querySelector('p:nth-child(2)');
     slogan.classList.add('footer-slogan');
+    row1MiddleContainer.append(row1.querySelector('.footer-slogan'));
+    row1.querySelectorAll('ul').forEach((list) => {
+      row1MiddleContainer.append(list);
+    });
+    row1.querySelector('.brand-img-container').after(row1MiddleContainer);
 
-    footerContainer.querySelectorAll('ul')
+    // move all p tags to new div and append that div to row1
+    const socialIconsContainer = document.createElement('div');
+    socialIconsContainer.classList.add('social-icons-container');
+    // get last 4 p tags from row1 container
+    socialIconsContainer.prepend(footerContainer.querySelector('.row-1 > p:nth-last-child(1)'));
+    socialIconsContainer.prepend(row1.querySelector(':scope > p:nth-last-child(1)'));  
+    socialIconsContainer.prepend(row1.querySelector(':scope > p:nth-last-child(1)'));
+    socialIconsContainer.prepend(row1.querySelector(':scope > p:nth-last-child(1)'));
+    row1.append(socialIconsContainer);
+    
+    // add class to each list 
+    row1.querySelectorAll('ul')
       .forEach((list, index) => {
         list.classList.add(`footer-menu-list-${index + 1}`);
       });
 
     // add horizontal line
-    const list = footerContainer.querySelector('ul');
+    const list = row1.querySelector('ul');
     const horizontalLine = document.createElement('hr');
     list.after(horizontalLine);
 
-    const rightSide = footerContainer.querySelector('div:nth-child(3)');
     // add target="_blank" to all links in right side
-    rightSide.querySelectorAll('a').forEach((link) => {
+    row1.querySelectorAll('a').forEach((link) => {
       link.target = '_blank';
     });
-    rightSide.classList.add('right-side');
-
+    
+    const fitnessAppLinksContainer = document.createElement('div');
+    fitnessAppLinksContainer.classList.add('fitness-app-links-container');
+     
     // Create link for powered by fitness logo
-    const poweredByFitnessImg = rightSide.querySelector('p:nth-last-child(2)');
+    const poweredByFitnessImg = row2.querySelector('p:nth-last-child(2)');
     const poweredByFitnessImgLink = createImageLink(poweredByFitnessImg, 'https://www.24hourfitness.com/');
 
-    // Create link for try workout logo
-    const tryWorkoutImg = rightSide.querySelector('p:last-child');
+    // // Create link for try workout logo
+    const tryWorkoutImg = row2.querySelector('p:last-child');
     const tryWorkoutImgLink = createImageLink(tryWorkoutImg, 'https://www.24hourfitness.com/programs/24go/');
 
-    rightSide.append(poweredByFitnessImgLink);
-    rightSide.append(tryWorkoutImgLink);
-
-    const leftSide = footerContainer.querySelector('div:first-child');
-    leftSide.classList.add('left-side');
-
-    // Create link for Brand logo
-    const brandImg = leftSide.querySelector('picture');
-    const brandImgLink = createImageLink(brandImg, '/');
-    leftSide.append(brandImgLink);
-
-    const middleDiv = footerContainer.querySelector('div:nth-child(2)');
-    middleDiv.classList.add('middle-div');
+    fitnessAppLinksContainer.append(poweredByFitnessImgLink);
+    fitnessAppLinksContainer.append(tryWorkoutImgLink);
+    row2.append(fitnessAppLinksContainer);
 
     // Trademark
     const trademarkContainer = document.createElement('div');
     trademarkContainer.classList.add('trademark-container');
-    const trademark = middleDiv.querySelector('p:last-child');
+    const trademark = row2.querySelector('p:first-child');
     trademark.classList.add('trade-mark');
     trademarkContainer.append(trademark);
-    middleDiv.append(trademarkContainer);
+    row2.prepend(trademarkContainer);
 
     // Top button
     const topBtnContainer = document.createElement('div');
@@ -78,10 +102,10 @@ export default async function decorate(block) {
     topBtn.className = 'button primary jump-to-top';
     topBtn.textContent = 'Top';
     topBtnContainer.append(topBtn);
-    middleDiv.appendChild(topBtnContainer);
-
+    
     decorateIcons(footerContainer);
     block.append(footerContainer);
+    block.append(topBtnContainer);
   }
 }
 

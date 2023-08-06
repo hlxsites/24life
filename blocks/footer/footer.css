@@ -36,26 +36,38 @@ footer li a:hover {
 
 .footer-container {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  gap: 35px;
 }
 
-
-.footer-container .left-side {
-  align-self: flex-start;
+.row-1 {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
 }
 
-.footer-container .right-side {
+.row-2 {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  gap: 260px;
+}
+
+.footer-container .fitness-app-links-container {
   text-align: right;
-  margin: 0 20px;
+  margin: 0 50px;
 }
 
-.footer-container .right-side img {
+.footer-container .fitness-app-links-container img {
   width: 200px;
   height: auto;
 }
 
-.footer-container .right-side .icon{
+.footer-container .social-icons-container .icon{
   fill: #949494;
   transition: all 0.3s ease;
   line-height: 1.6;
@@ -69,6 +81,10 @@ footer li a:hover {
   letter-spacing: 1px;
 }
 
+.footer-container .row-1 ul {
+  text-align: center;
+}
+
 .footer-container .footer-menu-list-1 li a {
   font-size: var(--footer-font-size-posts);
 }
@@ -78,7 +94,7 @@ footer li a:hover {
   opacity: 0.5;
 }
 
-.footer-container .right-side :is(.icon-facebook, .icon-instagram, .icon-email, .icon-twitter):hover {
+.footer-container .row-1 :is(.icon-facebook, .icon-instagram, .icon-email, .icon-twitter):hover {
   fill: var(--background-color);
 }
 
@@ -87,29 +103,13 @@ footer li a:hover {
   color: var(--text-color-on-black-background);
 }
 
-.footer-container .middle-div .trademark-container .trade-mark a:any-link {
+.footer-container .row-2 .trademark-container .trade-mark a:any-link {
   color: var(--text-color-on-black-background);
   opacity: 0.5;
 }
 
-.footer-container .middle-div .trademark-container .trade-mark a:hover {
+.footer-container .row-2 .trademark-container .trade-mark a:hover {
   opacity: 1;
-}
-
-footer .trademark-container {
-  text-align: center;
-  margin-top: 100px;
-}
-
-@media (max-width: 991px) {
-  footer .footer {
-    padding-left: 15px;
-    padding-right: 15px;
-  }
-
-  footer hr{
-    display: none;
-  }
 }
 
 footer .jump-to-top-container {
@@ -139,4 +139,52 @@ footer a.button.jump-to-top:any-link {
 footer a.button.jump-to-top:hover {
   color: #fff;
   opacity: 1;
+}
+ 
+/* ... Your existing CSS ... */
+
+/* Media Query for Mobile Devices (max-width: 768px) */
+@media only screen and (max-width: 991px) {
+  footer hr{
+    display: none;
+  }
+
+  /* Stacking elements vertically in the footer */
+  .row-1, .row-2 {
+    flex-direction: column;
+    align-items: center;
+    gap: 65px;
+  }
+
+  /* Adjust footer slogan */
+  footer .footer-slogan {
+    padding-bottom: 20px;
+    text-align: center;
+  }
+
+  footer .footer-container .footer-menu-list-1 {
+    margin-bottom: 60px;
+}
+
+  /* Footer Links */
+  footer li {
+    display: block;  /* stacking the li items vertically */
+    margin-right: 0;
+    margin-bottom: 0.5rem; /* space between items */
+  }
+
+  .footer-container .social-icons-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .footer-container .fitness-app-links-container {
+    margin: 0;
+    text-align: center;
+  }
+
+  footer .jump-to-top-container {
+    margin-top: 20px;
+  }
 }
