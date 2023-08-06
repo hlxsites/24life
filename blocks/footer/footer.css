@@ -141,9 +141,6 @@ footer a.button.jump-to-top:hover {
   opacity: 1;
 }
  
-/* ... Your existing CSS ... */
-
-/* Media Query for Mobile Devices (max-width: 768px) */
 @media only screen and (max-width: 991px) {
   footer hr{
     display: none;
@@ -166,11 +163,10 @@ footer a.button.jump-to-top:hover {
     margin-bottom: 60px;
 }
 
-  /* Footer Links */
   footer li {
-    display: block;  /* stacking the li items vertically */
+    display: block;   
     margin-right: 0;
-    margin-bottom: 0.5rem; /* space between items */
+    margin-bottom: 0.5rem;  
   }
 
   .footer-container .social-icons-container {
