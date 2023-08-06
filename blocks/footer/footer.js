@@ -39,7 +39,7 @@ export default async function decorate(block) {
     row1MiddleContainer.classList.add('row-1-middle-container');
     const slogan = row1.querySelector('p:nth-child(2)');
     slogan.classList.add('footer-slogan');
-    row1MiddleContainer.append(row1.querySelector('.footer-slogan'));
+    row1MiddleContainer.append(slogan);
     row1.querySelectorAll('ul').forEach((list) => {
       row1MiddleContainer.append(list);
     });
