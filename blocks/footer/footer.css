@@ -1,5 +1,6 @@
 footer {
-  padding: 2rem;
+  padding-top: 3.5rem;
+  padding-bottom: 2.5rem;
   background-color: var(--footer-background-color);
   font-size: var(--footer-font-size-copyright);
   color: var(--text-color-on-black-background);
@@ -16,5 +17,170 @@ footer .footer p {
 
 footer .footer-slogan {
   font-size: var(--footer-font-size-slogan);
+  padding-bottom: 40px;
+  font-style: italic;
+}
 
+footer li {
+  display: inline-block;
+  margin-right: 1rem;
+}
+
+footer li a:any-link {
+  color: var(--text-color-on-black-background);
+}
+
+footer li a:hover {
+  color: var(--link-hover-color);
+}
+
+.footer-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 35px;
+}
+
+.footer-container .row-1 {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+}
+
+.footer-container .row-2 {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  gap: 260px;
+}
+
+.footer-container .fitness-app-links-container {
+  text-align: right;
+  margin: 0 50px;
+}
+
+.footer-container .fitness-app-links-container img {
+  width: 200px;
+  height: auto;
+}
+
+.footer-container .social-icons-container .icon{
+  fill: #949494;
+  transition: all 0.3s ease;
+  line-height: 1.6;
+  width: 32px;
+  height: 32px;
+  margin-bottom: 19px;
+}
+
+.footer-container :is(.footer-menu-list-1, .footer-menu-list-2 ) {
+  padding-left: 0;
+  letter-spacing: 1px;
+}
+
+.footer-container .row-1 ul {
+  text-align: center;
+}
+
+.footer-container .footer-menu-list-1 li a {
+  font-size: var(--footer-font-size-posts);
+}
+
+.footer-container .footer-menu-list-2 li a {
+  font-size: var(--footer-font-size-pages);
+  opacity: 0.5;
+}
+
+.footer-container .row-1 :is(.icon-facebook, .icon-instagram, .icon-email, .icon-twitter):hover {
+  fill: var(--background-color);
+}
+
+.footer-container .footer-menu-list-2 li a:hover {
+  opacity: 1;
+  color: var(--text-color-on-black-background);
+}
+
+.footer-container .row-2 .trademark-container .trade-mark a:any-link {
+  color: var(--text-color-on-black-background);
+  opacity: 0.5;
+}
+
+.footer-container .row-2 .trademark-container .trade-mark a:hover {
+  opacity: 1;
+}
+
+footer .jump-to-top-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+}
+
+footer a.button.jump-to-top:any-link {
+  height: 30px;
+  font-size: 11px;
+  line-height: 27px;
+  min-width: 0;
+  opacity: 0.5;
+  border: 2px solid #fff;
+  padding: 0 26px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 0;
+  text-align: center;
+  transition: all 0.3s ease;
+  background: none;
+}
+
+footer a.button.jump-to-top:hover {
+  color: #fff;
+  opacity: 1;
+}
+ 
+@media only screen and (max-width: 991px) {
+  footer hr{
+    display: none;
+  }
+
+  /* Stacking elements vertically in the footer */
+  .footer-container .row-1, .footer-container .row-2 {
+    flex-direction: column;
+    align-items: center;
+    gap: 65px;
+  }
+
+  /* Adjust footer slogan */
+  footer .footer-slogan {
+    padding-bottom: 20px;
+    text-align: center;
+  }
+
+  footer .footer-container .footer-menu-list-1 {
+    margin-bottom: 60px;
+}
+
+  footer li {
+    display: block;   
+    margin-right: 0;
+    margin-bottom: 0.5rem;  
+  }
+
+  .footer-container .social-icons-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .footer-container .fitness-app-links-container {
+    margin: 0;
+    text-align: center;
+  }
+
+  footer .jump-to-top-container {
+    margin-top: 20px;
+  }
 }
