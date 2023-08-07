@@ -275,15 +275,23 @@ main .section {
   padding: 64px 16px;
 }
 
-@media (min-width: 600px) {
-  main .section {
-    padding: 64px 32px;
+@media (min-width: 768px) {
+  .section > div {
+    max-width: 595px;
+    margin: auto;
   }
 }
 
 @media (min-width: 900px) {
   .section > div {
-    max-width: 1200px;
+    max-width: 780px;
+    margin: auto;
+  }
+}
+
+@media (min-width: 1200px) {
+  .section > div {
+    max-width: 945px;
     margin: auto;
   }
 }

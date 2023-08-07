@@ -42,6 +42,31 @@ async function loadFonts() {
   }
 }
 
+function decorateVideoLinks(main) {
+  [...main.querySelectorAll('a')]
+    .filter(({ href }) => !!href)
+    .forEach((link) => {
+      let youtubeVideoId = '';
+      if (link.href.includes('youtube.com/watch?v=')) {
+        youtubeVideoId = new URL(link.href).searchParams.get('v');
+      } else if (link.href.includes('youtube.com/embed/') || link.href.includes('youtu.be/')) {
+        youtubeVideoId = new URL(link.href).pathname.split('/').pop();
+      }
+      if (youtubeVideoId) {
+        const iframe = document.createElement('iframe');
+        iframe.classList.add('youtube-video');
+        iframe.width = 560;
+        iframe.height = 315;
+        iframe.src = `https://www.youtube-nocookie.com/embed/${youtubeVideoId}?rel=0`;
+        iframe.title = 'YouTube video player';
+        iframe.frameborder = 0;
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        iframe.allowfullscreen = true;
+        link.replaceWith(iframe);
+      }
+    });
+}
+
 /**
  * Builds all synthetic blocks in a container element.
  * @param {Element} main The container element
@@ -49,6 +74,7 @@ async function loadFonts() {
 function buildAutoBlocks(main) {
   try {
     buildHeroBlock(main);
+    decorateVideoLinks(main);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Auto Blocking failed', error);
@@ -100,7 +126,7 @@ async function loadEager(doc) {
 async function loadLazy(doc) {
   const templateName = getMetadata('template');
   if (templateName) {
-    await loadTemplate(doc, templateName);
+    await loadTemplate(doc, templateName.toLowerCase());
   }
 
   const main = doc.querySelector('main');

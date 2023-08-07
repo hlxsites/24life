@@ -4,6 +4,8 @@ indices:
   default:
     include:
       - /**
+    exclude:
+      - /drafts/**
     target: /query-index.json
     properties:
       lastModified:
@@ -31,7 +33,9 @@ indices:
     include:
       - /**
     exclude:
-      - /authors/**
+      - /author/**
+      - /drafts/**
+      - /_template*
     target: /articles.json
     properties:
       lastModified:
@@ -52,26 +56,34 @@ indices:
       author:
         select: head > meta[name="author"]
         value: attribute(el, "content")
+      author-id:
+        select: head > meta[name="author-id"]
+        value: attribute(el, "content")
       image:
         select: head > meta[property="og:image"]
         value: match(attribute(el, "content"), "https:\/\/[^/]+(/.*)")
   authors:
     include:
-      - /authors/**
+      - /author/**
+    exclude:
+      - /author/_template*
     target: /authors.json
     properties:
       lastModified:
         select: none
         value: parseTimestamp(headers["last-modified"], "ddd, DD MMM YYYY hh:mm:ss GMT")
+      author-id:
+        select: none
+        value: replace(path, '/author/', '')
       name:
         select: main h1
         value: textContent(el)
       image:
         select: head > meta[property="og:image"]
         value: match(attribute(el, "content"), "https:\/\/[^/]+(/.*media_.*)")
-      descriptionHtml:
-        select: body > main p
-        value: innerHTML(el)
+      description:
+        select: head > meta[name="description"]
+        value: attribute(el, "content")
       links:
         select: head > meta[name="links"]
         values: attribute(el, "content")

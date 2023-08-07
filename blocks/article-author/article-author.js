@@ -5,7 +5,6 @@ export default function decorate(block) {
 
   const leftSide = document.createElement('div');
   leftSide.classList.add('brand');
-  leftSide.append(createOptimizedPicture('https://main--24life--hlxsites.hlx.page/drafts/wingeier/media_12c56b7b5e58629e2664d39563b806731fcde3991.png'));
   block.append(leftSide);
 
   const rightSide = document.createElement('div');
@@ -26,9 +25,24 @@ export default function decorate(block) {
   const authorDescription = document.createElement('p');
   authorDescription.classList.add('author-description');
   authorDescription.innerText = ''; // show nothing while loading the description
-  setTimeout(() => {
-    // TODO: fetch author description from index
-    authorDescription.innerText = 'TODO: fetch and replace description. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nisl eget ultricies ultrices, nunc nisl aliquam nunc, quis aliquet nunc nisl eget elit.';
+  // delay the loading of the author description, as it's usually after the fold
+  // and not an integral part of the first paint
+  setTimeout(async () => {
+    const resp = await fetch('/authors.json');
+    if (resp.ok) {
+      const json = await resp.json();
+      const authorInfo = json.data
+        .find((author) => author.name.toLowerCase() === getMetadata('author').toLowerCase());
+      if (authorInfo) {
+        authorDescription.innerText = authorInfo.description;
+        if (authorInfo.image) {
+          leftSide.innerHTML = '';
+          leftSide.append(createOptimizedPicture(authorInfo.image, authorInfo.name, false, [{ width: '300' }]));
+        }
+      }
+    } else {
+      console.log('Error fetching authors.json');
+    }
   }, 1000);
   rightSide.append(authorDescription);
   block.append(rightSide);

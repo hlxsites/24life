@@ -92,3 +92,9 @@
   font-weight: 700;
   font-stretch: normal;
 }
+
+main .youtube-video {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 9/5;
+}
