@@ -1,0 +1,13 @@
+{
+    "project": "24life",
+    "host": "https://main--24life--hlxsites.hlx.live/",
+    "plugins": [
+      {
+        "id": "library",
+        "title": "Library",
+        "environments": ["edit"],
+        "url": "/tools/sidekick/library.html",
+        "includePaths": ["**.docx**"]
+      }
+    ]
+  }
