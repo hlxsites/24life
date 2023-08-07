@@ -1,21 +1,15 @@
 import { PLUGIN_EVENTS } from 'https://www.hlx.live/tools/sidekick/library/events/events.js';
-// import { createOptimizedPicture, getMetadata } from '../../../../scripts/lib-franklin.js';
-
-const selectedAuthors = [];
 
 export async function decorate(container, ignored, query) {
   const data = await getAuthorData();
 
   const createMenuItems = () => {
     const filteredAuthors = getFilteredAuthors(data, query);
-    return filteredAuthors.map((item) => {
-      const isSelected = selectedAuthors.includes(item.author);
-      return `
-        <sp-menu-item value="${item.name} (${item['author-id']})" ${isSelected ? 'selected' : ''}>
+    return filteredAuthors.map((item) => `
+        <sp-menu-item value="${item.name} (${item['author-id']})">
           ${item.name} (${item['author-id']})
         </sp-menu-item>
-      `;
-    }).join('');
+      `).join('');
   };
 
   const handleCopyButtonClick = (e) => {
@@ -36,10 +30,10 @@ export async function decorate(container, ignored, query) {
     </sp-menu> `;
   container.append(spContainer);
 
-  const menuItemElements = spContainer.querySelectorAll('sp-menu-item');
-  menuItemElements.forEach((item) => {
-    item.addEventListener('click', handleCopyButtonClick);
-  });
+  spContainer.querySelectorAll('sp-menu-item')
+    .forEach((item) => {
+      item.addEventListener('click', handleCopyButtonClick);
+    });
 }
 
 async function getAuthorData() {
