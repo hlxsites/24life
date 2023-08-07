@@ -41,6 +41,7 @@ export default function decorate(block) {
         }
       }
     } else {
+      // eslint-disable-next-line no-console
       console.log('Error fetching authors.json');
     }
   }, 1000);
