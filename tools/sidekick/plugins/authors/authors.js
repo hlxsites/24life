@@ -7,7 +7,7 @@ export async function decorate(container, ignored, query) {
     const filteredAuthors = getFilteredAuthors(data, query);
     return filteredAuthors.map((item) => `
         <sp-menu-item value="${item.name} (${item['author-id']})">
-          ${item.name} (${item['author-id']})
+          ${item.name} <span class="author-id">(${item['author-id']})</span>
         </sp-menu-item>
       `).join('');
   };
