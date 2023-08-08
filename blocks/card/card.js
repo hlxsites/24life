@@ -11,6 +11,9 @@ import {
  *  - p > author with link (optional)
  */
 export default function decorate(block) {
+  // if block has author class then set a boolean
+  const isAuthor = block.classList.contains('author');
+
   const firstCell = block.firstElementChild.firstElementChild;
   firstCell.querySelector('h1, h2, h3, h4, h5, h6').classList.add('card-title');
 
@@ -38,20 +41,22 @@ export default function decorate(block) {
     firstCell.lastElementChild.classList.add('card-author');
   }
 
-  // often there is a collection like SUCCESS STORIES or GET STARTED. Multiple categories
-  // can be comma separated.
-  const collections = firstCell.querySelector('p:not([class])');
-  if (collections) {
-    collections.classList.add('card-collections');
-    const links = collections.textContent.split(',')
-      .map((collectionText) => {
-        const a = document.createElement('a');
-        a.href = `/collections/${toClassName(collectionText.trim())}`;
-        a.append(collectionText.trim());
-        return a;
-      });
-    collections.innerHTML = '';
-    collections.append(...links);
+  if (!isAuthor) {
+    // often there is a collection like SUCCESS STORIES or GET STARTED. Multiple categories
+    // can be comma separated.
+    const collections = firstCell.querySelector('p:not([class])');
+    if (collections) {
+      collections.classList.add('card-collections');
+      const links = collections.textContent.split(',')
+        .map((collectionText) => {
+          const a = document.createElement('a');
+          a.href = `/collections/${toClassName(collectionText.trim())}`;
+          a.append(collectionText.trim());
+          return a;
+        });
+      collections.innerHTML = '';
+      collections.append(...links);
+    }
   }
 
   const accentColor = ['focus', 'fitness', 'fuel', 'recover']
@@ -69,6 +74,85 @@ export default function decorate(block) {
     block.closest('.card-wrapper').classList.add('large');
     block.closest('.card-container').classList.add('has-large-card');
   }
+}
+
+/*
+
+/* convenience function to create a block from a JSON object from authors.json */
+export function createAuthorCardBlock(author) {
+  function p(content) {
+    const result = document.createElement('p');
+    result.append(content);
+    return result;
+  }
+
+  const picture = createOptimizedPicture(author.image);
+
+  const heading = document.createElement('h3');
+  const anchor = document.createElement('a');
+  anchor.href = author.path;
+  anchor.textContent = author.name;
+  heading.append(anchor);
+
+  const authorLinkContainer = document.createElement('div');
+  authorLinkContainer.classList.add('author-links');
+  // iterate over social media links author.links
+  // create a link for each one
+  // append to authorLinkContainer
+  console.log(author.links);
+  // iterate author.links array
+  let arr = JSON.parse(author.links);
+  if (arr.length > 0) {
+    arr = arr[0].split(',');
+  }
+  const socialLinksContainer = document.createElement('div');
+  socialLinksContainer.classList.add('social-links');
+  arr.forEach((link) => {
+    const socialLink = document.createElement('a');
+    socialLink.href = link;
+    socialLink.target = '_blank';
+    if (link.includes('facebook')) {
+      socialLink.innerHTML = '<span class="icon icon-facebook"><svg xmlns="http://www.w3.org/2000/svg"><use href="#icons-sprite-facebook"></use></svg></span>';
+      const container = document.createElement('p');
+      container.appendChild(socialLink);
+      socialLinksContainer.appendChild(container);
+    } else if (link.includes('twitter')) {
+      socialLink.innerHTML = '<span class="icon icon-twitter"><svg xmlns="http://www.w3.org/2000/svg"><use href="#icons-sprite-twitter"></use></svg></span>';
+      const container = document.createElement('p');
+      container.appendChild(socialLink);
+      socialLinksContainer.appendChild(container);
+    } else if (link.includes('instagram')) {
+      socialLink.innerHTML = '<span class="icon icon-instagram"><svg xmlns="http://www.w3.org/2000/svg"><use href="#icons-sprite-instagram"></use></svg></span>';
+      const container = document.createElement('p');
+      container.appendChild(socialLink);
+      socialLinksContainer.appendChild(container);
+    } else {
+      const pElement = document.createElement('p');
+      pElement.classList.add('other-links');
+      socialLink.innerHTML = link;
+      pElement.appendChild(socialLink);
+      authorLinkContainer.appendChild(pElement);
+    }
+  });
+  authorLinkContainer.prepend(socialLinksContainer);
+
+  // const socialIcons = '<a href="https://www.facebook.com/24Lifemag/" target="_blank"><span class="icon icon-facebook"><svg xmlns="http://www.w3.org/2000/svg"><use href="#icons-sprite-facebook"></use></svg></span></a>';
+  // authorLinkContainer.innerHTML= socialIcons;
+
+  const newBlock = buildBlock('card', {
+    elems: [
+      p(picture),
+      heading,
+      p(author.description),
+      authorLinkContainer,
+    ],
+  });
+
+  const wrapper = document.createElement('div');
+  wrapper.append(newBlock);
+  newBlock.classList.add('author');
+  decorateBlock(newBlock);
+  return wrapper;
 }
 
 /* convenience function to create a block from a JSON object from articles.json */

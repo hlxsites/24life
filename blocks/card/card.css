@@ -18,6 +18,14 @@
   object-position: top;
 }
 
+.card.author .card-image {
+  border-bottom: 0;
+}
+
+.card.author .card-image img {
+  aspect-ratio: 1/1;
+}
+
 .card .card-image img:hover {
   transform: scale(1.075);
 }
@@ -50,7 +58,32 @@
   font-size: var(--body-font-size-card-header);
 }
 
+.card.author .author-links a {
+  color: #d33;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.card.author .author-links .icon {
+  fill: #d33;
+}
+
+.card.author .other-links {
+  margin-top: 0;
+}
+
 .card .card-title a:hover {
+  color: var(--link-hover-color);
+}
+
+.card.author .card-title a  {
+  color: #bd2020;
+  letter-spacing: 1px;
+  font-size: 32px;
+  line-height: 40px;
+} 
+
+.card.author .card-title a:hover {
   color: var(--link-hover-color);
 }
 
@@ -58,6 +91,13 @@
   margin-top: 0.8em;
   font-size: var(--body-font-size-author);
 }
+
+.card.author .social-links {
+  display: flex;
+  gap: 1rem;
+}
+
+
 
 .card-container {
   display: grid;
