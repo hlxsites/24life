@@ -3,13 +3,16 @@
 // This is a fallback that checks the article page for the bio.
 
 /* global WebImporter */
+
 /* eslint-disable no-console, class-methods-use-this */
 
 function imageParagraph(img, document) {
   const p = document.createElement('p');
-  const newImg = document.createElement('img');
-  newImg.src = img.src;
-  p.append(newImg);
+  if (img) {
+    const newImg = document.createElement('img');
+    newImg.src = img.src;
+    p.append(newImg);
+  }
   return p;
 }
 
