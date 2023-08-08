@@ -1,8 +1,13 @@
-import { buildBlock, decorateBlock, decorateIcons } from '../../scripts/lib-franklin.js';
+import {
+  buildBlock, decorateBlock, decorateIcons, getMetadata,
+} from '../../scripts/lib-franklin.js';
 
 export default async function decorate(doc) {
   const firstSection = doc.querySelector('main .section');
-  firstSection.before(createSectionWithHeroBlock());
+  firstSection.before(createSectionWithHeroBlock(
+    doc.querySelector('main .section h1'),
+    doc.querySelector('main .section img'),
+  ));
 
   const firstContent = doc.querySelector('main .section .default-content-wrapper');
   firstContent.before(createSocialMediaButtons());
@@ -12,16 +17,28 @@ export default async function decorate(doc) {
   lastContent.after(createSocialMediaButtons());
 }
 
-function createSectionWithHeroBlock() {
+function createSectionWithHeroBlock(h1, img) {
   const section = document.createElement('div');
   section.classList.add('section', 'article-hero-container');
 
-  const container = document.createElement('div');
-  const newBlock = buildBlock('article-hero', '');
-  container.append(newBlock);
+  const wrapper = document.createElement('div');
+  const newBlock = buildBlock(
+    'article-hero',
+    [
+      ['title', getMetadata('og:title')],
+      ['image', getMetadata('og:image')],
+      ['collections', getMetadata('collections')],
+      ['author', getMetadata('author')],
+    ],
+  );
+  wrapper.append(newBlock);
   decorateBlock(newBlock);
 
-  section.append(container);
+  // remove title and image from existing section
+  h1.remove();
+  img.remove();
+
+  section.append(wrapper);
   return section;
 }
 
