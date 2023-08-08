@@ -36,7 +36,7 @@ indices:
       - /author/**
       - /
       - /drafts/**
-      - /_template*
+      - /template-*
     target: /articles.json
     properties:
       lastModified:
@@ -67,7 +67,7 @@ indices:
     include:
       - /author/**
     exclude:
-      - /author/_template*
+      - /author/template-*
     target: /authors.json
     properties:
       lastModified:
