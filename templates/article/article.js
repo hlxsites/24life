@@ -12,7 +12,7 @@ export default async function decorate(doc) {
   const firstContent = doc.querySelector('main .section .default-content-wrapper');
   firstContent.before(createSocialMediaButtons());
 
-  const lastContent = doc.querySelector('main .section:last-child .default-content-wrapper');
+  const lastContent = [...doc.querySelectorAll('main .section .default-content-wrapper')].at(-1);
   lastContent.after(createAuthorBlock());
   lastContent.after(createSocialMediaButtons());
 }
