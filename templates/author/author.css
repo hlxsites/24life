@@ -1,0 +1,8 @@
+main h1:first-child::before {
+  content: "BY: ";
+}
+
+main h1 {
+  text-transform: uppercase;
+  margin-bottom: 2em;
+}
