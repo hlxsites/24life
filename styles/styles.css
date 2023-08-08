@@ -25,14 +25,20 @@
   --label-text-color: #a0a0a0;
   --accent-color: #606163;
 
-  /* topic based colors/accent */
+  /* topic based colors/accent. Providing a text-variant to ensure accessibility, ie. a high
+     contrast ratio. see https://web.dev/color-and-contrast-accessibility */
   --color-focus: #3cb6ce;
+  --color-focus-text: #00809a;
   --color-fitness: #ee3124;
+  --color-fitness-text: #e02e22;
   --color-fuel: #018542;
+  --color-fuel-text: #018542;
   --color-recover: #44697d;
+  --color-recover-text: #44697d;
   --color-magazine: #000;
+  --color-magazine-text: #000;
 
-  /* cards have different fallback color, and the text uses a darker shade. */
+  /* fallback for cards, if no section si defined.  */
   --color-default-card: #cbcdcf;
   --color-default-card-text: #666;
 
@@ -299,18 +305,22 @@ main .section {
 
 .color-focus {
   --accent-color: var(--color-focus);
+  --accent-text-color: var(--color-focus-text);
 }
 
 .color-fitness {
   --accent-color: var(--color-fitness);
+  --accent-text-color: var(--color-fitness-text);
 }
 
 .color-fuel {
   --accent-color: var(--color-fuel);
+  --accent-text-color: var(--color-fuel-text);
 }
 
 .color-recover {
   --accent-color: var(--color-recover);
+  --accent-text-color: var(--color-recover-text);
 }
 
 .color-magazine {
