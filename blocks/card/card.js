@@ -95,7 +95,7 @@ export function createAuthorCardBlock(author) {
   const authorLinkContainer = document.createElement('div');
   authorLinkContainer.classList.add('author-links');
   // parse the author.links string and iterate over links
-  addAuthorLinks(author, authorLinkContainer);
+  // addAuthorLinks(author, authorLinkContainer);
 
   const newBlock = buildBlock('card', {
     elems: [
