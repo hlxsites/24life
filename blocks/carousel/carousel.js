@@ -1,5 +1,5 @@
 export default function decorate(block) {
-  const slideCount = block.childNodeCount;
+  const slideCount = block.childElementCount;
   [...block.children].forEach((child) => child.classList.add('slide'));
 
   // make a total of 3 copies of the slides, so it appears to be infinite scrolling
@@ -15,6 +15,7 @@ export default function decorate(block) {
     const position = getCurrentScrollIndex(block) + diff;
     block.scrollTo({ top: 0, left: position * block.clientWidth, behavior: smooth });
   }
+
   // set initial position
   requestAnimationFrame(() => {
     moveSlides(slideCount, 'instant');
@@ -59,16 +60,16 @@ function createButtons(moveSlides) {
 function onScrollEnd(block, callback, once = false) {
   if ('onscrollend' in window) {
     block.addEventListener('scrollend', callback, { once });
-  } else {
-    let timer = null;
-    const scrollListener = () => {
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        // no scrolling happened for 150ms
-        block.removeEventListener('scroll', scrollListener);
-        callback();
-      }, 150);
-    };
-    block.addEventListener('scroll', scrollListener);
+    return;
   }
+  let timer = null;
+  const scrollListener = () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      // no scrolling happened for 150ms
+      block.removeEventListener('scroll', scrollListener);
+      callback();
+    }, 150);
+  };
+  block.addEventListener('scroll', scrollListener);
 }
