@@ -27,6 +27,7 @@ export default function decorate(block) {
   const h1 = document.createElement('h1');
   h1.append(getMetadata('og:title'));
   overlay.append(h1);
+  overlay.append('By ');
 
   const authorLink = document.createElement('a');
   authorLink.href = `/author/${getMetadata('author-id')}`;

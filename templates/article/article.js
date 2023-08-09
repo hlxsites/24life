@@ -4,12 +4,15 @@ export default async function decorate(doc) {
   const firstSection = doc.querySelector('main .section');
   firstSection.before(createSectionWithHeroBlock());
 
+  // remove h1 and picture
+  doc.querySelector('main .section .default-content-wrapper h1').remove();
+  doc.querySelector('main .section .default-content-wrapper p').remove();
   const firstContent = doc.querySelector('main .section .default-content-wrapper');
   firstContent.before(createSocialMediaButtons());
 
-  const lastContent = doc.querySelector('main .section:last-child .default-content-wrapper');
-  lastContent.after(createAuthorBlock());
-  lastContent.after(createSocialMediaButtons());
+  const lastContent = doc.querySelector('main .section:last-child');
+  lastContent.append(createSocialMediaButtons());
+  lastContent.append(createAuthorBlock());
 }
 
 function createSectionWithHeroBlock() {
