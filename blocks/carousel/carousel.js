@@ -7,11 +7,6 @@ export default function decorate(block) {
   block.append(...[...block.children].map((child) => child.cloneNode(true)));
 
   function moveSlides(diff, smooth = 'smooth') {
-    // once the scroll is finished, make sure we are in the middle section
-    onScrollEnd(block, () => {
-      stayInCenterSlides(slideCount, block);
-    }, true);
-
     const position = getCurrentScrollIndex(block) + diff;
     block.scrollTo({ top: 0, left: position * block.clientWidth, behavior: smooth });
   }
@@ -21,6 +16,7 @@ export default function decorate(block) {
     moveSlides(slideCount, 'instant');
   });
 
+  // once the scroll is finished, make sure we are in the middle section
   onScrollEnd(block, () => {
     stayInCenterSlides(slideCount, block);
   }, false);
