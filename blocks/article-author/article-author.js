@@ -1,6 +1,7 @@
 import { createOptimizedPicture, getMetadata, toClassName } from '../../scripts/lib-franklin.js';
 
 export default function decorate(block) {
+  const authorString = block.textContent.trim();
   block.innerHTML = '';
 
   const leftSide = document.createElement('div');
@@ -17,8 +18,8 @@ export default function decorate(block) {
   const authorName = document.createElement('p');
   authorName.classList.add('author-name');
   const authorLink = document.createElement('a');
-  authorLink.href = `/author/${toClassName(getMetadata('author'))}`;
-  authorLink.innerText = getMetadata('author');
+  authorLink.href = `/author/${toClassName(authorString)}`;
+  authorLink.innerText = authorString;
   authorName.append(authorLink);
   rightSide.append(authorName);
 
@@ -32,7 +33,7 @@ export default function decorate(block) {
     if (resp.ok) {
       const json = await resp.json();
       const authorInfo = json.data
-        .find((author) => author.name.toLowerCase() === getMetadata('author').toLowerCase());
+        .find((author) => author.name.toLowerCase() === authorString.toLowerCase());
       if (authorInfo) {
         authorDescription.innerText = authorInfo.description;
         if (authorInfo.image) {
@@ -44,7 +45,7 @@ export default function decorate(block) {
       // eslint-disable-next-line no-console
       console.log('Error fetching authors.json');
     }
-  }, 1000);
+  }, 500);
   rightSide.append(authorDescription);
   block.append(rightSide);
 }
