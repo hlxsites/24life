@@ -36,6 +36,13 @@
   line-height: 1;
 }
 
+.card.author h3 a  {
+  color: #bd2020;
+  letter-spacing: 1px;
+  font-size: 32px;
+  line-height: 40px;
+} 
+
 .card .card-collections a:any-link {
   font-size: var(--body-font-size-category-subtitle);
   font-weight: 600;
@@ -46,7 +53,11 @@
 .card .card-collections a:hover {
   color: var(--link-hover-color);
 }
-
+ 
+.card.author h3 a:hover {
+  color: var(--link-hover-color);
+}
+ 
 .card .card-title {
   line-height: 0.75;
   margin-top: 0.2em;
@@ -76,16 +87,7 @@
   color: var(--link-hover-color);
 }
 
-.card.author .card-title a  {
-  color: #bd2020;
-  letter-spacing: 1px;
-  font-size: 32px;
-  line-height: 40px;
-} 
 
-.card.author .card-title a:hover {
-  color: var(--link-hover-color);
-}
 
 .card .card-author {
   margin-top: 0.8em;
