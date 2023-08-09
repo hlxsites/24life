@@ -1,5 +1,5 @@
 import {
-  buildBlock, createOptimizedPicture, decorateBlock, toClassName,
+  buildBlock, buildAuthorCardBlock, createOptimizedPicture, decorateBlock, toClassName,
 } from '../../scripts/lib-franklin.js';
 
 /**
@@ -97,14 +97,12 @@ export function createAuthorCardBlock(author) {
   // parse the author.links string and iterate over links
   addAuthorLinks(author, authorLinkContainer);
 
-  const newBlock = buildBlock('card', {
-    elems: [
-      p(picture),
-      heading,
-      p(author.description),
-      authorLinkContainer,
-    ],
-  });
+  const newBlock = buildAuthorCardBlock('card', [
+    p(picture),
+    heading,
+    p(author.description),
+    authorLinkContainer,
+  ]);
 
   const wrapper = document.createElement('div');
   wrapper.append(newBlock);
