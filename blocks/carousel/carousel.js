@@ -67,7 +67,7 @@ function onScrollEnd(block, callback, once = false) {
     clearTimeout(timer);
     timer = setTimeout(() => {
       // no scrolling happened for 150ms
-      block.removeEventListener('scroll', scrollListener);
+      if (once) block.removeEventListener('scroll', scrollListener);
       callback();
     }, 150);
   };
