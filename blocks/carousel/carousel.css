@@ -1,15 +1,18 @@
 .carousel {
   --position: 0;
 
-  overflow-x: hidden;
+  scroll-margin: 0;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  overflow-x: scroll;
   display: flex;
   position: relative;
 }
 
 .carousel .slide {
+  scroll-snap-align: start;
   display: block;
-  flex-shrink: 0;
-  width: 100%;
+  flex: 0 0 100%;
   transition: all 0.25s ease-in-out;
   transform: translateX( calc(-1 * var(--position) * 100%));
 
