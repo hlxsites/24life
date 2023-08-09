@@ -1,5 +1,5 @@
 .carousel-wrapper {
-  overflow-x: scroll;
+  overflow-x: hidden;
 }
 
 .carousel {
