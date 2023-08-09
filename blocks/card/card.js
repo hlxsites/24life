@@ -20,7 +20,7 @@ export default function decorate(block) {
   link.href = block.querySelector('.card-title a')?.href;
   link.append(...pictureParagraph.childNodes);
   link.classList.add('card-image');
-  link.ariaHidden = 'true';
+  link.ariaLabel = firstCell.querySelector('.card-title').textContent;
   pictureParagraph.replaceWith(link);
 
   // reduce image size: on desktop the images are small, and on mobile they fill the screen width.

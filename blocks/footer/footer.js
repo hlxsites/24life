@@ -31,6 +31,7 @@ export default async function decorate(block) {
     brandImgContainer.classList.add('brand-img-container');
     const brandImg = row1.querySelector('p:nth-child(1)');
     const brandImgLink = createImageLink(brandImg, '/');
+    brandImgLink.ariaLabel = 'Go to the home page';
     brandImgContainer.append(brandImgLink);
     row1.prepend(brandImgContainer);
 
@@ -52,6 +53,9 @@ export default async function decorate(block) {
     socialIconsContainer.prepend(row1.querySelector(':scope > p:nth-last-child(1)'));
     socialIconsContainer.prepend(row1.querySelector(':scope > p:nth-last-child(1)'));
     socialIconsContainer.prepend(row1.querySelector(':scope > p:nth-last-child(1)'));
+    socialIconsContainer.querySelectorAll('a').forEach((link) => {
+
+    });
     row1.append(socialIconsContainer);
 
     // add class to each list
