@@ -53,9 +53,6 @@ export default async function decorate(block) {
     socialIconsContainer.prepend(row1.querySelector(':scope > p:nth-last-child(1)'));
     socialIconsContainer.prepend(row1.querySelector(':scope > p:nth-last-child(1)'));
     socialIconsContainer.prepend(row1.querySelector(':scope > p:nth-last-child(1)'));
-    socialIconsContainer.querySelectorAll('a').forEach((link) => {
-
-    });
     row1.append(socialIconsContainer);
 
     // add class to each list
