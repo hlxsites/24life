@@ -95,6 +95,26 @@ export function createAuthorCardBlock(author) {
   const authorLinkContainer = document.createElement('div');
   authorLinkContainer.classList.add('author-links');
   // parse the author.links string and iterate over links
+  addAuthorLinks(author, authorLinkContainer);
+
+  const newBlock = buildBlock('card', {
+    elems: [
+      p(picture),
+      heading,
+      p(author.description),
+      authorLinkContainer,
+    ],
+  });
+
+  const wrapper = document.createElement('div');
+  wrapper.append(newBlock);
+  newBlock.classList.add('author');
+  decorateBlock(newBlock);
+  return wrapper;
+}
+
+function addAuthorLinks(author, authorLinkContainer) {
+  if (!author.links) return;
   let arr = JSON.parse(author.links);
   if (arr.length > 0) {
     arr = arr[0].split(',');
@@ -128,21 +148,6 @@ export function createAuthorCardBlock(author) {
     }
   });
   authorLinkContainer.prepend(socialLinksContainer);
-
-  const newBlock = buildBlock('card', {
-    elems: [
-      p(picture),
-      heading,
-      p(author.description),
-      authorLinkContainer,
-    ],
-  });
-
-  const wrapper = document.createElement('div');
-  wrapper.append(newBlock);
-  newBlock.classList.add('author');
-  decorateBlock(newBlock);
-  return wrapper;
 }
 
 /* convenience function to create a block from a JSON object from articles.json */
