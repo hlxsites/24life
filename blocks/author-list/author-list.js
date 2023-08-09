@@ -19,7 +19,6 @@ async function fetchAuthors(filter, block) {
   authors.sort((a, b) => a.name.localeCompare(b.name));
   authors.filter((author) => author.role === filter)
     .forEach((author) => {
-      console.log(author);
       const newBlock = createAuthorCardBlock(author);
       block.append(newBlock);
     });

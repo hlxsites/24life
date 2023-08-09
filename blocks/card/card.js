@@ -97,10 +97,6 @@ export function createAuthorCardBlock(author) {
   const authorLinkContainer = document.createElement('div');
   authorLinkContainer.classList.add('author-links');
   // iterate over social media links author.links
-  // create a link for each one
-  // append to authorLinkContainer
-  console.log(author.links);
-  // iterate author.links array
   let arr = JSON.parse(author.links);
   if (arr.length > 0) {
     arr = arr[0].split(',');
@@ -135,9 +131,6 @@ export function createAuthorCardBlock(author) {
     }
   });
   authorLinkContainer.prepend(socialLinksContainer);
-
-  // const socialIcons = '<a href="https://www.facebook.com/24Lifemag/" target="_blank"><span class="icon icon-facebook"><svg xmlns="http://www.w3.org/2000/svg"><use href="#icons-sprite-facebook"></use></svg></span></a>';
-  // authorLinkContainer.innerHTML= socialIcons;
 
   const newBlock = buildBlock('card', {
     elems: [
