@@ -22,7 +22,7 @@
   --text-color: #444;
   --text-color-secondary: #606060;
   --text-color-on-black-background: #fefefe;
-  --label-text-color: #a0a0a0;
+  --label-text-color: #757575;
   --accent-color: #606163;
 
   /* topic based colors/accent. Providing a text-variant to ensure accessibility, ie. a high
