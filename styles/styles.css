@@ -322,3 +322,17 @@ main .section {
 main .section.highlight {
   background-color: var(--highlight-background-color);
 }
+
+div.experts-page-heading {
+  background: #f8f8f8;
+  letter-spacing: 2px;
+  padding-bottom: 13px;
+  padding-top: 50px;
+}
+
+div.experts-page-editorial-staff {
+  margin: 0;
+  padding: 0;
+  margin-top: -5px;
+  margin-bottom: -25px;
+}

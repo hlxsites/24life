@@ -76,16 +76,16 @@ export default function decorate(block) {
   }
 }
 
+function p(content) {
+  const result = document.createElement('p');
+  result.append(content);
+  return result;
+}
+
 /*
 
 /* convenience function to create a block from a JSON object from authors.json */
 export function createAuthorCardBlock(author) {
-  function p(content) {
-    const result = document.createElement('p');
-    result.append(content);
-    return result;
-  }
-
   const picture = createOptimizedPicture(author.image);
 
   const heading = document.createElement('h3');
@@ -153,12 +153,6 @@ export function createCardBlock(articleInfo) {
   const wrapper = document.createElement('div');
   const firstCell = document.createElement('div');
   firstCell.append(articleInfo.title);
-
-  function p(content) {
-    const result = document.createElement('p');
-    result.append(content);
-    return result;
-  }
 
   const picture = createOptimizedPicture(articleInfo.image);
 

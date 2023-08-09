@@ -10,6 +10,7 @@ export default async function decorate(block) {
   const { filter } = readBlockConfig(block);
   block.textContent = '';
   block.classList.add('card-container');
+  // eslint-disable-next-line no-console
   fetchAuthors(filter, block).catch((e) => console.log(e));
 }
 
