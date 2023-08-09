@@ -6,6 +6,7 @@ indices:
       - /**
     exclude:
       - /drafts/**
+      - /block-library/**
     target: /query-index.json
     properties:
       lastModified:
@@ -37,6 +38,7 @@ indices:
       - /
       - /drafts/**
       - /template-*
+      - /block-library/**
     target: /articles.json
     properties:
       lastModified:
