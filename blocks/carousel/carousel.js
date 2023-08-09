@@ -1,5 +1,10 @@
 import { decorateIcons } from '../../scripts/lib-franklin.js';
 
+/**
+ * Generic carousel block, which can be used for any content or blocks.
+ * Each row is a slide.
+ * @param block
+ */
 export default function decorate(block) {
   const slideCount = block.childElementCount;
   [...block.children].forEach((child) => child.classList.add('slide'));
