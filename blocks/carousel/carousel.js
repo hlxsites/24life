@@ -1,3 +1,5 @@
+import { decorateIcons } from '../../scripts/lib-franklin.js';
+
 export default function decorate(block) {
   const slideCount = block.childElementCount;
   [...block.children].forEach((child) => child.classList.add('slide'));
@@ -21,7 +23,8 @@ export default function decorate(block) {
     stayInCenterSlides(slideCount, block);
   }, false);
 
-  block.parentElement.append(...createButtons(moveSlides));
+  block.append(...createButtons(moveSlides));
+  decorateIcons(block);
 }
 
 function getCurrentScrollIndex(block) {
@@ -38,14 +41,22 @@ function stayInCenterSlides(slideCount, block) {
 }
 
 function createButtons(moveSlides) {
+  function icon(name) {
+    const arrow = document.createElement('span');
+    arrow.classList.add('icon', `icon-${name}`);
+    return arrow;
+  }
+
   const prevButton = document.createElement('button');
   prevButton.classList.add('prev');
-  prevButton.textContent = 'Prev';
+  prevButton.ariaLabel = 'show previous slide';
+  prevButton.append(icon('angle-left'));
   prevButton.addEventListener('click', () => moveSlides(-1));
 
   const nextButton = document.createElement('button');
   nextButton.classList.add('next');
-  nextButton.textContent = 'Next';
+  nextButton.ariaLabel = 'show next slide';
+  nextButton.append(icon('angle-right'));
   nextButton.addEventListener('click', () => moveSlides(+1));
 
   return [prevButton, nextButton];
