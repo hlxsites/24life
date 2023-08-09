@@ -166,5 +166,5 @@ function linkBrand(nav) {
 
 function decorateNavTools(navTools) {
   // make sure links with icons have an aria-label
-  navTools.querySelector('a > .icon-search').ariaLabel = 'Search';
+  navTools.querySelector('a > .icon-search').closest('a').ariaLabel = 'Search';
 }
