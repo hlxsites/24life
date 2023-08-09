@@ -9,31 +9,31 @@ export default function decorate(block) {
   function moveSlides(diff, smooth = 'smooth') {
     // once the scroll is finished, make sure we are in the middle section
     onScrollEnd(block, () => {
-      maybeJumpToCenterSlides(slideCount, block);
+      stayInCenterSlides(slideCount, block);
     }, true);
 
-    const position = getCurrentPosition(block) + diff;
+    const position = getCurrentScrollIndex(block) + diff;
     block.scrollTo({ top: 0, left: position * block.clientWidth, behavior: smooth });
   }
-  block.addEventListener('scrollend', () => {
-    maybeJumpToCenterSlides(slideCount, block);
-  });
-
   // set initial position
   requestAnimationFrame(() => {
     moveSlides(slideCount, 'instant');
   });
 
+  onScrollEnd(block, () => {
+    stayInCenterSlides(slideCount, block);
+  }, false);
+
   block.parentElement.append(...createButtons(moveSlides));
 }
 
-function getCurrentPosition(block) {
+function getCurrentScrollIndex(block) {
   return block.scrollLeft / block.clientWidth;
 }
 
-function maybeJumpToCenterSlides(slideCount, block) {
+function stayInCenterSlides(slideCount, block) {
   // make sure we are in the middle section after each scroll
-  let position = getCurrentPosition(block);
+  let position = getCurrentScrollIndex(block);
   if (position < slideCount || position >= slideCount * 2) {
     position = slideCount + (position % slideCount);
     block.scrollTo({ top: 0, left: position * block.clientWidth, behavior: 'instant' });
