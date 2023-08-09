@@ -1,6 +1,16 @@
-import { loadBlocks, readBlockConfig, toClassName } from '../../scripts/lib-franklin.js';
+import {
+  buildBlock, decorateBlock, loadBlocks, readBlockConfig, toClassName,
+} from '../../scripts/lib-franklin.js';
 import ffetch from '../../scripts/ffetch.js';
 import { createCardBlock } from '../card/card.js';
+
+function createCarouselBlock() {
+  const wrapper = document.createElement('div');
+  const newBlock = buildBlock('carousel', 'a');
+  wrapper.append(newBlock);
+  decorateBlock(newBlock);
+  return wrapper;
+}
 
 export default function decorate(block) {
   let { by } = readBlockConfig(block);
@@ -9,12 +19,17 @@ export default function decorate(block) {
     by = new URL(document.location).pathname.split('/').pop();
   }
   block.textContent = '';
-  block.classList.add('card-container');
+  // block.classList.add('card-container');
   // eslint-disable-next-line no-console
-  fetchArticlesAndAddCards(by, block).catch((e) => console.log(e));
+  const carousel = createCarouselBlock();
+  block.append(carousel);
+  loadBlocks(block);
+  // fetchArticlesAndAddCards(by, carousel.querySelector('.block'))
+  //   .then(() => loadBlocks(block))
+  //   .catch((e) => console.error(e));
 }
 
-async function fetchArticlesAndAddCards(by, block) {
+async function fetchArticlesAndAddCards(by, container) {
   const articles = await ffetch('/articles.json').all();
 
   articles
@@ -26,7 +41,7 @@ async function fetchArticlesAndAddCards(by, block) {
         newBlock.querySelector('.card.block').classList.add(toClassName(article.section));
       }
 
-      block.append(newBlock);
+      // unwrap card-wrapper
+      container.append(newBlock.firstElementChild);
     });
-  loadBlocks(block);
 }
