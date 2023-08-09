@@ -31,6 +31,7 @@ export default async function decorate(block) {
     brandImgContainer.classList.add('brand-img-container');
     const brandImg = row1.querySelector('p:nth-child(1)');
     const brandImgLink = createImageLink(brandImg, '/');
+    brandImgLink.ariaLabel = 'Go to the home page';
     brandImgContainer.append(brandImgLink);
     row1.prepend(brandImgContainer);
 
