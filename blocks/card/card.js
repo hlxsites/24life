@@ -82,8 +82,6 @@ function p(content) {
   return result;
 }
 
-/*
-
 /* convenience function to create a block from a JSON object from authors.json */
 export function createAuthorCardBlock(author) {
   const picture = createOptimizedPicture(author.image);
@@ -96,32 +94,31 @@ export function createAuthorCardBlock(author) {
 
   const authorLinkContainer = document.createElement('div');
   authorLinkContainer.classList.add('author-links');
-  // iterate over social media links author.links
+  // parse the author.links string and iterate over links
   let arr = JSON.parse(author.links);
   if (arr.length > 0) {
     arr = arr[0].split(',');
   }
   const socialLinksContainer = document.createElement('div');
   socialLinksContainer.classList.add('social-links');
+  function addSocialLink(socialLink) {
+    const container = document.createElement('p');
+    container.appendChild(socialLink);
+    socialLinksContainer.appendChild(container);
+  }
   arr.forEach((link) => {
     const socialLink = document.createElement('a');
     socialLink.href = link;
     socialLink.target = '_blank';
     if (link.includes('facebook')) {
       socialLink.innerHTML = '<span class="icon icon-facebook"><svg xmlns="http://www.w3.org/2000/svg"><use href="#icons-sprite-facebook"></use></svg></span>';
-      const container = document.createElement('p');
-      container.appendChild(socialLink);
-      socialLinksContainer.appendChild(container);
+      addSocialLink(socialLink);
     } else if (link.includes('twitter')) {
       socialLink.innerHTML = '<span class="icon icon-twitter"><svg xmlns="http://www.w3.org/2000/svg"><use href="#icons-sprite-twitter"></use></svg></span>';
-      const container = document.createElement('p');
-      container.appendChild(socialLink);
-      socialLinksContainer.appendChild(container);
+      addSocialLink(socialLink);
     } else if (link.includes('instagram')) {
       socialLink.innerHTML = '<span class="icon icon-instagram"><svg xmlns="http://www.w3.org/2000/svg"><use href="#icons-sprite-instagram"></use></svg></span>';
-      const container = document.createElement('p');
-      container.appendChild(socialLink);
-      socialLinksContainer.appendChild(container);
+      addSocialLink(socialLink);
     } else {
       const pElement = document.createElement('p');
       pElement.classList.add('other-links');
