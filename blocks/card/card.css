@@ -65,6 +65,10 @@
   grid-template-columns: repeat(3, 1fr);
 }
 
+.card-container.single {
+  display: block;
+}
+
 .card-container.two-columns {
   grid-template-columns: repeat(2, 1fr);
 }
@@ -82,6 +86,10 @@
 .card-container.has-large-card {
   display: grid;
   grid-template-columns: 2fr 1fr;
+}
+
+.card-container.single .card-wrapper {
+  margin: auto;
 }
 
 .card-container.has-large-card .card-wrapper {

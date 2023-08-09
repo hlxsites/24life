@@ -9,14 +9,17 @@ export default async function decorate(doc) {
     doc.querySelector('main .section img'),
   ));
 
+  // remove h1 and picture
+  doc.querySelector('main .section .default-content-wrapper h1').remove();
+  doc.querySelector('main .section .default-content-wrapper p').remove();
   const firstContent = doc.querySelector('main .section .default-content-wrapper');
   firstContent.before(createSocialMediaButtons());
 
   const lastContent = [...doc.querySelectorAll('main .section .default-content-wrapper')].at(-1);
+  lastContent.append(createSocialMediaButtons());
   getMetadata('author').split(',').forEach((author) => {
-    lastContent.after(createAuthorBlock(author));
+    lastContent.append(createAuthorBlock(author));
   });
-  lastContent.after(createSocialMediaButtons());
 }
 
 function createSectionWithHeroBlock(h1, img) {

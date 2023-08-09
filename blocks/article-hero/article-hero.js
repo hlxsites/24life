@@ -30,6 +30,7 @@ export default function decorate(block) {
   const h1 = document.createElement('h1');
   h1.append(data.title);
   overlay.append(h1);
+  overlay.append('By ');
 
   const authorLinks = document.createElement('span');
   authorLinks.append('By ');
