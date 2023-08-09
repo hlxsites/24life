@@ -1,10 +1,7 @@
-.carousel-wrapper {
-  overflow-x: hidden;
-}
-
 .carousel {
   --position: 0;
 
+  overflow-x: hidden;
   display: flex;
   position: relative;
 }
