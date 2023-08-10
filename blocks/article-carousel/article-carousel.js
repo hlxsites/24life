@@ -18,10 +18,15 @@ export default async function decorate(block) {
   block.classList.add('carousel-container');
   // eslint-disable-next-line no-console
   const cards = await fetchArticlesAndCreateCards(section);
-  const groups = [[], [], []];
+  // TODO: clean up this mess
+  const groups = [
+    [document.createDocumentFragment('div')],
+    [document.createDocumentFragment('div')],
+    [document.createDocumentFragment('div')],
+  ];
   // put cards in group of 3
   cards.forEach((card, index) => {
-    groups[Math.floor(index / 3)].push(card);
+    groups[Math.floor(index / 3)][0].append(card);
   });
   // TODO: also support groups of 2 and 1?
   const carousel = createCarouselBlock(groups);
