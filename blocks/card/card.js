@@ -72,8 +72,7 @@ export default function decorate(block) {
 }
 
 /* convenience function to create a block from a JSON object from articles.json */
-export function createCardBlock(articleInfo) {
-  const wrapper = document.createElement('div');
+export function createCardBlock(articleInfo, parent) {
   const firstCell = document.createElement('div');
   firstCell.append(articleInfo.title);
 
@@ -106,10 +105,10 @@ export function createCardBlock(articleInfo) {
       author],
   });
 
-  wrapper.append(newBlock);
+  parent.append(newBlock);
   decorateBlock(newBlock);
 
-  return wrapper;
+  return newBlock;
 }
 
 function replacePictureSizes(image, imageSizes) {

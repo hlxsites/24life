@@ -1,4 +1,6 @@
-import { loadBlocks, readBlockConfig, toClassName } from '../../scripts/lib-franklin.js';
+import {
+  loadBlock, readBlockConfig, toClassName,
+} from '../../scripts/lib-franklin.js';
 import ffetch from '../../scripts/ffetch.js';
 import { createCardBlock } from '../card/card.js';
 
@@ -21,12 +23,10 @@ async function fetchArticlesAndAddCards(by, block) {
     .filter((article) => (by ? article['author-id'] === by : true))
     .filter(({ template }) => template === 'article')
     .forEach((article) => {
-      const newBlock = createCardBlock(article);
+      const newBlock = createCardBlock(article, block);
       if (article.section) {
-        newBlock.querySelector('.card.block').classList.add(toClassName(article.section));
+        newBlock.classList.add(toClassName(article.section));
       }
-
-      block.append(newBlock);
+      loadBlock(newBlock);
     });
-  loadBlocks(block);
 }
