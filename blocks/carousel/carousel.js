@@ -6,7 +6,6 @@ import { decorateIcons } from '../../scripts/lib-franklin.js';
  * @param block
  */
 export default async function decorate(block) {
-  const slideCount = block.childElementCount;
   [...block.children].forEach((child, index) => {
     child.classList.add('slide');
     child.dataset.slideId = index;
