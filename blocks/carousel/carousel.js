@@ -13,9 +13,9 @@ export default async function decorate(block) {
   });
 
   // make a total of 3 copies of the slides, so it appears to be infinite scrolling
-  const allSlides = [...block.querySelectorAll('.slide')];
-  block.prepend(...(cloneSlides(allSlides)));
-  block.append(...(cloneSlides(allSlides)));
+  const originalSlides = [...block.querySelectorAll('.slide')];
+  block.prepend(...(cloneSlides(originalSlides)));
+  block.append(...(cloneSlides(originalSlides)));
 
   function moveSlides(diff, smooth = 'smooth') {
     const target = diff > 0 ? findNextSlideOnTheRight(block) : findNextSlideOnTheLeft(block);
@@ -24,12 +24,15 @@ export default async function decorate(block) {
 
   // set initial position
   requestAnimationFrame(() => {
-    moveSlides(slideCount, 'instant');
+    scrollToSlide(originalSlides[0], block);
   });
 
-  // once the scroll is finished, make sure we are in the middle section
+  // once the scroll is finished, jump back to an original slide in the middle
   onScrollEnd(block, () => {
-    jumpFromClonesToOriginals(slideCount, block);
+    const original = getOriginal(getCurrentSlide(block), block);
+    if (original) {
+      scrollToSlide(original, block);
+    }
   }, false);
 
   block.append(...createButtons(moveSlides));
@@ -71,14 +74,15 @@ function findNextSlideOnTheLeft(block) {
   return block.querySelector('.slide');
 }
 
-function jumpFromClonesToOriginals(slideCount, block) {
-  const current = getCurrentSlide(block);
-  if (current.dataset.slideCloneId) {
-    const original = block.querySelector(`[data-slide-id="${current.dataset.slideCloneId}"]`);
-    if (original) {
-      block.scrollTo({ top: 0, left: original.offsetLeft, behavior: 'instant' });
-    }
+function scrollToSlide(original, block, behavior = 'instant') {
+  block.scrollTo({ top: 0, left: original.offsetLeft, behavior });
+}
+
+function getOriginal(slide, block) {
+  if (slide.dataset.slideCloneId) {
+    return block.querySelector(`[data-slide-id="${slide.dataset.slideCloneId}"]`);
   }
+  return null;
 }
 
 function createButtons(moveSlides) {
