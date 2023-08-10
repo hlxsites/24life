@@ -16,20 +16,39 @@ export default async function decorate(block) {
 }
 
 async function fetchAuthors(filter, block) {
-  let authors;
-  if (filter === 'Expert') {
-    authors = await ffetch('/authors.json').limit(50).all();
-    console.log('authors', authors.length, authors);
-  } else {
-    authors = await ffetch('/authors.json').all();
-  }
+  const authors = await ffetch('/authors.json').filter((author) => author.role === filter).all();
   // sort author list by name
   authors.sort((a, b) => a.name.localeCompare(b.name));
-  const filteredAuthors = authors.filter((author) => author.role === filter);
-  filteredAuthors.forEach((author) => {
+  // create the first 6 authors
+  const firstAuthors = authors.slice(0, 6);
+  firstAuthors.forEach((author) => {
     const newBlock = createAuthorCardBlock(author);
     block.append(newBlock);
   });
+  // create load more button if there are more authors than shown
+  let start = 6;
+  let end = 56;
+  if (authors.length > 6) {
+    const loadMoreButton = document.createElement('button');
+    loadMoreButton.classList.add('load-more-button');
+    loadMoreButton.textContent = 'Load more';
+    loadMoreButton.addEventListener('click', () => {
+      // get the next 50 authors
+      const nextAuthors = authors.slice(start, end);
+      start += 50;
+      end += 50;
+      loadMoreButton.remove();
+      nextAuthors.forEach((author) => {
+        const newBlock = createAuthorCardBlock(author);
+        block.append(newBlock);
+      });
+      // create the load-more-button, if there are more authors
+      if (authors.length > end) {
+        block.append(loadMoreButton);
+      }
+    });
+    block.append(loadMoreButton);
+  }
   loadBlocks(block);
 }
 
