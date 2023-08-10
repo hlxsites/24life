@@ -51,10 +51,9 @@ function getCurrentSlide(block) {
     .find((slide) => viewStart <= slide.offsetLeft && slide.offsetLeft < viewEnd);
 }
 
-function cloneSlides(allSlides) {
-  return allSlides.map((child) => {
+function cloneSlides(originalSlides) {
+  return originalSlides.map((child) => {
     const clone = child.cloneNode(true);
-    clone.dataset.clone = true;
     clone.dataset.slideCloneId = child.dataset.slideId;
     delete clone.dataset.slideId;
     return clone;
