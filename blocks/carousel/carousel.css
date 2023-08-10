@@ -10,6 +10,11 @@
   scroll-behavior: smooth;
   overflow-x: scroll;
   display: flex;
+  scrollbar-width: none;
+}
+
+.carousel::-webkit-scrollbar {
+  display: none;
 }
 
 .carousel .slide {

@@ -1,1 +1,5 @@
 /* there are no styles here yet */
+.article-carousel .carousel.block .slide > div {
+    display: flex;
+    gap: 2rem;
+}
