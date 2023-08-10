@@ -1,5 +1,23 @@
 /* there are no styles here yet */
-.article-carousel .carousel.block .slide > div {
-    display: flex;
-    gap: 2rem;
+.article-carousel .carousel.block {
+  display: flex;
+  gap: 2rem;
+}
+
+.article-carousel .carousel.block .slide {
+  flex: 1 0 30%;
+}
+
+
+
+@media (max-width: 900px) {
+  .article-carousel .carousel.block .slide {
+    flex: 1 0 50%;
+  }
+}
+
+@media (max-width: 700px) {
+  .article-carousel .carousel.block .slide {
+    flex: 1 0 100%;
+  }
 }
