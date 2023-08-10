@@ -16,14 +16,20 @@ export default async function decorate(block) {
 }
 
 async function fetchAuthors(filter, block) {
-  const authors = await ffetch('/authors.json').all();
+  let authors;
+  if (filter === 'Expert') {
+    authors = await ffetch('/authors.json').limit(50).all();
+    console.log('authors', authors.length, authors);
+  } else {
+    authors = await ffetch('/authors.json').all();
+  }
   // sort author list by name
   authors.sort((a, b) => a.name.localeCompare(b.name));
-  authors.filter((author) => author.role === filter)
-    .forEach((author) => {
-      const newBlock = createAuthorCardBlock(author);
-      block.append(newBlock);
-    });
+  const filteredAuthors = authors.filter((author) => author.role === filter);
+  filteredAuthors.forEach((author) => {
+    const newBlock = createAuthorCardBlock(author);
+    block.append(newBlock);
+  });
   loadBlocks(block);
 }
 
@@ -51,7 +57,7 @@ function p(content) {
 
 /* convenience function to create a block from a JSON object from authors.json */
 function createAuthorCardBlock(author) {
-  const picture = author.image;
+  const picture = createOptimizedPicture(author.image);
   const heading = document.createElement('h3');
   const anchor = document.createElement('a');
   anchor.href = author.path;
