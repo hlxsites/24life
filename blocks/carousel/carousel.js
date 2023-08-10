@@ -28,7 +28,7 @@ export default async function decorate(block) {
 
   // once the scroll is finished, jump back to an original slide in the middle
   onScrollEnd(block, () => {
-    const original = getOriginal(getCurrentSlide(block), block);
+    const original = getOriginalSlide(getCurrentSlide(block), block);
     if (original) {
       scrollToSlide(original, block);
     }
@@ -38,26 +38,11 @@ export default async function decorate(block) {
   await decorateIcons(block);
 }
 
-function findNextSlideOnTheRight(block) {
-  const viewEnd = block.scrollLeft + block.clientWidth;
-  return [...block.querySelectorAll('.slide')]
-    .find((slide) => viewEnd < slide.offsetLeft);
-}
-
 function getCurrentSlide(block) {
   const viewStart = block.scrollLeft;
   const viewEnd = block.scrollLeft + block.clientWidth;
   return [...block.querySelectorAll('.slide')]
     .find((slide) => viewStart <= slide.offsetLeft && slide.offsetLeft < viewEnd);
-}
-
-function cloneSlides(originalSlides) {
-  return originalSlides.map((child) => {
-    const clone = child.cloneNode(true);
-    clone.dataset.slideCloneId = child.dataset.slideId;
-    delete clone.dataset.slideId;
-    return clone;
-  });
 }
 
 function findNextSlideOnTheLeft(block) {
@@ -72,11 +57,28 @@ function findNextSlideOnTheLeft(block) {
   return block.querySelector('.slide');
 }
 
-function scrollToSlide(original, block, behavior = 'instant') {
-  block.scrollTo({ top: 0, left: original.offsetLeft, behavior });
+function findNextSlideOnTheRight(block) {
+  const viewEnd = block.scrollLeft + block.clientWidth;
+  return [...block.querySelectorAll('.slide')]
+    .find((slide) => viewEnd < slide.offsetLeft);
 }
 
-function getOriginal(slide, block) {
+function cloneSlides(originalSlides) {
+  return originalSlides.map((child) => {
+    const clone = child.cloneNode(true);
+    clone.dataset.slideCloneId = child.dataset.slideId;
+    delete clone.dataset.slideId;
+    return clone;
+  });
+}
+
+function scrollToSlide(original, block, behavior = 'instant') {
+  if (original) {
+    block.scrollTo({ top: 0, left: original.offsetLeft, behavior });
+  }
+}
+
+function getOriginalSlide(slide, block) {
   if (slide.dataset.slideCloneId) {
     return block.querySelector(`[data-slide-id="${slide.dataset.slideCloneId}"]`);
   }
@@ -84,25 +86,16 @@ function getOriginal(slide, block) {
 }
 
 function createButtons(moveSlides) {
-  function icon(name) {
-    const arrow = document.createElement('span');
-    arrow.classList.add('icon', `icon-${name}`);
-    return arrow;
-  }
-
-  const prevButton = document.createElement('button');
-  prevButton.classList.add('prev');
-  prevButton.ariaLabel = 'show previous slide';
-  prevButton.append(icon('angle-left'));
-  prevButton.addEventListener('click', () => moveSlides('prev'));
-
-  const nextButton = document.createElement('button');
-  nextButton.classList.add('next');
-  nextButton.ariaLabel = 'show next slide';
-  nextButton.append(icon('angle-right'));
-  nextButton.addEventListener('click', () => moveSlides('next'));
-
-  return [prevButton, nextButton];
+  return ['prev', 'next'].map((direction) => {
+    const button = document.createElement('button');
+    button.classList.add(direction);
+    button.ariaLabel = `show ${direction} slide`;
+    const icon = document.createElement('span');
+    icon.classList.add('icon', `icon-angle-${direction === 'prev' ? 'left' : 'right'}`);
+    button.append(icon);
+    button.addEventListener('click', () => moveSlides(direction));
+    return button;
+  });
 }
 
 /** Fallback for Safari, see explanation on https://developer.chrome.com/blog/scrollend-a-new-javascript-event/
