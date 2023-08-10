@@ -4,44 +4,44 @@ import {
 import ffetch from '../../scripts/ffetch.js';
 import { createCardBlock } from '../card/card.js';
 
-function createCarouselBlock() {
+function createCarouselBlock(content) {
   const wrapper = document.createElement('div');
-  const newBlock = buildBlock('carousel', 'a');
+  const newBlock = buildBlock('carousel', content);
   wrapper.append(newBlock);
   decorateBlock(newBlock);
   return wrapper;
 }
 
-export default function decorate(block) {
-  let { by } = readBlockConfig(block);
-  if (!by && document.location.pathname.startsWith('/author/')) {
-    // auto-detect author, e.g. https://www.24life.com/author/24life
-    by = new URL(document.location).pathname.split('/').pop();
-  }
+export default async function decorate(block) {
+  const { section } = readBlockConfig(block);
   block.textContent = '';
-  // block.classList.add('card-container');
+  block.classList.add('carousel-container');
   // eslint-disable-next-line no-console
-  const carousel = createCarouselBlock();
+  const cards = await fetchArticlesAndCreateCards(section);
+  const groups = [[], [], []];
+  // put cards in group of 3
+  cards.forEach((card, index) => {
+    groups[Math.floor(index / 3)].push(card);
+  });
+  // TODO: also support groups of 2 and 1?
+  const carousel = createCarouselBlock(groups);
   block.append(carousel);
-  loadBlocks(block);
-  // fetchArticlesAndAddCards(by, carousel.querySelector('.block'))
-  //   .then(() => loadBlocks(block))
-  //   .catch((e) => console.error(e));
+  await loadBlocks(block);
 }
 
-async function fetchArticlesAndAddCards(by, container) {
-  const articles = await ffetch('/articles.json').all();
-
-  articles
-    .filter((article) => (by ? article['author-id'] === by : true))
+async function fetchArticlesAndCreateCards(filterSection) {
+  return ffetch('/articles.json')
     .filter(({ template }) => template === 'article')
-    .forEach((article) => {
+    .filter(({ section }) => (filterSection ? section === filterSection : true))
+    .limit(9)
+    .map((article) => {
       const newBlock = createCardBlock(article);
       if (article.section) {
         newBlock.querySelector('.card.block').classList.add(toClassName(article.section));
       }
 
       // unwrap card-wrapper
-      container.append(newBlock.firstElementChild);
-    });
+      return newBlock.firstElementChild;
+    })
+    .all();
 }
