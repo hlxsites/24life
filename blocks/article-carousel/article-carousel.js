@@ -17,7 +17,7 @@ async function fetchArticlesAndCreateCards(filters) {
   return ffetch('/articles.json')
     .chunks(20)
     .filter(({ template }) => template === 'article')
-  // make sure all filters match
+    // make sure all filters match
     .filter((article) => Object.keys(filters).every(
       (key) => article[key]?.toLowerCase() === filters[key].toLowerCase(),
     ))
