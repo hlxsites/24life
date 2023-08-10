@@ -7,7 +7,7 @@ indices:
     exclude:
       - /drafts/**
       - /block-library/**
-      - /_template-*
+      - /template-*
     target: /query-index.json
     properties:
       lastModified:
