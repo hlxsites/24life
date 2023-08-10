@@ -31,7 +31,7 @@ export default async function decorate(block) {
   // TODO: also support groups of 2 and 1?
   const carousel = createCarouselBlock(groups);
   block.append(carousel);
-  await loadBlocks(block);
+  await loadBlocks(block.closest('main'));
 }
 
 async function fetchArticlesAndCreateCards(filterSection) {
