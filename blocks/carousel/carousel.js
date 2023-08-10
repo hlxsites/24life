@@ -17,50 +17,30 @@ export default async function decorate(block) {
   block.append(...(cloneSlides(originalSlides)));
 
   function moveSlides(prevOrNext, smooth = 'smooth') {
-    const target = prevOrNext === 'next' ? findNextSlideOnTheRight(block) : findNextSlideOnTheLeft(block);
-    block.scrollTo({ top: 0, left: target.offsetLeft, behavior: smooth });
+    let newOffset;
+    if (prevOrNext === 'next') {
+      newOffset = block.scrollLeft + block.clientWidth;
+    } else {
+      newOffset = Math.max(block.scrollLeft - block.clientWidth, 0);
+    }
+    block.scrollTo({ top: 0, left: newOffset, behavior: smooth });
   }
 
   // set initial position
   requestAnimationFrame(() => {
-    scrollToSlide(originalSlides[0], block);
+    block.scrollTo({ top: 0, left: originalSlides[0].offsetLeft, behavior: 'instant' });
   });
 
   // once the scroll is finished, jump back to an original slide in the middle
   onScrollEnd(block, () => {
     const original = getOriginalSlide(getCurrentSlide(block), block);
     if (original) {
-      scrollToSlide(original, block);
+      block.scrollTo({ top: 0, left: original.offsetLeft, behavior: 'instant' });
     }
   }, false);
 
   block.append(...createButtons(moveSlides));
   await decorateIcons(block);
-}
-
-function getCurrentSlide(block) {
-  const viewStart = block.scrollLeft;
-  const viewEnd = block.scrollLeft + block.clientWidth;
-  return [...block.querySelectorAll('.slide')]
-    .find((slide) => viewStart <= slide.offsetLeft && slide.offsetLeft < viewEnd);
-}
-
-function findNextSlideOnTheLeft(block) {
-  const viewStart = block.scrollLeft;
-  const candidate = [...block.querySelectorAll('.slide')]
-    .reverse()
-    .find((slide) => slide.offsetLeft < viewStart - block.clientWidth);
-
-  // try to scroll a full page
-  if (candidate) return candidate;
-  // if there not enough slides to scroll a full page, scroll to the beginning
-  return block.querySelector('.slide');
-}
-
-function findNextSlideOnTheRight(block) {
-  const viewEnd = block.scrollLeft + block.clientWidth;
-  return [...block.querySelectorAll('.slide')]
-    .find((slide) => viewEnd < slide.offsetLeft);
 }
 
 function cloneSlides(originalSlides) {
@@ -72,10 +52,11 @@ function cloneSlides(originalSlides) {
   });
 }
 
-function scrollToSlide(original, block, behavior = 'instant') {
-  if (original) {
-    block.scrollTo({ top: 0, left: original.offsetLeft, behavior });
-  }
+function getCurrentSlide(block) {
+  const viewStart = block.scrollLeft;
+  const viewEnd = block.scrollLeft + block.clientWidth;
+  return [...block.querySelectorAll('.slide')]
+    .find((slide) => viewStart <= slide.offsetLeft && slide.offsetLeft < viewEnd);
 }
 
 function getOriginalSlide(slide, block) {
