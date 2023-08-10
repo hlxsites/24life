@@ -51,8 +51,7 @@ function p(content) {
 
 /* convenience function to create a block from a JSON object from authors.json */
 function createAuthorCardBlock(author) {
-  const picture = createOptimizedPicture(author.image);
-
+  const picture = author.image;
   const heading = document.createElement('h3');
   const anchor = document.createElement('a');
   anchor.href = author.path;
