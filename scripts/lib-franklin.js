@@ -420,22 +420,6 @@ export function buildBlock(blockName, content) {
   return (blockEl);
 }
 
-export function buildAuthorCardBlock(blockName, content) {
-  const table = Array.isArray(content) ? content : [content];
-  const blockEl = document.createElement('div');
-  blockEl.classList.add(blockName);
-  table.forEach((val) => {
-    if (val) {
-      if (typeof val === 'string') {
-        blockEl.innerHTML += val;
-      } else {
-        blockEl.appendChild(val);
-      }
-    }
-  });
-  return (blockEl);
-}
-
 /**
  * Loads JS and CSS for a block.
  * @param {Element} block The block element
