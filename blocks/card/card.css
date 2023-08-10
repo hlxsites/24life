@@ -54,6 +54,16 @@
   color: var(--link-hover-color);
 }
  
+.card.author .author-links a {
+  color: #d33;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.card .card-title a:hover {
+  color: var(--link-hover-color);
+}
+
 .card.author h3 a:hover {
   color: var(--link-hover-color);
 }
@@ -69,11 +79,6 @@
   font-size: var(--body-font-size-card-header);
 }
 
-.card.author .author-links a {
-  color: #d33;
-  font-weight: 600;
-  font-size: 16px;
-}
 
 .card.author .author-links .icon {
   fill: #d33;
@@ -82,12 +87,6 @@
 .card.author .other-links {
   margin-top: 0;
 }
-
-.card .card-title a:hover {
-  color: var(--link-hover-color);
-}
-
-
 
 .card .card-author {
   margin-top: 0.8em;
