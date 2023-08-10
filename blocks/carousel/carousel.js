@@ -5,7 +5,7 @@ import { decorateIcons } from '../../scripts/lib-franklin.js';
  * Each row is a slide.
  * @param block
  */
-export default function decorate(block) {
+export default async function decorate(block) {
   const slideCount = block.childElementCount;
   [...block.children].forEach((child) => child.classList.add('slide'));
 
@@ -29,7 +29,7 @@ export default function decorate(block) {
   }, false);
 
   block.append(...createButtons(moveSlides));
-  decorateIcons(block);
+  await decorateIcons(block);
 }
 
 function getCurrentScrollIndex(block) {

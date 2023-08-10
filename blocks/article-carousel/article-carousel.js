@@ -1,5 +1,5 @@
 import {
-  buildBlock, decorateBlock, loadBlocks, readBlockConfig, toClassName,
+  buildBlock, decorateBlock, loadBlock, loadBlocks, readBlockConfig, toClassName,
 } from '../../scripts/lib-franklin.js';
 import ffetch from '../../scripts/ffetch.js';
 import { createCardBlock } from '../card/card.js';
@@ -31,7 +31,16 @@ export default async function decorate(block) {
   // TODO: also support groups of 2 and 1?
   const carousel = createCarouselBlock(groups);
   block.append(carousel);
-  await loadBlocks(block.closest('main'));
+
+  // }
+  await loadBlock(carousel.firstElementChild);
+
+  // const footerBlock = buildBlock('footer', '');
+  // footer.append(footerBlock);
+  // decorateBlock(footerBlock);
+  // return loadBlock(footerBlock);
+
+  // await loadBlocks(block.closest('main'));
 }
 
 async function fetchArticlesAndCreateCards(filterSection) {
@@ -39,14 +48,15 @@ async function fetchArticlesAndCreateCards(filterSection) {
     .filter(({ template }) => template === 'article')
     .filter(({ section }) => (filterSection ? section === filterSection : true))
     .limit(9)
-    .map((article) => {
-      const newBlock = createCardBlock(article);
+    .map(async (article) => {
+      const card = createCardBlock(article);
       if (article.section) {
-        newBlock.querySelector('.card.block').classList.add(toClassName(article.section));
+        card.querySelector('.card.block').classList.add(toClassName(article.section));
       }
 
       // unwrap card-wrapper
-      return newBlock.firstElementChild;
+      await loadBlock(card.firstElementChild);
+      return card.firstElementChild;
     })
     .all();
 }
