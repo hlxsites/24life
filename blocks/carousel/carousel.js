@@ -16,8 +16,8 @@ export default async function decorate(block) {
   block.prepend(...(cloneSlides(originalSlides)));
   block.append(...(cloneSlides(originalSlides)));
 
-  function moveSlides(diff, smooth = 'smooth') {
-    const target = diff > 0 ? findNextSlideOnTheRight(block) : findNextSlideOnTheLeft(block);
+  function moveSlides(prevOrNext, smooth = 'smooth') {
+    const target = prevOrNext === 'next'? findNextSlideOnTheRight(block) : findNextSlideOnTheLeft(block);
     block.scrollTo({ top: 0, left: target.offsetLeft, behavior: smooth });
   }
 
@@ -94,13 +94,13 @@ function createButtons(moveSlides) {
   prevButton.classList.add('prev');
   prevButton.ariaLabel = 'show previous slide';
   prevButton.append(icon('angle-left'));
-  prevButton.addEventListener('click', () => moveSlides(-1));
+  prevButton.addEventListener('click', () => moveSlides('prev'));
 
   const nextButton = document.createElement('button');
   nextButton.classList.add('next');
   nextButton.ariaLabel = 'show next slide';
   nextButton.append(icon('angle-right'));
-  nextButton.addEventListener('click', () => moveSlides(+1));
+  nextButton.addEventListener('click', () => moveSlides('next'
 
   return [prevButton, nextButton];
 }
