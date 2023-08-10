@@ -7,15 +7,19 @@ import { decorateIcons } from '../../scripts/lib-franklin.js';
  */
 export default async function decorate(block) {
   const slideCount = block.childElementCount;
-  [...block.children].forEach((child) => child.classList.add('slide'));
+  [...block.children].forEach((child, index) => {
+    child.classList.add('slide');
+    child.dataset.slideId = index;
+  });
 
   // make a total of 3 copies of the slides, so it appears to be infinite scrolling
-  block.append(...[...block.children].map((child) => child.cloneNode(true)));
-  block.append(...[...block.children].map((child) => child.cloneNode(true)));
+  const allSlides = [...block.querySelectorAll('.slide')];
+  block.prepend(...(cloneSlides(allSlides)));
+  block.append(...(cloneSlides(allSlides)));
 
   function moveSlides(diff, smooth = 'smooth') {
-    const position = getCurrentScrollIndex(block) + diff;
-    block.scrollTo({ top: 0, left: position * block.clientWidth, behavior: smooth });
+    const target = diff > 0 ? findNextSlideOnTheRight(block) : findNextSlideOnTheLeft(block);
+    block.scrollTo({ top: 0, left: target.offsetLeft, behavior: smooth });
   }
 
   // set initial position
@@ -25,23 +29,55 @@ export default async function decorate(block) {
 
   // once the scroll is finished, make sure we are in the middle section
   onScrollEnd(block, () => {
-    stayInCenterSlides(slideCount, block);
+    jumpFromClonesToOriginals(slideCount, block);
   }, false);
 
   block.append(...createButtons(moveSlides));
   await decorateIcons(block);
 }
 
-function getCurrentScrollIndex(block) {
-  return block.scrollLeft / block.clientWidth;
+function findNextSlideOnTheRight(block) {
+  const viewEnd = block.scrollLeft + block.clientWidth;
+  return [...block.querySelectorAll('.slide')]
+    .find((slide) => viewEnd < slide.offsetLeft);
 }
 
-function stayInCenterSlides(slideCount, block) {
-  // make sure we are in the middle section after each scroll
-  let position = getCurrentScrollIndex(block);
-  if (position < slideCount || position >= slideCount * 2) {
-    position = slideCount + (position % slideCount);
-    block.scrollTo({ top: 0, left: position * block.clientWidth, behavior: 'instant' });
+function getCurrentSlide(block) {
+  const viewStart = block.scrollLeft;
+  const viewEnd = block.scrollLeft + block.clientWidth;
+  return [...block.querySelectorAll('.slide')]
+    .find((slide) => viewStart <= slide.offsetLeft && slide.offsetLeft < viewEnd);
+}
+
+function cloneSlides(allSlides) {
+  return allSlides.map((child) => {
+    const clone = child.cloneNode(true);
+    clone.dataset.clone = true;
+    clone.dataset.slideCloneId = child.dataset.slideId;
+    delete clone.dataset.slideId;
+    return clone;
+  });
+}
+
+function findNextSlideOnTheLeft(block) {
+  const viewStart = block.scrollLeft;
+  const candidate = [...block.querySelectorAll('.slide')]
+    .reverse()
+    .find((slide) => slide.offsetLeft < viewStart - block.clientWidth);
+
+  // try to scroll a full page
+  if (candidate) return candidate;
+  // if there not enough slides to scroll a full page, scroll to the beginning
+  return block.querySelector('.slide');
+}
+
+function jumpFromClonesToOriginals(slideCount, block) {
+  const current = getCurrentSlide(block);
+  if (current.dataset.slideCloneId) {
+    const original = block.querySelector(`[data-slide-id="${current.dataset.slideCloneId}"]`);
+    if (original) {
+      block.scrollTo({ top: 0, left: original.offsetLeft, behavior: 'instant' });
+    }
   }
 }
 
