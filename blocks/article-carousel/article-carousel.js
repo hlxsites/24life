@@ -37,6 +37,7 @@ export default async function decorate(block) {
 
 async function fetchArticlesAndCreateCards(filterSection) {
   return ffetch('/articles.json')
+    .chunks(20)
     .filter(({ template }) => template === 'article')
     .filter(({ section }) => (filterSection ? section === filterSection : true))
     .limit(9)
