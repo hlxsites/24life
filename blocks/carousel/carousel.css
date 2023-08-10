@@ -3,8 +3,6 @@
 }
 
 .carousel {
-  --position: 0;
-
   scroll-margin: 0;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
@@ -22,7 +20,6 @@
   display: block;
   flex: 0 0 100%;
   transition: all 0.25s ease-in-out;
-  transform: translateX( calc(-1 * var(--position) * 100%));
 }
 
 .carousel > button {
