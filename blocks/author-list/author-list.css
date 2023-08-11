@@ -1,0 +1,85 @@
+div.author-list-container {
+  padding-top: 32px;
+}
+
+.author-list .author-image {
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 1/1;
+}
+
+.author-list .author-image img {
+  transition: .7s ease-in-out;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  object-position: top;
+  border-bottom: 0;
+  display: block;
+  line-height: 0;
+  margin-bottom: 0;
+  width: 100%;
+}
+
+.author-list-item img:hover {
+  transform: scale(1.075);
+}
+
+.author-list .author-list-item h3 a {
+  color: var(--author-list-item-title-color);
+  letter-spacing: 1px;
+  font-size: 32px;
+  line-height: 0.75;
+  margin-top: 0.2em;
+  margin-bottom: 0;
+}
+
+.author-list .author-list-item .author-links a {
+  color: var(--link-color-default-content);
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.author-list .author-list-item h3 a:hover {
+  color: var(--link-hover-color);
+}
+
+.author-list .author-list-item .author-links .icon {
+  fill: var(--link-color-default-content);
+}
+
+.author-list .author-list-item .other-links {
+  margin-top: 0;
+}
+
+.author-list .author-list-item .social-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.author-list {
+  display: grid;
+  gap: 2em;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.author-list .author-load-more-container {
+  grid-column: 1/-1;
+  display: flex;
+  justify-content: center;
+}
+
+/* on smaller screens, show everything in a single column. */
+@media (max-width: 991px) {
+  .author-list {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 1200px) {
+  .section.experts-page-heading > div,
+  .section.experts-page-editorial-staff > div,
+  .section.author-list-container > div {
+    max-width: 1150px;
+  }
+}
