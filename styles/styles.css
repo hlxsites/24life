@@ -25,7 +25,6 @@
   --label-text-color: #757575;
   --accent-color: #606163;
   --author-list-item-title-color: #bd2020;
-  --author-list-item-link-color: #d33;
 
   /* topic based colors/accent. Providing a text-variant to ensure accessibility, ie. a high
      contrast ratio. see https://web.dev/color-and-contrast-accessibility */

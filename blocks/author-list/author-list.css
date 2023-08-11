@@ -34,7 +34,7 @@ div.author-list-container {
 }
 
 .author-list .author-list-item .author-links a {
-  color: var(--author-list-item-link-color);
+  color: var(--link-color-default-content);
   font-weight: 600;
   font-size: 16px;
 }
@@ -44,7 +44,7 @@ div.author-list-container {
 }
 
 .author-list .author-list-item .author-links .icon {
-  fill: var(--author-list-item-link-color);
+  fill: var(--link-color-default-content);
 }
 
 .author-list .author-list-item .other-links {
