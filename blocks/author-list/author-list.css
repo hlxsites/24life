@@ -1,67 +1,71 @@
- .author-list-item img {
-   transition: .7s ease-in-out;
-   aspect-ratio: 1/1;
-   object-fit: cover;
-   object-position: top;
-   border-bottom: 0;
-   display: block;
-   overflow: hidden;
-   line-height: 0;
-   margin-bottom: 0;
- }
+div.author-list-container {
+  padding-top: 32px;
+}
 
- .author-list-item img:hover {
-   transform: scale(1.075);
- }
+.author-list-item img {
+  transition: .7s ease-in-out;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  object-position: top;
+  border-bottom: 0;
+  display: block;
+  overflow: hidden;
+  line-height: 0;
+  margin-bottom: 0;
+}
 
- .author-list-item h3 a {
-   color: #bd2020;
-   letter-spacing: 1px;
-   font-size: 32px;
-   line-height: 0.75;
-   margin-top: 0.2em;
-   margin-bottom: 0;
- }
+.author-list-item img:hover {
+  transform: scale(1.075);
+}
 
- .author-list-item .author-links a {
-   color: #d33;
-   font-weight: 600;
-   font-size: 16px;
- }
+.author-list-item h3 a {
+  color: var(--author-list-item-title-color);
+  letter-spacing: 1px;
+  font-size: 32px;
+  line-height: 0.75;
+  margin-top: 0.2em;
+  margin-bottom: 0;
+}
 
- .author-list-item h3 a:hover {
-   color: var(--link-hover-color);
- }
+.author-list-item .author-links a {
+  color: var(--author-list-item-link-color);
+  font-weight: 600;
+  font-size: 16px;
+}
 
- .author-list-item .author-links .icon {
-   fill: #d33;
- }
+.author-list-item h3 a:hover {
+  color: var(--link-hover-color);
+}
 
- .author-list-item .other-links {
-   margin-top: 0;
- }
+.author-list-item .author-links .icon {
+  fill: var(--author-list-item-link-color);
+}
 
- .author-list-item .social-links {
-   display: flex;
-   gap: 1rem;
- }
+.author-list-item .other-links {
+  margin-top: 0;
+}
 
- .author-list {
-   display: grid;
-   gap: 2em;
-   grid-template-columns: repeat(3, 1fr);
- }
+.author-list-item .social-links {
+  display: flex;
+  gap: 1rem;
+}
 
- .author-load-more-container {
-   grid-column: 1/-1;
-   display: flex;
-   justify-content: center;
- }
+.author-list {
+  display: grid;
+  gap: 2em;
+  grid-template-columns: repeat(3, 1fr);
+}
 
- /* on smaller screens, show everything in a single column. */
- @media (max-width: 991px) {
-   .author-list {
-     display: flex;
-     flex-direction: column;
-   }
- }
+.author-load-more-container {
+  grid-column: 1/-1;
+  display: flex;
+  justify-content: center;
+}
+
+/* on smaller screens, show everything in a single column. */
+@media (max-width: 991px) {
+  .author-list {
+    display: flex;
+    flex-direction: column;
+  }
+}

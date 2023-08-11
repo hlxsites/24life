@@ -1,5 +1,7 @@
 import ffetch from '../../scripts/ffetch.js';
-import { readBlockConfig, loadBlocks, createOptimizedPicture } from '../../scripts/lib-franklin.js';
+import {
+  readBlockConfig, loadBlocks, createOptimizedPicture, decorateIcons,
+} from '../../scripts/lib-franklin.js';
 
 /**
  * loads and decorates the footer
@@ -28,7 +30,7 @@ async function fetchAuthors(filter, block) {
   if (authors.length > numInitialLodedAuthors) {
     const { loadMoreButton, loadMoreContainer } = createLoadMoreButton();
     loadMoreButton.addEventListener('click', () => {
-      // get the next 50 authors
+      // fetch rest of the authors
       const nextAuthors = authors.slice(numInitialLodedAuthors);
       nextAuthors.forEach((author) => {
         const newBlock = createAuthorCardBlock(author);
@@ -52,19 +54,10 @@ function createLoadMoreButton() {
 }
 
 function buildAuthorListItem(className, content) {
-  const list = Array.isArray(content) ? content : [content];
   const container = document.createElement('div');
   container.classList.add(className);
-  list.forEach((val) => {
-    if (val) {
-      if (typeof val === 'string') {
-        container.innerHTML += val;
-      } else {
-        container.appendChild(val);
-      }
-    }
-  });
-  return (container);
+  container.append(...content);
+  return container;
 }
 
 function p(content) {
@@ -104,22 +97,20 @@ function addAuthorLinks(author, authorLinkContainer) {
   const socialLinksContainer = document.createElement('div');
   socialLinksContainer.classList.add('social-links');
   function addSocialLink(socialLink) {
-    const container = document.createElement('p');
-    container.appendChild(socialLink);
-    socialLinksContainer.appendChild(container);
+    socialLinksContainer.appendChild(p(socialLink));
   }
   arr.forEach((link) => {
     const socialLink = document.createElement('a');
     socialLink.href = link;
     socialLink.target = '_blank';
     if (link.includes('facebook')) {
-      socialLink.innerHTML = '<span class="icon icon-facebook"><svg xmlns="http://www.w3.org/2000/svg"><use href="#icons-sprite-facebook"></use></svg></span>';
+      socialLink.innerHTML = '<span class="icon icon-facebook"></span>';
       addSocialLink(socialLink);
     } else if (link.includes('twitter')) {
-      socialLink.innerHTML = '<span class="icon icon-twitter"><svg xmlns="http://www.w3.org/2000/svg"><use href="#icons-sprite-twitter"></use></svg></span>';
+      socialLink.innerHTML = '<span class="icon icon-twitter"></span>';
       addSocialLink(socialLink);
     } else if (link.includes('instagram')) {
-      socialLink.innerHTML = '<span class="icon icon-instagram"><svg xmlns="http://www.w3.org/2000/svg"><use href="#icons-sprite-instagram"></use></svg></span>';
+      socialLink.innerHTML = '<span class="icon icon-instagram"></span>';
       addSocialLink(socialLink);
     } else {
       const pElement = document.createElement('p');
@@ -128,6 +119,7 @@ function addAuthorLinks(author, authorLinkContainer) {
       pElement.appendChild(socialLink);
       authorLinkContainer.appendChild(pElement);
     }
+    decorateIcons(socialLinksContainer);
   });
   authorLinkContainer.prepend(socialLinksContainer);
 }
