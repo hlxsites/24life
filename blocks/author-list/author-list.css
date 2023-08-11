@@ -71,6 +71,8 @@ div.author-list-container {
 }
 
 @media (min-width: 1200px) {
+  .section.experts-page-heading>div,
+  .section.experts-page-editorial-staff>div,
   .section.author-list-container>div {
     max-width: 1150px;
   }
