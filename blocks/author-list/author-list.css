@@ -2,20 +2,22 @@ div.author-list-container {
   padding-top: 32px;
 }
 
-.author-list .author-list-item img {
+.author-list .author-image {
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 1/1;
+}
+
+.author-list .author-image img {
   transition: .7s ease-in-out;
   aspect-ratio: 1/1;
   object-fit: cover;
   object-position: top;
   border-bottom: 0;
   display: block;
-  overflow: hidden;
   line-height: 0;
   margin-bottom: 0;
-}
-
-.author-list .author-image {
-  overflow: hidden;
+  width: 100%;
 }
 
 .author-list-item img:hover {

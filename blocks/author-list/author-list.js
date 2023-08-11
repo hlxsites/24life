@@ -62,14 +62,17 @@ function buildAuthorListItem(className, content) {
 
 function p(content) {
   const result = document.createElement('p');
-  result.append(content);
+  if (content) result.append(content);
   return result;
 }
 
 /* convenience function to create a block from a JSON object from authors.json */
 function createAuthorCardBlock(author) {
-  const pictureP = p(createOptimizedPicture(author.image, 'author-image', true));
+  const pictureP = p();
   pictureP.classList.add('author-image');
+  if (author.image) {
+    pictureP.append(createOptimizedPicture(author.image, 'author-image', true));
+  }
 
   const heading = document.createElement('h3');
   const anchor = document.createElement('a');
