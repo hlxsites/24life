@@ -71,7 +71,7 @@ div.author-list-container {
 }
 
 @media (min-width: 1200px) {
-  .section>div {
+  .section.author-list-container>div {
     max-width: 1150px;
   }
 }
