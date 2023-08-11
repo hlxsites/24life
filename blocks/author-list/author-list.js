@@ -1,7 +1,5 @@
 import ffetch from '../../scripts/ffetch.js';
-import {
-  readBlockConfig, loadBlocks, createOptimizedPicture, decorateBlock,
-} from '../../scripts/lib-franklin.js';
+import { readBlockConfig, loadBlocks, createOptimizedPicture } from '../../scripts/lib-franklin.js';
 
 /**
  * loads and decorates the footer
@@ -10,62 +8,63 @@ import {
 export default async function decorate(block) {
   const { filter } = readBlockConfig(block);
   block.textContent = '';
-  block.classList.add('card-container');
   // eslint-disable-next-line no-console
   fetchAuthors(filter, block).catch((e) => console.log(e));
 }
 
 async function fetchAuthors(filter, block) {
+  // get all authors from authors.json and filter them by role
   const authors = await ffetch('/authors.json').filter((author) => author.role === filter).all();
   // sort author list by name
   authors.sort((a, b) => a.name.localeCompare(b.name));
   // create the first 6 authors
-  const firstAuthors = authors.slice(0, 6);
+  const numInitialLodedAuthors = 6;
+  const firstAuthors = authors.slice(0, numInitialLodedAuthors);
   firstAuthors.forEach((author) => {
     const newBlock = createAuthorCardBlock(author);
     block.append(newBlock);
   });
   // create load more button if there are more authors than shown
-  let start = 6;
-  let end = 56;
-  if (authors.length > 6) {
-    const loadMoreButton = document.createElement('button');
-    loadMoreButton.classList.add('load-more-button');
-    loadMoreButton.textContent = 'Load more';
+  if (authors.length > numInitialLodedAuthors) {
+    const { loadMoreButton, loadMoreContainer } = createLoadMoreButton();
     loadMoreButton.addEventListener('click', () => {
       // get the next 50 authors
-      const nextAuthors = authors.slice(start, end);
-      start += 50;
-      end += 50;
-      loadMoreButton.remove();
+      const nextAuthors = authors.slice(numInitialLodedAuthors);
       nextAuthors.forEach((author) => {
         const newBlock = createAuthorCardBlock(author);
         block.append(newBlock);
       });
-      // create the load-more-button, if there are more authors
-      if (authors.length > end) {
-        block.append(loadMoreButton);
-      }
+      loadMoreContainer.remove();
     });
-    block.append(loadMoreButton);
+    block.append(loadMoreContainer);
   }
   loadBlocks(block);
 }
 
-function buildAuthorCardBlock(blockName, content) {
-  const table = Array.isArray(content) ? content : [content];
-  const blockEl = document.createElement('div');
-  blockEl.classList.add(blockName);
-  table.forEach((val) => {
+function createLoadMoreButton() {
+  const loadMoreContainer = document.createElement('div');
+  loadMoreContainer.classList.add('author-load-more-container');
+  const loadMoreButton = document.createElement('button');
+  loadMoreContainer.append(loadMoreButton);
+  loadMoreButton.classList.add('author-list-load-more-button');
+  loadMoreButton.textContent = 'Load more';
+  return { loadMoreButton, loadMoreContainer };
+}
+
+function buildAuthorListItem(className, content) {
+  const list = Array.isArray(content) ? content : [content];
+  const container = document.createElement('div');
+  container.classList.add(className);
+  list.forEach((val) => {
     if (val) {
       if (typeof val === 'string') {
-        blockEl.innerHTML += val;
+        container.innerHTML += val;
       } else {
-        blockEl.appendChild(val);
+        container.appendChild(val);
       }
     }
   });
-  return (blockEl);
+  return (container);
 }
 
 function p(content) {
@@ -76,7 +75,7 @@ function p(content) {
 
 /* convenience function to create a block from a JSON object from authors.json */
 function createAuthorCardBlock(author) {
-  const picture = createOptimizedPicture(author.image, author.name, true, [{ width: '360' }]);
+  const picture = createOptimizedPicture(author.image, 'author-image');
   const heading = document.createElement('h3');
   const anchor = document.createElement('a');
   anchor.href = author.path;
@@ -88,18 +87,12 @@ function createAuthorCardBlock(author) {
   // parse the author.links string and iterate over links
   addAuthorLinks(author, authorLinkContainer);
 
-  const newBlock = buildAuthorCardBlock('card', [
+  return buildAuthorListItem('author-list-item', [
     p(picture),
     heading,
     p(author.description),
     authorLinkContainer,
   ]);
-
-  const wrapper = document.createElement('div');
-  wrapper.append(newBlock);
-  newBlock.classList.add('author');
-  decorateBlock(newBlock);
-  return wrapper;
 }
 
 function addAuthorLinks(author, authorLinkContainer) {
