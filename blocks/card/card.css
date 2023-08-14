@@ -59,7 +59,7 @@
   font-size: var(--body-font-size-author);
 }
 
-.card-wrapper.three-columns {
+.card-wrapper {
   display: grid;
   gap: 2em;
   grid-template-columns: repeat(3, 1fr);
