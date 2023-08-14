@@ -1,8 +1,12 @@
 import {
-  buildBlock, decorateBlock, decorateIcons, getMetadata,
+  buildBlock, decorateBlock, decorateIcons, getMetadata, toClassName,
 } from '../../scripts/lib-franklin.js';
 
 export default async function decorate(doc) {
+  if (getMetadata('section')) {
+    doc.querySelector('main').classList.add(`color-${toClassName(getMetadata('section'))}`);
+  }
+
   const firstSection = doc.querySelector('main .section');
   firstSection.before(createSectionWithHeroBlock(
     doc.querySelector('main .section h1'),
@@ -53,6 +57,11 @@ function createAuthorBlock() {
 
 function createArticleCarousel() {
   const container = document.createElement('div');
+  const carouselTitle = document.createElement('p');
+  carouselTitle.classList.add('article-carousel-title');
+  carouselTitle.innerHTML = `<strong>${getMetadata('section')}</strong> - MORE TO EXPLORE`;
+
+  container.append(carouselTitle);
   const newBlock = buildBlock('article-carousel', [['Section', getMetadata('section')]]);
   container.append(newBlock);
   decorateBlock(newBlock);
