@@ -28,16 +28,25 @@ export default async function decorate(block) {
 
   const backgroundImages = document.createElement('div');
   backgroundImages.classList.add('background-images');
+  const slideshowButtons = document.createElement('div');
+  slideshowButtons.classList.add('slideshow-buttons');
   config.images.forEach((url, index) => {
+    const button = document.createElement('button');
+    button.ariaLabel = `go to Slide ${index + 1}`;
+    slideshowButtons.append(button);
+
     const p = document.createElement('p');
     p.classList.add('slide');
-    if (index === 0) {
-      p.classList.add('active');
-    }
     p.append(createOptimizedPicture(url, config.title));
     backgroundImages.append(p);
+
+    if (index === 0) {
+      p.classList.add('active');
+      button.classList.add('active');
+    }
   });
   block.append(backgroundImages);
+  block.append(slideshowButtons);
 
   block.addEventListener('click', () => {
     goToNextSlide(block);
