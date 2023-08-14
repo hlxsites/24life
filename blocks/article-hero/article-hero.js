@@ -1,10 +1,13 @@
-import { createOptimizedPicture, getMetadata, toClassName } from '../../scripts/lib-franklin.js';
+import {
+  createOptimizedPicture, readBlockConfig, toClassName,
+} from '../../scripts/lib-franklin.js';
 
 export default function decorate(block) {
+  const data = readBlockConfig(block);
   block.innerText = '';
   block.append(createOptimizedPicture(
-    getMetadata('og:image'),
-    getMetadata('og:title'),
+    data.image,
+    data.title,
     true,
   ));
 
@@ -13,7 +16,7 @@ export default function decorate(block) {
 
   const collections = document.createElement('div');
   collections.classList.add('hero-collections');
-  const links = getMetadata('collections')?.split(',')
+  const links = data.collections?.split(',')
     .map((collectionText) => {
       const a = document.createElement('a');
       a.href = `/collections/${toClassName(collectionText.trim())}`;
@@ -25,13 +28,13 @@ export default function decorate(block) {
   overlay.append(collections);
 
   const h1 = document.createElement('h1');
-  h1.append(getMetadata('og:title'));
+  h1.append(data.title);
   overlay.append(h1);
   overlay.append('By ');
 
   const authorLink = document.createElement('a');
-  authorLink.href = `/author/${getMetadata('author-id')}`;
-  authorLink.textContent = getMetadata('author');
+  authorLink.href = `/author/${toClassName(data.author)}`;
+  authorLink.textContent = data.author;
   overlay.append(authorLink);
 
   block.append(overlay);

@@ -1,34 +1,77 @@
-import { buildBlock, decorateBlock, decorateIcons } from '../../scripts/lib-franklin.js';
+import {
+  buildBlock, decorateBlock, decorateIcons, getMetadata, toClassName,
+} from '../../scripts/lib-franklin.js';
 
 export default async function decorate(doc) {
+  if (getMetadata('section')) {
+    doc.querySelector('main').classList.add(`color-${toClassName(getMetadata('section'))}`);
+  }
+
   const firstSection = doc.querySelector('main .section');
-  firstSection.before(createSectionWithHeroBlock());
+  firstSection.before(createSectionWithHeroBlock(
+    doc.querySelector('main .section h1'),
+    doc.querySelector('main .section img'),
+  ));
 
   // remove h1 and picture
   const firstContent = doc.querySelector('main .section .default-content-wrapper');
   firstContent.before(createSocialMediaButtons());
 
   const lastContent = [...doc.querySelectorAll('main .section .default-content-wrapper')].at(-1);
-  lastContent.append(createSocialMediaButtons());
-  lastContent.append(createAuthorBlock());
+  lastContent.after(createArticleCarousel());
+  lastContent.after(createAuthorBlock());
+  lastContent.after(createSocialMediaButtons());
 }
 
-function createSectionWithHeroBlock() {
+function createNewSection() {
   const section = document.createElement('div');
   section.classList.add('section', 'article-hero-container');
+  section.dataset.sectionStatus = 'initialized';
+  section.style.display = 'none';
+  return section;
+}
 
-  const container = document.createElement('div');
-  const newBlock = buildBlock('article-hero', '');
-  container.append(newBlock);
+function createSectionWithHeroBlock(h1, img) {
+  const section = createNewSection();
+  section.classList.add('article-hero-container');
+
+  const wrapper = document.createElement('div');
+  const newBlock = buildBlock(
+    'article-hero',
+    [
+      ['title', getMetadata('og:title')],
+      ['image', getMetadata('og:image')],
+      ['collections', getMetadata('collections')],
+      ['author', getMetadata('author')],
+    ],
+  );
+  wrapper.append(newBlock);
   decorateBlock(newBlock);
 
-  section.append(container);
+  // remove title and image from existing section
+  h1.remove();
+  img.remove();
+
+  section.append(wrapper);
   return section;
 }
 
 function createAuthorBlock() {
   const container = document.createElement('div');
   const newBlock = buildBlock('article-author', '');
+  container.append(newBlock);
+  decorateBlock(newBlock);
+  return container;
+}
+
+function createArticleCarousel() {
+  const container = document.createElement('div');
+  const carouselTitle = document.createElement('p');
+  carouselTitle.classList.add('article-carousel-title');
+  carouselTitle.innerHTML = `<strong>${getMetadata('section')}</strong> - more to explore`;
+
+  container.append(carouselTitle);
+  const newBlock = buildBlock('article-carousel', [['Section', getMetadata('section')]]);
   container.append(newBlock);
   decorateBlock(newBlock);
   return container;
