@@ -1,13 +1,11 @@
 import { createOptimizedPicture, decorateIcons, readBlockConfig } from '../../scripts/lib-franklin.js';
 
-function goToNextSlide(block) {
-  const current = block.querySelector('.slide.active');
-  current.classList.remove('active');
-  let { nextElementSibling } = current;
-  if (!nextElementSibling) {
-    nextElementSibling = block.querySelector('.slide');
-  }
-  nextElementSibling.classList.add('active');
+function goToSlide(block, index) {
+  block.querySelector('.slide.active').classList.remove('active');
+  [...block.querySelectorAll('.slide')].at(index).classList.add('active');
+
+  block.querySelector('.slideshow-buttons .active').classList.remove('active');
+  [...block.querySelectorAll('.slideshow-buttons button')].at(index).classList.add('active');
 }
 
 /**
@@ -34,6 +32,9 @@ export default async function decorate(block) {
     const button = document.createElement('button');
     button.ariaLabel = `go to Slide ${index + 1}`;
     slideshowButtons.append(button);
+    button.addEventListener('click', () => {
+      goToSlide(block, index);
+    });
 
     const p = document.createElement('p');
     p.classList.add('slide');
@@ -47,10 +48,6 @@ export default async function decorate(block) {
   });
   block.append(backgroundImages);
   block.append(slideshowButtons);
-
-  block.addEventListener('click', () => {
-    goToNextSlide(block);
-  });
 
   await decorateIcons(block);
 }
