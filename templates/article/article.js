@@ -67,7 +67,7 @@ function createArticleCarousel() {
   const container = document.createElement('div');
   const carouselTitle = document.createElement('p');
   carouselTitle.classList.add('article-carousel-title');
-  carouselTitle.innerHTML = `<strong>${getMetadata('section')}</strong> - MORE TO EXPLORE`;
+  carouselTitle.innerHTML = `<strong>${getMetadata('section')}</strong> - more to explore`;
 
   container.append(carouselTitle);
   const newBlock = buildBlock('article-carousel', [['Section', getMetadata('section')]]);
