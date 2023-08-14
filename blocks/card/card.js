@@ -34,10 +34,6 @@ export default function decorate(block) {
       { width: '300' },
     ],
   );
-  // adjust style if only 1 card in the section
-  if (block.children.length === 1) {
-    block.closest('.card-container').classList.add('single');
-  }
 
   if (firstCell.lastElementChild.classList.length === 0) {
     firstCell.lastElementChild.classList.add('card-author');

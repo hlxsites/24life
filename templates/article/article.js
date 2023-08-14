@@ -13,7 +13,6 @@ export default async function decorate(doc) {
     doc.querySelector('main .section img'),
   ));
 
-  // remove h1 and picture
   const firstContent = doc.querySelector('main .section .default-content-wrapper');
   firstContent.before(createSocialMediaButtons());
 
