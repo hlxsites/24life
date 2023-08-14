@@ -7,29 +7,27 @@
 }
 
 .magazine-hero .background-images {
-  scroll-margin: 0;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  overflow-x: scroll;
-  display: flex;
-  scrollbar-width: none;
-  touch-action: pan-x;
+  width: 100%;
+  aspect-ratio: 1/1;
+
 }
 
 .magazine-hero .slide {
-  scroll-snap-align: start;
+  position: absolute;
   display: block;
-  flex: 0 0 100%;
-  transition: all 0.25s ease-in-out;
-  touch-action: pan-x;
+  top: 0;
+  transition: opacity 0.25s ease-in-out;
+  z-index: -1;
+  opacity: 0;
+  margin: 0;
 }
 
+.magazine-hero .slide.active {
+  opacity: 1;
+}
 
 .magazine-hero .text-overlay {
-  position: absolute;
   z-index: 10;
   top: 10px;
   left: 10px;
 }
-
-
