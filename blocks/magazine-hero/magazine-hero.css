@@ -13,7 +13,7 @@
   overflow-x: scroll;
   display: flex;
   scrollbar-width: none;
-  touch-action: pan-y;
+  touch-action: pan-x;
 }
 
 .magazine-hero .slide {
@@ -21,7 +21,7 @@
   display: block;
   flex: 0 0 100%;
   transition: all 0.25s ease-in-out;
-  touch-action: pan-y;
+  touch-action: pan-x;
 }
 
 
