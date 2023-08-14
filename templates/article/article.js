@@ -13,6 +13,7 @@ export default async function decorate(doc) {
   firstContent.before(createSocialMediaButtons());
 
   const lastContent = [...doc.querySelectorAll('main .section .default-content-wrapper')].at(-1);
+  lastContent.after(createArticleCarousel());
   lastContent.after(createAuthorBlock());
   lastContent.after(createSocialMediaButtons());
 }
@@ -45,6 +46,14 @@ function createSectionWithHeroBlock(h1, img) {
 function createAuthorBlock() {
   const container = document.createElement('div');
   const newBlock = buildBlock('article-author', '');
+  container.append(newBlock);
+  decorateBlock(newBlock);
+  return container;
+}
+
+function createArticleCarousel() {
+  const container = document.createElement('div');
+  const newBlock = buildBlock('article-carousel', [['Section', getMetadata('section')]]);
   container.append(newBlock);
   decorateBlock(newBlock);
   return container;
