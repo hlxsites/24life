@@ -4,7 +4,7 @@ import {
 import ffetch from '../../scripts/ffetch.js';
 import { createCardBlock } from '../card/card.js';
 
-export default function decorate(block) {
+export default async function decorate(block) {
   const filters = readBlockConfig(block);
   if (!Object.keys(filters) && document.location.pathname.startsWith('/author/')) {
     // auto-detect author, e.g. https://www.24life.com/author/24life
@@ -13,23 +13,23 @@ export default function decorate(block) {
   block.textContent = '';
   block.classList.add('card-container');
   // eslint-disable-next-line no-console
-  fetchArticlesAndAddCards(filters, block).catch((e) => console.log(e));
+  await fetchArticlesAndAddCards(filters, block);
 }
 
 async function fetchArticlesAndAddCards(filters, block) {
   const articles = await ffetch('/articles.json').all();
 
-  articles
+  await Promise.all(articles
     // make sure all filters match
     .filter((article) => Object.keys(filters).every(
       (key) => article[key]?.toLowerCase() === filters[key].toLowerCase(),
     ))
     .filter(({ template }) => template === 'article')
-    .forEach((article) => {
+    .map(async (article) => {
       const newBlock = createCardBlock(article, block);
       if (article.section) {
         newBlock.classList.add(toClassName(article.section));
       }
-      loadBlock(newBlock);
-    });
+      await loadBlock(newBlock);
+    }));
 }
