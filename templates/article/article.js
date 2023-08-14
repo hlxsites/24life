@@ -22,9 +22,17 @@ export default async function decorate(doc) {
   lastContent.after(createSocialMediaButtons());
 }
 
-function createSectionWithHeroBlock(h1, img) {
+function createNewSection() {
   const section = document.createElement('div');
   section.classList.add('section', 'article-hero-container');
+  section.dataset.sectionStatus = 'initialized';
+  section.style.display = 'none';
+  return section;
+}
+
+function createSectionWithHeroBlock(h1, img) {
+  const section = createNewSection();
+  section.classList.add('article-hero-container');
 
   const wrapper = document.createElement('div');
   const newBlock = buildBlock(
