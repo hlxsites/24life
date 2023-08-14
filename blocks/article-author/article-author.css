@@ -1,6 +1,7 @@
 .article-author {
     display: flex;
     gap: 3em;
+    margin: 2rem 0;
 }
 
 .article-author .brand {
@@ -16,6 +17,7 @@
     color: var(--label-text-color);
     font-weight: 400;
     font-style: italic;
+    margin-top: 0;
     margin-bottom: 0;
     line-height: 1;
 }
