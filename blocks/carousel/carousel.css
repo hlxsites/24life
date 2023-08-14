@@ -1,0 +1,42 @@
+.carousel-wrapper {
+  position: relative;
+}
+
+.carousel {
+  scroll-margin: 0;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  overflow-x: scroll;
+  display: flex;
+  scrollbar-width: none;
+  margin-left: 2em;
+  margin-right: 2em;
+}
+
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel .slide {
+  scroll-snap-align: start;
+  display: block;
+  flex: 0 0 100%;
+  transition: all 0.25s ease-in-out;
+}
+
+.carousel > button {
+  position: absolute;
+  top: 40%;
+  background: unset;
+  padding: 0;
+  margin: 0;
+}
+
+.carousel > button.prev{
+  left: 0;
+}
+
+.carousel button.next{
+  right: 0;
+}
+
