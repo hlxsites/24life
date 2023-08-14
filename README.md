@@ -1,5 +1,4 @@
-# Your Project's Title...
-Your project's description...
+# 24life.com
 
 ## Environments
 - Preview: https://main--24life--hlxsites.hlx.page/
