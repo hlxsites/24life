@@ -1,0 +1,35 @@
+.magazine-hero {
+  position: relative;
+}
+
+.magazine-hero::-webkit-scrollbar {
+  display: none;
+}
+
+.magazine-hero .background-images {
+  scroll-margin: 0;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  overflow-x: scroll;
+  display: flex;
+  scrollbar-width: none;
+}
+
+.magazine-hero .slide {
+  scroll-snap-align: start;
+  display: block;
+  flex: 0 0 100%;
+  transition: all 0.25s ease-in-out;
+}
+
+
+.magazine-hero .text-overlay {
+  /* mouse events should control the scrolling in the background. */
+  pointer-events: initial;
+  position: absolute;
+  z-index: 10;
+  top: 200px;
+  left: 200px;
+}
+
+
