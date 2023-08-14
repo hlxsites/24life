@@ -7,6 +7,7 @@ indices:
     exclude:
       - /drafts/**
       - /block-library/**
+      - /template-*
     target: /query-index.json
     properties:
       lastModified:
@@ -32,23 +33,30 @@ indices:
         value: match(attribute(el, "content"), "https:\/\/[^/]+(/.*)")
   articles:
     include:
-      - /**
-    exclude:
-      - /author/**
-      - /
-      - /drafts/**
-      - /template-*
-      - /block-library/**
+      - /fitness/**
+      - /focus/**
+      - /fuel/**
+      - /magazine/**
+      - /recover/**
     target: /articles.json
     properties:
       lastModified:
         select: none
         value: parseTimestamp(headers["last-modified"], "ddd, DD MMM YYYY hh:mm:ss GMT")
+      publishDate:
+        select: head > meta[name="publication-date"]
+        value: parseTimestamp(attribute(el, "content"), MM/DD/YYYY)
+      content:
+        select: main > section:nth-of-type(2)
+        value: textContent(el)
       template:
         select: head > meta[name="template"]
         value: attribute(el, "content")
       title:
         select: head > meta[property="og:title"]
+        value: attribute(el, "content")
+      description:
+        select: head > meta[property="og:description"]
         value: attribute(el, "content")
       collections:
         select: head > meta[name="collections"]
@@ -59,8 +67,8 @@ indices:
       author:
         select: head > meta[name="author"]
         value: attribute(el, "content")
-      author-id:
-        select: head > meta[name="author-id"]
+      tags:
+        select: head > meta[name="tags"]
         value: attribute(el, "content")
       image:
         select: head > meta[property="og:image"]
@@ -93,3 +101,17 @@ indices:
       role:
         select: head > meta[name="role"]
         value: attribute(el, "content")
+  magazines:
+    include:
+      - /magazine/**
+    target: /magazines.json
+    properties:
+      title:
+        select: head > meta[property="og:title"]
+        value: attribute(el, "content")
+      image:
+        select: head > meta[property="og:image"]
+        value: match(attribute(el, "content"), "https:\/\/[^/]+(/.*media_.*)")
+      publishDate:
+        select: head > meta[name="publication-date"]
+        value: parseTimestamp(attribute(el, "content"), YYYY/MM/DD)
