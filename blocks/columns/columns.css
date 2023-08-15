@@ -11,6 +11,11 @@
   order: 1;
 }
 
+.columns.border > div > div {
+  border: 1px solid #dcdcde;
+  padding: .6em 1.5em;
+}
+
 .columns > div > .columns-img-col {
   order: 0;
 }
