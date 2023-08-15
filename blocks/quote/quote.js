@@ -1,5 +1,5 @@
 export default function decorate(block) {
-  const children = block.children;
+  const [children] = block.children;
   // first column
   if (children.length > 0) {
     children[0].classList.add('quote-text');
