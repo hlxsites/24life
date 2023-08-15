@@ -1,13 +1,5 @@
 import { createOptimizedPicture, decorateIcons, readBlockConfig } from '../../scripts/lib-franklin.js';
 
-function createArticleLink(url, text) {
-  const link = document.createElement('a');
-  link.classList.add('article-link');
-  link.href = url;
-  link.textContent = text;
-  return link;
-}
-
 /**
  * Generic carousel block, which can be used for any content or blocks.
  * Each row is a slide.
@@ -17,17 +9,35 @@ export default async function decorate(block) {
   const config = readBlockConfig(block);
   // readBlockConfig does not keep the link texts, so we store them here
   const linkTexts = {};
-  for (const a of [...block.querySelectorAll('a')]) {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const a of block.querySelectorAll('a')) {
     linkTexts[a.href] = a.textContent;
   }
   block.textContent = '';
 
   const overlay = document.createElement('div');
   overlay.classList.add('text-overlay');
+  overlay.append(createLeftOverlay(overlay, config));
+  overlay.append(createRightOverlay(overlay, config, linkTexts));
 
+  block.append(overlay);
+
+  createBackgroundSlideshow(block, config.images);
+
+  await decorateIcons(block);
+}
+
+function createArticleLink(url, text) {
+  const link = document.createElement('a');
+  link.classList.add('article-link');
+  link.href = url;
+  link.textContent = text;
+  return link;
+}
+
+function createLeftOverlay(overlay, config) {
   const leftSide = document.createElement('div');
   leftSide.classList.add('left-side');
-  overlay.append(leftSide);
 
   const issue = document.createElement('p');
   issue.classList.add('issue');
@@ -43,9 +53,12 @@ export default async function decorate(block) {
   description.append(config.description);
   leftSide.append(description);
 
+  return leftSide;
+}
+
+function createRightOverlay(overlay, config, linkTexts) {
   const rightSide = document.createElement('div');
   rightSide.classList.add('right-side');
-  overlay.append(rightSide);
 
   rightSide.append(createArticleLink(config.focus, linkTexts[config.focus]));
   rightSide.append(createArticleLink(config.fitness, linkTexts[config.fitness]));
@@ -58,11 +71,7 @@ export default async function decorate(block) {
   downButton.href = '#'; // TODO: link to first content after video
   rightSide.append(downButton);
 
-  block.append(overlay);
-
-  createBackgroundSlideshow(block, config.images);
-
-  await decorateIcons(block);
+  return rightSide;
 }
 
 function createBackgroundSlideshow(block, images) {

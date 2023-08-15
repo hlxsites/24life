@@ -6,6 +6,26 @@
 .magazine-hero .text-overlay {
     top: 10px;
     left: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.magazine-hero .text-overlay .left-side {
+    width: 33%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.magazine-hero .text-overlay .left-side .issue {
+    font-size: 10px;
+    font-weight: bold;
+    color: #ddd8d7;
+}
+
+.magazine-hero .text-overlay .right-side {
+    width: 30%;
 }
 
 .magazine-hero .background-images {
