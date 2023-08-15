@@ -1,12 +1,23 @@
+.section.magazine-hero-container {
+    padding: 0;
+}
+
+.section > .magazine-hero-wrapper {
+    max-width: unset;
+    margin: unset;
+}
+
 .magazine-hero {
     position: relative;
-    aspect-ratio: 5/2;
+    aspect-ratio: 7/4;
 }
 
 .magazine-hero .text-overlay {
     display: flex;
     justify-content: space-between;
     height: 100%;
+    color: #fff;
+    margin:auto;
 }
 
 .magazine-hero .text-overlay .left-side {
@@ -14,14 +25,33 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    padding: 2em 2em 2em 8%;
+    margin-top: 5%;
 }
 
 .magazine-hero .text-overlay .left-side .issue {
-    font-size: 10px;
-    font-weight: bold;
+    font-size: 13px;
+    font-weight: 400;
+    margin-bottom: 0.5em;
     color: #ddd8d7;
 }
+
+.magazine-hero .text-overlay .left-side h1 {
+    font-size: 53px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin: 0 0 10px;
+}
+
+.magazine-hero .text-overlay .left-side .description {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.2em;
+    font-weight:  400;
+    max-width: 20em;
+}
+
 
 .magazine-hero .text-overlay .right-side {
     width: 30%;
@@ -29,6 +59,7 @@
 
 .magazine-hero .background-images {
     position: absolute;
+    z-index: -10;
     top: 0;
     left: 0;
     width: 100%;
@@ -76,7 +107,7 @@
     margin: 0;
     border-radius: 50%;
     border: none;
-    background-color: #bbbbbb;
+    background-color: #bbb;
     transition: background-color 0.3s ease;
 }
 
