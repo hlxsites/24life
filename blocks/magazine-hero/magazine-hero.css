@@ -55,7 +55,35 @@
 
 .magazine-hero .text-overlay .right-side {
     width: 30%;
+    margin-top: 5%;
 }
+
+
+.magazine-hero .text-overlay .right-side a.article-link:any-link {
+    font-size: 14px;
+    display: block;
+    text-transform: uppercase;
+    color: inherit;
+    max-width: 12em;
+    border-left: var(--accent-color) 2px solid;
+    padding-left: 1em;
+    font-weight: bold;
+    margin-bottom: 1em;
+}
+
+.magazine-hero .text-overlay .right-side a.article-link:hover {
+    color: var(--link-hover-color);
+}
+
+.magazine-hero .text-overlay .right-side .down-button {
+    padding: 18px 40px;
+    background-color: rgb(0 0 0 / 40%);
+}
+
+.magazine-hero .text-overlay .right-side .down-button:hover {
+    background-color: rgb(0 0 0 / 70%);
+}
+
 
 .magazine-hero .background-images {
     position: absolute;

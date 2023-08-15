@@ -27,11 +27,12 @@ export default async function decorate(block) {
   await decorateIcons(block);
 }
 
-function createArticleLink(url, text) {
+function createArticleLink(config, sectionName, linkTexts) {
   const link = document.createElement('a');
   link.classList.add('article-link');
-  link.href = url;
-  link.textContent = text;
+  link.href = config[sectionName];
+  link.textContent = linkTexts[config[sectionName]];
+  link.classList.add(`color-${sectionName}`);
   return link;
 }
 
@@ -60,14 +61,14 @@ function createRightOverlay(overlay, config, linkTexts) {
   const rightSide = document.createElement('div');
   rightSide.classList.add('right-side');
 
-  rightSide.append(createArticleLink(config.focus, linkTexts[config.focus]));
-  rightSide.append(createArticleLink(config.fitness, linkTexts[config.fitness]));
-  rightSide.append(createArticleLink(config.fuel, linkTexts[config.fuel]));
-  rightSide.append(createArticleLink(config.recover, linkTexts[config.recover]));
+  rightSide.append(createArticleLink(config, 'focus', linkTexts));
+  rightSide.append(createArticleLink(config, 'fitness', linkTexts));
+  rightSide.append(createArticleLink(config, 'fuel', linkTexts));
+  rightSide.append(createArticleLink(config, 'recover', linkTexts));
 
   const downButton = document.createElement('button');
   downButton.classList.add('down-button');
-  downButton.textContent = 'Explore This Issue';
+  downButton.innerHTML = 'Explore This Issue <span class="icon icon-arrow-down"></span>';
   downButton.href = '#'; // TODO: link to first content after video
   rightSide.append(downButton);
 
