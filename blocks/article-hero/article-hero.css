@@ -1,5 +1,12 @@
 .article-hero {
     position: relative;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.article-hero .hero-title {
+  letter-spacing: 3px;
+  text-transform: uppercase;
 }
 
 .article-hero img {
@@ -12,7 +19,24 @@
     gap: 30px;
 }
 
-.article-hero .hero-overlay  {
+div.hero-overlay-smaller-screen > a::before,
+.article-hero div.hero-overlay > a::before{
+  content: "By: ";
+}
+
+.article-hero div.hero-overlay > a{
+  color: #a0a0a0
+}
+
+.article-hero div.hero-collections > a {
+  color: var(--accent-color);
+}
+
+div.hero-overlay > a:hover {
+  color: var(--link-color-default-content);
+}
+
+.article-hero .hero-overlay {
     position: absolute;
     bottom: 80px;
     right: 0;
@@ -27,6 +51,12 @@
     padding: unset;
 }
 
-.section > div.article-hero-wrapper {
+.section>div.article-hero-wrapper {
     max-width: unset;
+}
+
+@media screen and (max-width: 599px) {
+    .article-hero .hero-overlay {
+        display: none;
+    }
 }
