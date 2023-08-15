@@ -73,7 +73,6 @@
   grid-template-columns: repeat(2, 1fr);
 }
 
-
 .card-wrapper .card-wrapper {
   /* make sure all the cards have the same width */
   flex-grow: 1;

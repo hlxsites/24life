@@ -40,6 +40,12 @@
     color: var(--text-color-secondary);
 }
 
+.article-author .social-links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
 @media (max-width: 900px) {
   .article-author {
     flex-direction: column;

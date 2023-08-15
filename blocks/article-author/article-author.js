@@ -1,4 +1,6 @@
-import { createOptimizedPicture, getMetadata, toClassName } from '../../scripts/lib-franklin.js';
+import {
+  createOptimizedPicture, decorateIcons, getMetadata, toClassName,
+} from '../../scripts/lib-franklin.js';
 
 export default function decorate(block) {
   const authorString = block.textContent.trim();
@@ -40,6 +42,9 @@ export default function decorate(block) {
           leftSide.innerHTML = '';
           leftSide.append(createOptimizedPicture(authorInfo.image, authorInfo.name, false, [{ width: '300' }]));
         }
+        if (authorInfo.links) {
+          addAuthorLinks(authorInfo, authorName);
+        }
       }
     } else {
       // eslint-disable-next-line no-console
@@ -48,4 +53,30 @@ export default function decorate(block) {
   }, 500);
   rightSide.append(authorDescription);
   block.append(rightSide);
+}
+
+function addAuthorLinks(author, authorNameContainer) {
+  const aLinks = author.links.split(',');
+  const socialLinksContainer = document.createElement('div');
+  socialLinksContainer.classList.add('social-links');
+  function addSocialLink(socialLink) {
+    socialLinksContainer.appendChild(socialLink);
+  }
+  aLinks.forEach((link) => {
+    const socialLink = document.createElement('a');
+    socialLink.href = link;
+    socialLink.target = '_blank';
+    if (link.includes('facebook')) {
+      socialLink.innerHTML = '<span class="icon icon-facebook"></span>';
+      addSocialLink(socialLink);
+    } else if (link.includes('twitter')) {
+      socialLink.innerHTML = '<span class="icon icon-twitter"></span>';
+      addSocialLink(socialLink);
+    } else if (link.includes('instagram')) {
+      socialLink.innerHTML = '<span class="icon icon-instagram"></span>';
+      addSocialLink(socialLink);
+    }
+    decorateIcons(socialLinksContainer);
+  });
+  authorNameContainer.after(socialLinksContainer);
 }
