@@ -4,10 +4,9 @@
 }
 
 .magazine-hero .text-overlay {
-    top: 10px;
-    left: 10px;
     display: flex;
     justify-content: space-between;
+    height: 100%;
 }
 
 .magazine-hero .text-overlay .left-side {
@@ -29,6 +28,9 @@
 }
 
 .magazine-hero .background-images {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
 }
@@ -59,7 +61,7 @@
 
 .magazine-hero .slideshow-buttons {
     position: absolute;
-    bottom: 50px;
+    bottom: 1rem;
     width: 100%;
     height: 20px;
     display: flex;
