@@ -51,8 +51,8 @@ div.hero-overlay > a:hover {
     padding: unset;
 }
 
-.section>div.article-hero-wrapper {
-    max-width: unset;
+.section > div.article-hero-wrapper {
+  max-width: unset;
 }
 
 @media screen and (max-width: 599px) {
