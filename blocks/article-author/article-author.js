@@ -1,5 +1,5 @@
 import {
-   createOptimizedPicture, decorateIcons, getMetadata, toClassName
+  createOptimizedPicture, decorateIcons, getMetadata, toClassName,
 } from '../../scripts/lib-franklin.js';
 
 export default function decorate(block) {
