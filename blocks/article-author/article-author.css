@@ -4,7 +4,7 @@
     margin: 2rem 0;
 }
 
-.article-author .brand {
+.article-author .author-image {
     width: 212px;
     flex-shrink: 0;
     flex-grow: 0;
@@ -51,7 +51,7 @@
     flex-direction: column;
   }
 
-  .article-author .brand {
+  .article-author .author-image {
     width: unset;
   }
 

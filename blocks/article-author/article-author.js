@@ -7,7 +7,7 @@ export default function decorate(block) {
   block.innerHTML = '';
 
   const leftSide = document.createElement('div');
-  leftSide.classList.add('brand');
+  leftSide.classList.add('author-image');
   block.append(leftSide);
 
   const rightSide = document.createElement('div');
