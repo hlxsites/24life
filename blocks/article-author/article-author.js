@@ -1,4 +1,6 @@
-import { createOptimizedPicture, decorateIcons, getMetadata, toClassName } from '../../scripts/lib-franklin.js';
+import {
+   createOptimizedPicture, decorateIcons, getMetadata, toClassName
+} from '../../scripts/lib-franklin.js';
 
 export default function decorate(block) {
   block.innerHTML = '';
