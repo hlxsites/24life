@@ -14,6 +14,7 @@
 
 .magazine-hero .text-overlay {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   height: 100%;
   color: #fff;
@@ -21,9 +22,15 @@
   padding: 8%;
 }
 
+@media (min-width: 900px) {
+  .magazine-hero .text-overlay {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
 .magazine-hero .text-overlay .left-side {
-  width: 66%;
-  height: 100%;
+  width: 33%;
   display: flex;
   flex-direction: column;
   margin-top: 5%;
@@ -54,11 +61,21 @@
 
 
 .magazine-hero .text-overlay .right-side {
-  width: 30%;
+  width: 70%;
   margin-top: 5%;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   flex-direction: column;
   align-items: center;
+  align-self: center;
+}
+
+@media (min-width: 900px) {
+  .magazine-hero .text-overlay .right-side {
+    width: 30%;
+    display: flex;
+    align-self: start;
+  }
 }
 
 
@@ -83,6 +100,7 @@
   background-color: rgb(0 0 0 / 40%);
   font-size: var(--heading-font-size-h5);
   font-weight: normal;
+  grid-column: 1 / span 2;
 }
 
 .magazine-hero .text-overlay .right-side .down-button:hover {
@@ -154,3 +172,5 @@
 .magazine-hero .slideshow-buttons button.active {
   background-color: white;
 }
+
+
