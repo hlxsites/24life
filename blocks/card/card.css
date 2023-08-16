@@ -59,18 +59,21 @@
   font-size: var(--body-font-size-author);
 }
 
-.card-wrapper {
-  display: grid;
+.card-container {
   gap: 2em;
-  grid-template-columns: repeat(3, 1fr);
 }
 
-.card-wrapper.two-columns {
+.card-container.two-columns {
+  display: grid;
   grid-template-columns: repeat(2, 1fr);
 }
 
+.card-container.three-columns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
 
-.card-wrapper .card-wrapper {
+.card-container .card-wrapper {
   /* make sure all the cards have the same width */
   flex-grow: 1;
   flex-basis: 0;
@@ -79,35 +82,39 @@
 
 /* variation: if there is card with the 'large' variant, show it large on the left side,
    and the other cards will be in a column on the right. */
-.card-wrapper.has-large-card {
+.card-container.has-large-card {
   display: grid;
   grid-template-columns: 2fr 1fr;
 }
 
-.card-wrapper.has-large-card .card-wrapper {
+.card-container.single .card-wrapper {
+    margin: auto;
+}
+
+.card-container.has-large-card .card-wrapper {
   grid-column: 2;
 }
 
-.card-wrapper.has-large-card .card-wrapper.large {
+.card-container.has-large-card .card-wrapper.large {
   grid-column: 1;
   grid-row: 1 / 3;
 }
 
-.card-wrapper.has-large-card .card.large .card-image img {
+.card-container.has-large-card .card.large .card-image img {
   aspect-ratio: 750/500;
 }
 
-.card-wrapper.has-large-card .card.large .card-title {
+.card-container.has-large-card .card.large .card-title {
   margin-top: 0.75em;
 }
 
-.card-wrapper.has-large-card .card.large .card-title a {
+.card-container.has-large-card .card.large .card-title a {
   font-size:var(--heading-font-size-h3);
 }
 
 /* on smaller screens, show everything in a single column. */
 @media (max-width: 900px) {
-  .section.card-wrapper {
+  .section.card-container {
     display: flex;
     flex-direction: column;
   }

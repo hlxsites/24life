@@ -13,7 +13,6 @@ export default async function decorate(block) {
 }
 
 async function fetchArticlesAndCreateCards(filters) {
-  const dummyParent = document.createElement('div');
   return ffetch('/articles.json')
     .chunks(20)
     .filter(({ template }) => template === 'article')
@@ -23,13 +22,14 @@ async function fetchArticlesAndCreateCards(filters) {
     ))
     .limit(9)
     .map(async (article) => {
-      const card = createCardBlock(article, dummyParent);
+      const wrapper = document.createElement('div');
+      const card = createCardBlock(article, wrapper);
       if (article.section) {
         card.classList.add(toClassName(article.section));
       }
 
       await loadBlock(card);
-      return card;
+      return wrapper;
     })
     .all();
 }
