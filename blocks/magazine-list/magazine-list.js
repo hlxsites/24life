@@ -24,7 +24,7 @@ async function fetchMagazines(currentIssue, otherIssues) {
 
       const issueImage = createOptimizedPicture(issue.image, issue.title, true);
       issueImage.className = 'issue-image';
-      
+
       const titleDiv = document.createElement('div');
       titleDiv.className = 'issue-title';
       titleDiv.textContent = issue.title;
@@ -40,12 +40,5 @@ async function fetchMagazines(currentIssue, otherIssues) {
       } else {
         otherIssues.append(issueDiv);
       }
-
-      issueDiv.addEventListener('mouseenter', (e) => {
-        titleDiv.style.display = 'flex';
-      });
-      issueDiv.addEventListener('mouseleave', (e) => {
-        titleDiv.style.display = 'none';
-      });
     }));
 }
