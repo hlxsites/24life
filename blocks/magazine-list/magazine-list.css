@@ -1,3 +1,8 @@
+.current-issue,
+.other-issues {
+  margin-bottom: 10px;
+}
+
 .current-issue {
   display: flex;
   justify-content: center;
@@ -6,6 +11,7 @@
 
 .other-issues {
   display: block;
+  line-height: 0;
 }
 
 .issue {
@@ -46,7 +52,9 @@
   transition: all 1s ease;
   opacity: 0;
 }
-
+.other-issues .issue {
+  margin-bottom: 10px;
+}
 /* Override section padding */
 main .section {
   padding: 0;
@@ -61,6 +69,10 @@ main .section {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 30px;
+  }
+
+  .other-issues .issue {
+    margin-bottom: 0;
   }
 }
 
