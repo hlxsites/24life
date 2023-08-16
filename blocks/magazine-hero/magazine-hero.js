@@ -68,7 +68,7 @@ function createRightOverlay(overlay, config, linkTexts) {
 
   const downButton = document.createElement('button');
   downButton.classList.add('down-button');
-  downButton.innerHTML = 'Explore This Issue <span class="icon icon-arrow-down"></span>';
+  downButton.innerHTML = 'Explore This Issue <span class="icon icon-arrow-down-solid"></span>';
   downButton.href = '#'; // TODO: link to first content after video
   rightSide.append(downButton);
 
