@@ -23,16 +23,11 @@ export default async function decorate(block) {
 function removeEmptyKeyOrValue(obj) {
   if (!obj || typeof obj !== 'object') return {};
 
-  function checkIfInvalidString(key) {
-    return key === undefined || key === '' || (typeof key === 'string' && key.trim() === '');
-  }
-
-  Object.keys(obj).forEach((key) => {
-    if (checkIfInvalidString(key) || checkIfInvalidString(obj[key])) {
-      delete obj[key];
-    }
-  });
-  return obj;
+  return Object.fromEntries(
+    Object.entries(obj).filter(
+      ([key, value]) => key.trim() && value?.toString()?.trim(),
+    ),
+  );
 }
 
 async function fetchArticlesAndAddCards(filters, block) {
