@@ -6,9 +6,13 @@ import { createCardBlock } from '../card/card.js';
 
 export default async function decorate(block) {
   const filters = readBlockConfig(block);
-  if (!Object.keys(filters) && document.location.pathname.startsWith('/author/')) {
+  const isEmptyFilter = Object.keys(filters).length === 0;
+  if (isEmptyFilter && document.location.pathname.startsWith('/author/')) {
     // auto-detect author, e.g. https://www.24life.com/author/24life
     filters.author = new URL(document.location).pathname.split('/').pop();
+  } else if (isEmptyFilter && document.location.pathname.startsWith('/collections/')) {
+    filters.collections = new URL(document.location).pathname.split('/').pop();
+    filters.collections = filters.collections?.replace(/-/g, ' ');
   }
   block.textContent = '';
   block.classList.add('card-container');
@@ -22,7 +26,7 @@ async function fetchArticlesAndAddCards(filters, block) {
   await Promise.all(articles
     // make sure all filters match
     .filter((article) => Object.keys(filters).every(
-      (key) => article[key]?.toLowerCase() === filters[key].toLowerCase(),
+      (key) => { console.log(article.title, article[key], filters[key]); return article[key]?.toLowerCase().includes(filters[key].toLowerCase()); },
     ))
     .filter(({ template }) => template === 'article')
     .map(async (article) => {
