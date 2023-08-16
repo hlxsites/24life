@@ -29,6 +29,7 @@ export default function decorate(block) {
 
   const h1 = document.createElement('h1');
   h1.append(data.title);
+  h1.classList.add('hero-title');
   overlay.append(h1);
   overlay.append('By ');
 
