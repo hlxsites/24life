@@ -27,12 +27,6 @@
   height: auto;
 }
 
-.issue:hover .issue-title {
-  transition: all 1s ease;
-  transform: translateY(0%);
-  opacity: 1;
-}
-
 .issue-title {
   position: absolute;
   z-index: 100;
@@ -44,7 +38,7 @@
   font-weight: 600;
   font-style: italic;
   color: #fff;
-  background-color: rgba(45, 45, 45, 0.8);
+  background-color: rgba(45, 45, 45, 80%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -52,9 +46,17 @@
   transition: all 1s ease;
   opacity: 0;
 }
+
+.issue:hover .issue-title {
+  transition: all 1s ease;
+  transform: translateY(0%);
+  opacity: 1;
+}
+
 .other-issues .issue {
   margin-bottom: 10px;
 }
+
 /* Override section padding */
 main .section {
   padding: 0;
