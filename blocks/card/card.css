@@ -106,6 +106,7 @@
 
 /* on smaller screens, show everything in a single column. */
 @media (max-width: 900px) {
+  div.card-wrapper,
   .section.card-wrapper {
     display: flex;
     flex-direction: column;
