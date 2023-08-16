@@ -26,7 +26,7 @@ async function fetchArticlesAndAddCards(filters, block) {
   await Promise.all(articles
     // make sure all filters match
     .filter((article) => Object.keys(filters).every(
-      (key) => { console.log(article.title, article[key], filters[key]); return article[key]?.toLowerCase().includes(filters[key].toLowerCase()); },
+      (key) => article[key]?.toLowerCase().includes(filters[key].toLowerCase()),
     ))
     .filter(({ template }) => template === 'article')
     .map(async (article) => {
