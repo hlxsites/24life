@@ -13,7 +13,6 @@
 
 
 @media (min-width: 900px) {
-
   .magazine-hero {
     aspect-ratio: 7/4;
   }
@@ -191,4 +190,40 @@
   background-color: white;
 }
 
+
+/* animations */
+
+.magazine-hero .animate-slide-from-left {
+  animation: slide-in-from-left 0.5s ease-out forwards;
+  transform:translateX(-300%);
+  opacity: 0;
+}
+
+@keyframes slide-in-from-left {
+  80% {
+    opacity: 0;
+  }
+  to {
+    transform:translateX(0);
+    opacity: 1;
+  }
+}
+
+.magazine-hero .animate-appear-from-center {
+  animation: appear-from-center 0.9s ease-out forwards;
+  transform:translateX(170px);
+  width: 0;
+  overflow: hidden;
+  animation-delay: 0.8s;
+}
+
+@keyframes appear-from-center {
+  /*30%{*/
+  /*  width: 0;*/
+  /*}*/
+  to {
+    transform:translateX(0);
+    width: 100%;
+  }
+}
 

@@ -41,16 +41,17 @@ function createLeftOverlay(overlay, config) {
   leftSide.classList.add('left-side');
 
   const issue = document.createElement('p');
-  issue.classList.add('issue');
+  issue.classList.add('issue', 'animate-slide-from-left');
   issue.append(config.issue);
   leftSide.append(issue);
 
   const h1 = document.createElement('h1');
+  h1.classList.add('animate-appear-from-center');
   h1.append(config.title);
   leftSide.append(h1);
 
   const description = document.createElement('p');
-  description.classList.add('description');
+  description.classList.add('description', 'animate-slide-from-left');
   description.append(config.description);
   leftSide.append(description);
 
