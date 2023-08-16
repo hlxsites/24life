@@ -98,3 +98,7 @@ main .youtube-video {
   height: auto;
   aspect-ratio: 9/5;
 }
+
+main .library-metadata-wrapper {
+  display: none;
+}
