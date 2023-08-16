@@ -5,7 +5,7 @@ import ffetch from '../../scripts/ffetch.js';
 import { createCardBlock } from '../card/card.js';
 
 export default async function decorate(block) {
-  const filters = readBlockConfig(block);
+  const filters = removeEmptyKeyOrValue(readBlockConfig(block));
   const isEmptyFilter = Object.keys(filters).length === 0;
   if (isEmptyFilter && document.location.pathname.startsWith('/author/')) {
     // auto-detect author, e.g. https://www.24life.com/author/24life
@@ -18,6 +18,21 @@ export default async function decorate(block) {
   block.classList.add('card-container');
   // eslint-disable-next-line no-console
   await fetchArticlesAndAddCards(filters, block);
+}
+
+function removeEmptyKeyOrValue(obj) {
+  if (!obj || typeof obj !== 'object') return {};
+
+  function checkIfInvalidString(key) {
+    return key === undefined || key === '' || (typeof key === 'string' && key.trim() === '');
+  }
+
+  Object.keys(obj).forEach((key) => {
+    if (checkIfInvalidString(key) || checkIfInvalidString(obj[key])) {
+      delete obj[key];
+    }
+  });
+  return obj;
 }
 
 async function fetchArticlesAndAddCards(filters, block) {
