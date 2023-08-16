@@ -17,11 +17,9 @@ export default async function decorate(doc) {
   firstContent.before(createSocialMediaButtons());
 
   const lastContent = [...doc.querySelectorAll('main .section .default-content-wrapper')].at(-1);
-  lastContent.append(createSocialMediaButtons());
-  getMetadata('author').split(',').forEach((author) => {
-    lastContent.append(createAuthorBlock(author));
-  });
-  lastContent.append(createArticleCarousel());
+  lastContent.after(createArticleCarousel());
+  lastContent.after(createAuthorBlock());
+  lastContent.after(createSocialMediaButtons());
 }
 
 function createNewSection() {
@@ -57,9 +55,9 @@ function createSectionWithHeroBlock(h1, img) {
   return section;
 }
 
-function createAuthorBlock(author) {
+function createAuthorBlock() {
   const container = document.createElement('div');
-  const newBlock = buildBlock('article-author', author);
+  const newBlock = buildBlock('article-author', '');
   container.append(newBlock);
   decorateBlock(newBlock);
   return container;
