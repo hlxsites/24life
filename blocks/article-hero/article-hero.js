@@ -31,6 +31,7 @@ export default function decorate(block) {
   h1.append(data.title);
   h1.classList.add('hero-title');
   overlay.append(h1);
+  overlay.append('By ');
 
   const authorLink = document.createElement('a');
   authorLink.href = `/author/${toClassName(data.author)}`;
