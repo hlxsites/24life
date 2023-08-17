@@ -18,6 +18,8 @@
   letter-spacing: 0.05em;
   line-height: 1.15;
   font-weight: 500;
+  padding: 10px 0;
+  position: relative;
 }
 
 .quote .quote-author {
@@ -26,11 +28,6 @@
   font-family: var(--body-font-family);
   font-size: var(--body-font-size-card-header);
   line-height: 1.45;
-}
-
-.quote .quote-text {
-  padding: 10px 0;
-  position: relative;
 }
 
 .quote .quote-author > div::before {
