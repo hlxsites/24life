@@ -114,6 +114,7 @@
 
 /* on smaller screens, show everything in a single column. */
 @media (max-width: 900px) {
+  .section.card-container,
   .card-container.three-columns{
     display: flex;
     flex-direction: column;
