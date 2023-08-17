@@ -58,6 +58,15 @@ function createLeftOverlay(overlay, config) {
   return leftSide;
 }
 
+function scrollToFistParagraph() {
+  for (const p of document.querySelectorAll('.default-content-wrapper p')) {
+    if (!p.querySelector('iframe')) {
+      p.scrollIntoView({ behavior: 'smooth' });
+      break;
+    }
+  }
+}
+
 function createRightOverlay(overlay, config, linkTexts) {
   const rightSide = document.createElement('div');
   rightSide.classList.add('right-side');
@@ -70,7 +79,8 @@ function createRightOverlay(overlay, config, linkTexts) {
   const downButton = document.createElement('button');
   downButton.classList.add('down-button');
   downButton.innerHTML = 'Explore This Issue <span class="icon icon-arrow-down-solid"></span>';
-  downButton.href = '#'; // TODO: link to first content after video
+  downButton.addEventListener('click', scrollToFistParagraph);
+
   rightSide.append(downButton);
 
   return rightSide;

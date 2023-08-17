@@ -169,6 +169,10 @@ code, samp {
   padding: .125em;
 }
 
+p {
+  scroll-margin-top: var(--nav-height);
+}
+
 pre {
   overflow: scroll;
 }
