@@ -8,6 +8,12 @@ import {
 import ffetch from '../../scripts/ffetch.js';
 import { createCardBlock } from '../card/card.js';
 
+function plainText(text) {
+  const fragment = document.createElement('div');
+  fragment.append(text);
+  return fragment.innerHTML;
+}
+
 /**
  * Generic carousel block, which can be used for any content or blocks.
  * Each row is a slide.
@@ -22,32 +28,14 @@ export default async function decorate(block) {
     const card = document.createElement('div');
     card.classList.add('slide');
 
-    const imageP = document.createElement('p');
-    imageP.classList.add('image');
-    const picture = createOptimizedPicture(article.image);
-    imageP.append(picture);
-    card.append(imageP);
+    card.innerHTML = `
+    <p class="image">${createOptimizedPicture(article.image).outerHTML}</p>
+    <div class="text">
+        <p class="section">${plainText(article.section)}</p>
+        <p class="title">${plainText(article.title)}</p>
+        <p class="author">BY ${plainText(article.author)}</p>
+    </div> `;
 
-    const textP = document.createElement('p');
-    textP.classList.add('text');
-
-    const section = document.createElement('div');
-    section.classList.add('section');
-    section.append(article.section);
-    textP.append(section);
-
-    const title = document.createElement('div');
-    title.classList.add('title');
-    title.append(article.title);
-    textP.append(title);
-
-    const author = document.createElement('div');
-    author.classList.add('author');
-    author.append('BY ');
-    author.append(article.author);
-    textP.append(author);
-
-    card.append(textP);
     return card;
   });
   block.append(...slides);
