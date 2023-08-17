@@ -23,7 +23,6 @@ export default async function decorate(block) {
   block.append(overlay);
 
   createBackgroundSlideshow(block, config.images);
-
   await decorateIcons(block);
 }
 
@@ -115,6 +114,11 @@ function createBackgroundSlideshow(block, images) {
     const nextSlide = activeSlide.nextElementSibling || block.querySelector('.slide');
     goToSlide([...block.querySelectorAll('.slide')].indexOf(nextSlide));
   }
+  function goToPrevSlide() {
+    const activeSlide = block.querySelector('.slide.active');
+    const prevSlide = activeSlide.previousElementSibling || block.querySelector('.slide:last-child');
+    goToSlide([...block.querySelectorAll('.slide')].indexOf(prevSlide));
+  }
 
   images.forEach((url, index) => {
     const button = document.createElement('button');
@@ -135,4 +139,23 @@ function createBackgroundSlideshow(block, images) {
   block.append(backgroundImages);
   block.append(slideshowButtons);
   autoplaySlides(goToNextSlide);
+
+  /** detect swipe gestures on touch screens to advance slides */
+  function gestureStart(event) {
+    const touchStartX = event.changedTouches[0].screenX;
+
+    function gestureEnd(endEvent) {
+      const touchEndX = endEvent.changedTouches[0].screenX;
+      const delta = touchEndX - touchStartX;
+      if (delta < -5) {
+        goToNextSlide();
+      } else if (delta > 5) {
+        goToPrevSlide();
+      } else {
+        // finger not moved enough, do nothing
+      }
+    }
+    block.addEventListener('touchend', gestureEnd, { once: true });
+  }
+  block.addEventListener('touchstart', gestureStart, false);
 }
