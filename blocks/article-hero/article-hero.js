@@ -47,12 +47,18 @@ export default function decorate(block) {
   h1.append(data.title);
   h1.classList.add('hero-title');
   overlay.append(h1);
-  overlay.append('By ');
 
-  const authorLink = document.createElement('a');
-  authorLink.href = `/author/${toClassName(data.author)}`;
-  authorLink.textContent = data.author;
-  overlay.append(authorLink);
-
+  const authorLinks = document.createElement('span');
+  authorLinks.append('By ');
+  data.author.split(',').forEach((author, index) => {
+    const authorLink = document.createElement('a');
+    authorLink.href = `/author/${toClassName(author)}`;
+    authorLink.textContent = author;
+    if (index > 0) {
+      authorLinks.append(' and ');
+    }
+    authorLinks.append(authorLink);
+    overlay.append(authorLinks);
+  });
   block.append(overlay);
 }
