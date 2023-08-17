@@ -124,7 +124,7 @@ function createBackgroundSlideshow(block, images) {
 
     const p = document.createElement('p');
     p.classList.add('slide');
-    p.append(createOptimizedPicture(url));
+    p.append(createOptimizedPicture(url, 'slideshow background image', index === 0));
     backgroundImages.append(p);
 
     if (index === 0) {
