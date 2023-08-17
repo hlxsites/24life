@@ -59,6 +59,20 @@
   text-transform: uppercase;
   letter-spacing: 0.15em;
   margin: 0 0 10px;
+
+  /* animation */
+  animation: appear-from-center 0.9s ease-out forwards;
+  transform:translateX(170px);
+  width: 0;
+  overflow: hidden;
+  animation-delay: 0.8s;
+}
+
+@keyframes appear-from-center {
+  to {
+    transform:translateX(0);
+    width: 100%;
+  }
 }
 
 .magazine-hero .text-overlay .left-side .description {
@@ -147,6 +161,17 @@
   font-size: var(--heading-font-size-h5);
   font-weight: normal;
   grid-column: 1 / span 2;
+
+  /* animation */
+  animation: button-appear 0.9s ease-out forwards;
+  opacity: 0;
+  animation-delay: 2s;
+}
+
+@keyframes button-appear {
+  to {
+    opacity: 1;
+  }
 }
 
 .magazine-hero .text-overlay .right-side .down-button:hover {
@@ -238,19 +263,3 @@
     opacity: 1;
   }
 }
-
-.magazine-hero .animate-appear-from-center {
-  animation: appear-from-center 0.9s ease-out forwards;
-  transform:translateX(170px);
-  width: 0;
-  overflow: hidden;
-  animation-delay: 0.8s;
-}
-
-@keyframes appear-from-center {
-  to {
-    transform:translateX(0);
-    width: 100%;
-  }
-}
-
