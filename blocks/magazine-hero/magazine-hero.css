@@ -98,12 +98,37 @@
     font-size: 14px;
     display: block;
     text-transform: uppercase;
-    color: inherit;
     max-width: 12em;
     border-left: var(--accent-color) 2px solid;
     padding-left: 1em;
     font-weight: bold;
     margin-bottom: 1em;
+
+    /* animation */
+    animation: slide-and-stretch-from-right 0.9s ease-out forwards;
+    transform: translateX(50px);
+    animation-delay: 1.2s;
+    border-left-width: 0;
+    color: transparent;
+  }
+
+  @keyframes slide-and-stretch-from-right {
+    0% {
+      color: transparent;
+    }
+
+    50% {
+      border-left-width: 2px;
+      padding-left: 2em;
+      color: transparent;
+    }
+
+    100% {
+      transform:translateX(0);
+      border-left-width: 2px;
+      padding-left: 1em;
+      color:inherit;
+    }
   }
 
   .magazine-hero .text-overlay .right-side a.article-link:hover {
@@ -191,7 +216,7 @@
 }
 
 
-/* animations */
+/* === animations === */
 
 .magazine-hero .animate-slide-from-left {
   animation: slide-in-from-left 0.5s ease-out forwards;
@@ -203,7 +228,8 @@
   80% {
     opacity: 0;
   }
-  to {
+
+  100% {
     transform:translateX(0);
     opacity: 1;
   }
@@ -218,9 +244,6 @@
 }
 
 @keyframes appear-from-center {
-  /*30%{*/
-  /*  width: 0;*/
-  /*}*/
   to {
     transform:translateX(0);
     width: 100%;
