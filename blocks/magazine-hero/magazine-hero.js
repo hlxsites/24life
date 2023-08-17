@@ -89,6 +89,15 @@ function createBackgroundSlideshow(block, images) {
 
     block.querySelector('.slideshow-buttons .active').classList.remove('active');
     [...block.querySelectorAll('.slideshow-buttons button')].at(index).classList.add('active');
+
+    // automatically advance slides. Reset timer when user interacts with the slideshow
+    autoplaySlides();
+  }
+
+  let autoSlideInterval = null;
+  function autoplaySlides() {
+    clearInterval(autoSlideInterval);
+    autoSlideInterval = setInterval(() => goToNextSlide(), 7000);
   }
 
   function goToNextSlide() {
@@ -115,7 +124,5 @@ function createBackgroundSlideshow(block, images) {
   });
   block.append(backgroundImages);
   block.append(slideshowButtons);
-
-  // automatically advance slides
-  setInterval(() => goToNextSlide(), 7000);
+  autoplaySlides(goToNextSlide);
 }
