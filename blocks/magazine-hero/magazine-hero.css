@@ -47,7 +47,7 @@
 }
 
 .magazine-hero .text-overlay .left-side .issue {
-  font-size: 13px;
+  font-size: var(--body-font-size-author);
   font-weight: 400;
   margin-bottom: 0.5em;
   color: #ddd8d7;
@@ -77,7 +77,7 @@
 
 .magazine-hero .text-overlay .left-side .description {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--body-font-size-author);
   line-height: 1.2em;
   font-weight: 400;
   max-width: 20em;
@@ -106,13 +106,13 @@
 .magazine-hero .text-overlay .right-side a.article-link {
   display: none;
 
-  /* to be updated from JS */
+  /* this is updated from JS */
   --animation-order: 1;
 }
 
 @media (min-width: 600px) {
   .magazine-hero .text-overlay .right-side a.article-link:any-link {
-    font-size: 11px;
+    font-size: 12px;
     display: block;
     text-transform: uppercase;
     max-width: 12em;
