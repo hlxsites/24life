@@ -15,6 +15,10 @@ body.article main .article-social-media-buttons a:hover svg {
     background-color: var(--link-color-default-content);
 }
 
+body.article main .article-carousel-wrapper {
+    margin: 4rem 0;
+}
+
 @media (min-width: 900px) {
     body.article main .article-carousel-wrapper {
         display: flex;
