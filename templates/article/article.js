@@ -82,20 +82,32 @@ function createSocialMediaButtons() {
   const socialMediaButtons = document.createElement('div');
   socialMediaButtons.innerHTML = `
   <div class="article-social-media-buttons">
-          <a aria-label="share this page on twitter"  target="_blank" href="https://twitter.com/share?url=">
+          <a aria-label="share this page on twitter" href="https://twitter.com/share?url=">
               <span class="icon icon-twitter-alt"></span>
           </a>
       
-          <a aria-label="share this page on facebook" target="_blank" href="http://www.facebook.com/share.php?u=">
+          <a aria-label="share this page on facebook" href="http://www.facebook.com/share.php?u=">
               <span class="icon icon-facebook"></span>
           </a>
       
-          <a aria-label="share this page on pinterest" target="_blank" href="http://pinterest.com/pin/create/button/?url=">
+          <a aria-label="share this page on pinterest" href="http://pinterest.com/pin/create/button/?url=">
               <span class="icon icon-pinterest"></span>
           </a>
   </div>`;
   socialMediaButtons.querySelectorAll('a').forEach((a) => {
-    a.href += window.location.href;
+    a.onclick = function (e) {
+      e.preventDefault();
+      const newUrl = `${a.href}${window.location.href}`;
+      const pin = newUrl.includes('pinterest.com');
+      let description = '';
+      let imageUrl = '';
+      if (pin) {
+        description = encodeURIComponent((document.querySelector('meta[property="og:description"]')?.getAttribute('content') || ''));
+        imageUrl = (document.querySelector('meta[property="og:image"]')?.getAttribute('content') || '');
+      }
+      const parameters = pin ? `&description=${description}&image=${imageUrl}` : '';
+      window.open(newUrl + parameters, 'sharer', 'toolbar=0,status=0,width=626,height=436');
+    }
   });
   // noinspection JSIgnoredPromiseFromCall
   decorateIcons(socialMediaButtons);
