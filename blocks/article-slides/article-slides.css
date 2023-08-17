@@ -1,0 +1,20 @@
+.section.article-slides-container {
+  padding: 0;
+}
+
+.section > .article-slides-wrapper {
+  max-width: unset;
+  margin: unset;
+}
+
+.article-slides {
+  height: 600px;
+  position: relative;
+}
+
+.article-slides .slide {
+  position: absolute;
+  /* TODO */
+  opacity: 0.5;
+}
+
