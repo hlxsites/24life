@@ -91,11 +91,14 @@
 
 .magazine-hero .text-overlay .right-side a.article-link {
   display: none;
+
+  /* to be updated from JS */
+  --animation-order: 1;
 }
 
 @media (min-width: 600px) {
   .magazine-hero .text-overlay .right-side a.article-link:any-link {
-    font-size: 14px;
+    font-size: 11px;
     display: block;
     text-transform: uppercase;
     max-width: 12em;
@@ -105,15 +108,16 @@
     margin-bottom: 1em;
 
     /* animation */
-    animation: slide-and-stretch-from-right 0.9s ease-out forwards;
+    animation: slide-and-stretch-from-right 0.4s ease-out forwards;
     transform: translateX(50px);
-    animation-delay: 1.2s;
+    animation-delay: calc(1s + var(--animation-order) * 200ms);
     border-left-width: 0;
     color: transparent;
   }
 
   @keyframes slide-and-stretch-from-right {
     0% {
+      border-left-width: 0;
       color: transparent;
     }
 
@@ -216,7 +220,7 @@
 }
 
 
-/* === animations === */
+/* === animations that are used multiple times === */
 
 .magazine-hero .animate-slide-from-left {
   animation: slide-in-from-left 0.5s ease-out forwards;

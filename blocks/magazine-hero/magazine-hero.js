@@ -27,12 +27,13 @@ export default async function decorate(block) {
   await decorateIcons(block);
 }
 
-function createArticleLink(config, sectionName, linkTexts) {
+function createArticleLink(config, sectionName, linkTexts, animationOrder) {
   const link = document.createElement('a');
   link.classList.add('article-link');
   link.href = config[sectionName];
   link.textContent = linkTexts[config[sectionName]];
   link.classList.add(`color-${sectionName}`);
+  link.style.setProperty('--animation-order', animationOrder);
   return link;
 }
 
@@ -62,10 +63,10 @@ function createRightOverlay(overlay, config, linkTexts) {
   const rightSide = document.createElement('div');
   rightSide.classList.add('right-side');
 
-  rightSide.append(createArticleLink(config, 'focus', linkTexts));
-  rightSide.append(createArticleLink(config, 'fitness', linkTexts));
-  rightSide.append(createArticleLink(config, 'fuel', linkTexts));
-  rightSide.append(createArticleLink(config, 'recover', linkTexts));
+  rightSide.append(createArticleLink(config, 'focus', linkTexts, 1));
+  rightSide.append(createArticleLink(config, 'fitness', linkTexts, 2));
+  rightSide.append(createArticleLink(config, 'fuel', linkTexts, 3));
+  rightSide.append(createArticleLink(config, 'recover', linkTexts, 4));
 
   const downButton = document.createElement('button');
   downButton.classList.add('down-button');
