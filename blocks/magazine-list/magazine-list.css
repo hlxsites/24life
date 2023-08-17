@@ -1,20 +1,20 @@
-.current-issue,
+.magazine-list .current-issue,
 .other-issues {
   margin-bottom: 10px;
 }
 
-.current-issue {
+.magazine-list .current-issue {
   display: flex;
   justify-content: center;
   line-height: 0;
 }
 
-.other-issues {
+.magazine-list .other-issues {
   display: block;
   line-height: 0;
 }
 
-.issue {
+.magazine-list .issue {
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -22,12 +22,11 @@
   overflow: hidden;
 }
 
-.issue-image > img {
+.magazine-list .issue-image > img {
   width: 100%;
   height: auto;
 }
-
-.issue-title {
+.magazine-list .issue-title {
   position: absolute;
   z-index: 100;
   width: 100%;
@@ -47,18 +46,18 @@
   opacity: 0;
 }
 
-.issue:hover .issue-title {
+.magazine-list .issue:hover .issue-title {
   transition: all 1s ease;
   transform: translateY(0%);
   opacity: 1;
 }
 
-.other-issues .issue {
+.magazine-list .other-issues .issue {
   margin-bottom: 10px;
 }
 
 /* Override section padding */
-main .section {
+main .section.magazine-list-container {
   padding: 0;
 }
 
@@ -67,19 +66,19 @@ main .section {
     max-width: unset;
   }
 
-  .other-issues {
+  .magazine-list .other-issues {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 30px;
   }
 
-  .other-issues .issue {
+  .magazine-list .other-issues .issue {
     margin-bottom: 0;
   }
 }
 
 @media (min-width: 992px) {
-  .current-issue .issue {
+  .magazine-list .current-issue .issue {
     width: 33.333%;
   }
 }

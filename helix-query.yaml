@@ -104,6 +104,8 @@ indices:
   magazines:
     include:
       - /magazine/**
+    exclude:
+      - /magazine
     target: /magazines.json
     properties:
       title:

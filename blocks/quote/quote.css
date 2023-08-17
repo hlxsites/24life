@@ -23,7 +23,7 @@
 }
 
 .quote .quote-author {
-  color: #999;
+  color: var(--label-text-color);
   font-style: italic;
   font-family: var(--body-font-family);
   font-size: var(--body-font-size-card-header);
