@@ -78,6 +78,20 @@ function createArticleCarousel() {
   return container;
 }
 
+function updateSocialLink(e) {
+  e.preventDefault();
+  const newUrl = `${e.currentTarget.href}${window.location.href}`;
+  const pin = newUrl.includes('pinterest.com');
+  let description = '';
+  let imageUrl = '';
+  if (pin) {
+    description = encodeURIComponent((document.querySelector('meta[property="og:description"]')?.getAttribute('content') || ''));
+    imageUrl = (document.querySelector('meta[property="og:image"]')?.getAttribute('content') || '');
+  }
+  const parameters = pin ? `&description=${description}&image=${imageUrl}` : '';
+  window.open(newUrl + parameters, 'sharer', 'toolbar=0,status=0,width=626,height=436');
+}
+
 function createSocialMediaButtons() {
   const socialMediaButtons = document.createElement('div');
   socialMediaButtons.innerHTML = `
@@ -95,19 +109,7 @@ function createSocialMediaButtons() {
           </a>
   </div>`;
   socialMediaButtons.querySelectorAll('a').forEach((a) => {
-    a.onclick = function (e) {
-      e.preventDefault();
-      const newUrl = `${a.href}${window.location.href}`;
-      const pin = newUrl.includes('pinterest.com');
-      let description = '';
-      let imageUrl = '';
-      if (pin) {
-        description = encodeURIComponent((document.querySelector('meta[property="og:description"]')?.getAttribute('content') || ''));
-        imageUrl = (document.querySelector('meta[property="og:image"]')?.getAttribute('content') || '');
-      }
-      const parameters = pin ? `&description=${description}&image=${imageUrl}` : '';
-      window.open(newUrl + parameters, 'sharer', 'toolbar=0,status=0,width=626,height=436');
-    }
+    a.onclick = updateSocialLink;
   });
   // noinspection JSIgnoredPromiseFromCall
   decorateIcons(socialMediaButtons);

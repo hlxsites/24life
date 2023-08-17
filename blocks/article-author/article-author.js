@@ -57,7 +57,6 @@ export default function decorate(block) {
 
 function addAuthorLinks(author, authorNameContainer) {
   const aLinks = author.links.replace(/^\["|"\]$/g, '').split(', ');
-  //const aLinks = JSON.parse(author.links);
   const socialLinksContainer = document.createElement('div');
   socialLinksContainer.classList.add('social-links');
   function addSocialLink(socialLink) {
