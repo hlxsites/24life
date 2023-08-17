@@ -91,6 +91,12 @@ function createBackgroundSlideshow(block, images) {
     [...block.querySelectorAll('.slideshow-buttons button')].at(index).classList.add('active');
   }
 
+  function goToNextSlide() {
+    const activeSlide = block.querySelector('.slide.active');
+    const nextSlide = activeSlide.nextElementSibling || block.querySelector('.slide');
+    goToSlide([...block.querySelectorAll('.slide')].indexOf(nextSlide));
+  }
+
   images.forEach((url, index) => {
     const button = document.createElement('button');
     button.ariaLabel = `go to Slide ${index + 1}`;
@@ -109,4 +115,7 @@ function createBackgroundSlideshow(block, images) {
   });
   block.append(backgroundImages);
   block.append(slideshowButtons);
+
+  // automatically advance slides
+  setInterval(() => goToNextSlide(), 7000);
 }
