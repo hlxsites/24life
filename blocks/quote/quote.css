@@ -31,7 +31,7 @@
 }
 
 .quote .quote-author > div::before {
-  content: "&mdash;";
+  content: "\2014"; /* em dash */
   display: inline;
   margin-right: 5px;
 }
