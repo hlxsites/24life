@@ -5,7 +5,6 @@
 @media screen and (min-width: 1200px) {
     .collection-hero {
         height: 100vh;
-        padding-bottom: 50px;
     }
 }
 
@@ -20,15 +19,6 @@
     .collection-hero img {
         height: 100%;
     }
-}
-
-.collection-hero div.hero-description {
-    max-width: 100%;
-    margin: auto;
-}
-
-.collection-hero div.hero-description > p {
-   text-align: center;
 }
 
 .section.collection-hero-container {

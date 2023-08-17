@@ -23,13 +23,4 @@ export default function decorate(block) {
     overlay.append(p);
     block.append(overlay);
   }
-
-  if (data.description) {
-    const descriptionWrapper = document.createElement('div');
-    descriptionWrapper.classList.add('hero-description');
-    const description = document.createElement('p');
-    description.append(data.description);
-    descriptionWrapper.append(description);
-    block.append(descriptionWrapper);
-  }
 }
