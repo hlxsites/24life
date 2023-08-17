@@ -31,7 +31,7 @@
 }
 
 .quote .quote-author > div::before {
-  content: "\2014";
+  content: "&mdash;";
   display: inline;
   margin-right: 5px;
 }
