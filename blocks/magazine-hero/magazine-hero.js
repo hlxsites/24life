@@ -9,7 +9,6 @@ export default async function decorate(block) {
   const config = readBlockConfig(block);
   // readBlockConfig does not keep the link texts, so we store them here
   const linkTexts = {};
-  // eslint-disable-next-line no-restricted-syntax
   for (const a of block.querySelectorAll('a')) {
     linkTexts[a.href] = a.textContent;
   }
@@ -57,7 +56,7 @@ function createLeftOverlay(overlay, config) {
   return leftSide;
 }
 
-function scrollToFistParagraph() {
+function scrollToFirstParagraph() {
   for (const p of document.querySelectorAll('.default-content-wrapper p')) {
     if (!p.querySelector('iframe')) {
       p.scrollIntoView({ behavior: 'smooth' });
@@ -78,7 +77,7 @@ function createRightOverlay(overlay, config, linkTexts) {
   const downButton = document.createElement('button');
   downButton.classList.add('down-button');
   downButton.innerHTML = 'Explore This Issue <span class="icon icon-arrow-down-solid"></span>';
-  downButton.addEventListener('click', scrollToFistParagraph);
+  downButton.addEventListener('click', scrollToFirstParagraph);
 
   rightSide.append(downButton);
 
