@@ -60,15 +60,18 @@
 }
 
 .card-container {
-  display: grid;
   gap: 2em;
-  grid-template-columns: repeat(3, 1fr);
 }
 
 .card-container.two-columns {
+  display: grid;
   grid-template-columns: repeat(2, 1fr);
 }
 
+.card-container.three-columns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
 
 .card-container .card-wrapper {
   /* make sure all the cards have the same width */
@@ -82,6 +85,10 @@
 .card-container.has-large-card {
   display: grid;
   grid-template-columns: 2fr 1fr;
+}
+
+.card-container.single .card-wrapper {
+    margin: auto;
 }
 
 .card-container.has-large-card .card-wrapper {
@@ -107,7 +114,8 @@
 
 /* on smaller screens, show everything in a single column. */
 @media (max-width: 900px) {
-  .section.card-container {
+  .section.card-container,
+  .card-container.three-columns{
     display: flex;
     flex-direction: column;
   }

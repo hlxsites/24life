@@ -1,32 +1,51 @@
-import { loadBlocks, readBlockConfig, toClassName } from '../../scripts/lib-franklin.js';
+import {
+  loadBlock, readBlockConfig, toClassName,
+} from '../../scripts/lib-franklin.js';
 import ffetch from '../../scripts/ffetch.js';
 import { createCardBlock } from '../card/card.js';
 
-export default function decorate(block) {
-  let { by } = readBlockConfig(block);
-  if (!by && document.location.pathname.startsWith('/author/')) {
+export default async function decorate(block) {
+  const filters = removeEmptyKeyOrValue(readBlockConfig(block));
+  const isEmptyFilter = Object.keys(filters).length === 0;
+  if (isEmptyFilter && document.location.pathname.startsWith('/author/')) {
     // auto-detect author, e.g. https://www.24life.com/author/24life
-    by = new URL(document.location).pathname.split('/').pop();
+    filters.author = new URL(document.location).pathname.split('/').pop();
+  } else if (isEmptyFilter && document.location.pathname.startsWith('/collections/')) {
+    filters.collections = new URL(document.location).pathname.split('/').pop();
+    filters.collections = filters.collections?.replace(/-/g, ' ');
   }
   block.textContent = '';
-  block.classList.add('card-container');
+  block.classList.add('card-container', 'three-columns');
   // eslint-disable-next-line no-console
-  fetchArticlesAndAddCards(by, block).catch((e) => console.log(e));
+  await fetchArticlesAndAddCards(filters, block);
 }
 
-async function fetchArticlesAndAddCards(by, block) {
+function removeEmptyKeyOrValue(obj) {
+  if (!obj || typeof obj !== 'object') return {};
+
+  return Object.fromEntries(
+    Object.entries(obj).filter(
+      ([key, value]) => key.trim() && value?.toString()?.trim(),
+    ),
+  );
+}
+
+async function fetchArticlesAndAddCards(filters, block) {
   const articles = await ffetch('/articles.json').all();
 
-  articles
-    .filter((article) => (by ? article['author-id'] === by : true))
+  await Promise.all(articles
+    // make sure all filters match
+    .filter((article) => Object.keys(filters).every(
+      (key) => article[key]?.toLowerCase().includes(filters[key].toLowerCase()),
+    ))
     .filter(({ template }) => template === 'article')
-    .forEach((article) => {
-      const newBlock = createCardBlock(article);
+    .map(async (article) => {
+      const wrapper = document.createElement('div');
+      const newBlock = createCardBlock(article, wrapper);
       if (article.section) {
-        newBlock.querySelector('.card.block').classList.add(toClassName(article.section));
+        newBlock.classList.add(toClassName(article.section));
       }
-
-      block.append(newBlock);
-    });
-  loadBlocks(block);
+      block.append(wrapper);
+      await loadBlock(newBlock);
+    }));
 }

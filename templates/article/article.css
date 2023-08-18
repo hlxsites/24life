@@ -1,16 +1,39 @@
-.article-social-media-buttons {
-  display: flex;
-  justify-content: center;
-  margin: 1em;
-  gap: 1em;
+body.article main .article-social-media-buttons {
+    display: flex;
+    justify-content: center;
+    margin: 1em;
+    gap: 1em;
 }
 
-.article-social-media-buttons svg {
-  fill: var(--link-color-default-content);
-  transition: all 0.3s ease;
+body.article main .article-social-media-buttons svg {
+    fill: var(--link-color-default-content);
+    transition: all 0.3s ease;
 }
 
-.article-social-media-buttons a:hover svg {
-  fill: white;
-  background-color: var(--link-color-default-content);
+body.article main .article-social-media-buttons a:hover svg {
+    fill: white;
+    background-color: var(--link-color-default-content);
+}
+
+body.article main .article-carousel-wrapper {
+    margin: 4rem 0;
+}
+
+@media (min-width: 900px) {
+    body.article main .article-carousel-wrapper {
+        display: flex;
+    }
+}
+
+
+body.article main .article-carousel-wrapper .article-carousel-title {
+    color: var(--accent-text-color);
+    text-transform: uppercase;
+    flex: 0 0 20%;
+    margin-top: 3rem;
+}
+
+
+body.article main .article-carousel-wrapper .article-carousel {
+    width: 80%;
 }

@@ -1,8 +1,12 @@
 import {
-  buildBlock, decorateBlock, decorateIcons, getMetadata,
+  buildBlock, decorateBlock, decorateIcons, getMetadata, toClassName,
 } from '../../scripts/lib-franklin.js';
 
 export default async function decorate(doc) {
+  if (getMetadata('section')) {
+    doc.querySelector('main').classList.add(`color-${toClassName(getMetadata('section'))}`);
+  }
+
   const firstSection = doc.querySelector('main .section');
   firstSection.before(createSectionWithHeroBlock(
     doc.querySelector('main .section h1'),
@@ -13,13 +17,24 @@ export default async function decorate(doc) {
   firstContent.before(createSocialMediaButtons());
 
   const lastContent = [...doc.querySelectorAll('main .section .default-content-wrapper')].at(-1);
-  lastContent.after(createAuthorBlock());
-  lastContent.after(createSocialMediaButtons());
+  lastContent.append(createSocialMediaButtons());
+  getMetadata('author').split(',').forEach((author) => {
+    lastContent.append(createAuthorBlock(author));
+  });
+  lastContent.append(createArticleCarousel());
+}
+
+function createNewSection() {
+  const section = document.createElement('div');
+  section.classList.add('section', 'article-hero-container');
+  section.dataset.sectionStatus = 'initialized';
+  section.style.display = 'none';
+  return section;
 }
 
 function createSectionWithHeroBlock(h1, img) {
-  const section = document.createElement('div');
-  section.classList.add('section', 'article-hero-container');
+  const section = createNewSection();
+  section.classList.add('article-hero-container');
 
   const wrapper = document.createElement('div');
   const newBlock = buildBlock(
@@ -42,32 +57,59 @@ function createSectionWithHeroBlock(h1, img) {
   return section;
 }
 
-function createAuthorBlock() {
+function createAuthorBlock(author) {
   const container = document.createElement('div');
-  const newBlock = buildBlock('article-author', '');
+  const newBlock = buildBlock('article-author', author);
   container.append(newBlock);
   decorateBlock(newBlock);
   return container;
+}
+
+function createArticleCarousel() {
+  const container = document.createElement('div');
+  const carouselTitle = document.createElement('p');
+  carouselTitle.classList.add('article-carousel-title');
+  carouselTitle.innerHTML = `<strong>${getMetadata('section')}</strong> - more to explore`;
+
+  container.append(carouselTitle);
+  const newBlock = buildBlock('article-carousel', [['Section', getMetadata('section')]]);
+  container.append(newBlock);
+  decorateBlock(newBlock);
+  return container;
+}
+
+function updateSocialLink(e) {
+  e.preventDefault();
+  const newUrl = `${e.currentTarget.href}${window.location.href}`;
+  const pin = newUrl.includes('pinterest.com');
+  let description = '';
+  let imageUrl = '';
+  if (pin) {
+    description = encodeURIComponent((document.querySelector('meta[property="og:description"]')?.getAttribute('content') || ''));
+    imageUrl = (document.querySelector('meta[property="og:image"]')?.getAttribute('content') || '');
+  }
+  const parameters = pin ? `&description=${description}&image=${imageUrl}` : '';
+  window.open(newUrl + parameters, 'sharer', 'toolbar=0,status=0,width=626,height=436');
 }
 
 function createSocialMediaButtons() {
   const socialMediaButtons = document.createElement('div');
   socialMediaButtons.innerHTML = `
   <div class="article-social-media-buttons">
-          <a aria-label="share this page on twitter"  target="_blank" href="https://twitter.com/share?url=">
+          <a aria-label="share this page on twitter" href="https://twitter.com/share?url=">
               <span class="icon icon-twitter-alt"></span>
           </a>
       
-          <a aria-label="share this page on facebook" target="_blank" href="http://www.facebook.com/share.php?u=">
+          <a aria-label="share this page on facebook" href="http://www.facebook.com/share.php?u=">
               <span class="icon icon-facebook"></span>
           </a>
       
-          <a aria-label="share this page on pinterest" target="_blank" href="http://pinterest.com/pin/create/button/?url=">
+          <a aria-label="share this page on pinterest" href="http://pinterest.com/pin/create/button/?url=">
               <span class="icon icon-pinterest"></span>
           </a>
   </div>`;
   socialMediaButtons.querySelectorAll('a').forEach((a) => {
-    a.href += window.location.href;
+    a.onclick = updateSocialLink;
   });
   // noinspection JSIgnoredPromiseFromCall
   decorateIcons(socialMediaButtons);

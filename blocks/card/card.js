@@ -56,7 +56,7 @@ export default function decorate(block) {
   }
 
   const accentColor = ['focus', 'fitness', 'fuel', 'recover']
-    .find((categoryText) => block.classList.contains(categoryText));
+    .find((sectionText) => block.classList.contains(sectionText));
   if (accentColor) {
     block.style.setProperty('--accent-color', `var(--color-${accentColor})`);
     block.style.setProperty('--category-text-color', `var(--color-${accentColor}-text)`);
@@ -73,8 +73,7 @@ export default function decorate(block) {
 }
 
 /* convenience function to create a block from a JSON object from articles.json */
-export function createCardBlock(articleInfo) {
-  const wrapper = document.createElement('div');
+export function createCardBlock(articleInfo, parent) {
   const firstCell = document.createElement('div');
   firstCell.append(articleInfo.title);
 
@@ -107,10 +106,10 @@ export function createCardBlock(articleInfo) {
       author],
   });
 
-  wrapper.append(newBlock);
+  parent.append(newBlock);
   decorateBlock(newBlock);
 
-  return wrapper;
+  return newBlock;
 }
 
 function replacePictureSizes(image, imageSizes) {
