@@ -14,7 +14,6 @@
 }
 
 @media (min-width: 600px) {
-
   .article-slides {
     height: 580px;
   }
@@ -48,9 +47,6 @@
 .article-slides .slide .image {
   flex: 0 0 66%;
   height: 100%;
-}
-@media (min-width: 600px) {
-
 }
 
 .article-slides .slide .image img {
@@ -86,7 +82,7 @@
 
 .article-slides .slide .text .subtitle {
   text-transform: uppercase;
-  opacity: 50%;
+  opacity: 0.5;
 }
 
 .article-slides .slide .text .title {
@@ -99,7 +95,7 @@
 
 .article-slides .slide .text .author {
   text-transform: uppercase;
-  opacity: 50%;
+  opacity: 0.5;
 }
 
 
@@ -111,11 +107,11 @@
     height: 20px;
     display: flex;
     justify-content: center;
-    gap: 1vw;
+    gap: 0.7vw;
   }
 
   .article-slides .slideshow-buttons button {
-    height: 1.5vw;
+    height: 1.1vw;
     aspect-ratio: 1/1;
     padding: 0;
     margin: 0;
