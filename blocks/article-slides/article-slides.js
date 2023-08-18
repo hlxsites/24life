@@ -101,8 +101,8 @@ export default async function decorate(block) {
 
 async function fetchArticles(config) {
   return ffetch('/articles.json')
-    .chunks(config.limit || 9)
-    .limit(config.limit || 9)
+    .chunks(Number(config.limit || 9))
+    .limit(Number(config.limit || 9))
     .all();
 }
 
