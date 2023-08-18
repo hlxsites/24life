@@ -20,6 +20,7 @@
 }
 
 .article-slides .slide {
+  display: flex;
   position: absolute;
   height: 100%;
   width: 100%;
@@ -33,13 +34,11 @@
 
 .article-slides .slide.active {
   opacity: 1;
-  display: flex;
 }
 
 @media (min-width: 600px) {
   .article-slides .slide {
     flex-direction: row;
-    height: 100%;
   }
 }
 
