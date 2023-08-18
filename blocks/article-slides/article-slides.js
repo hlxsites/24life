@@ -14,6 +14,17 @@ export default async function decorate(block) {
   const config = readBlockConfig(block);
   block.textContent = '';
 
+  function goToSlide(index) {
+    block.querySelector('.slide.active').classList.remove('active');
+    [...block.querySelectorAll('.slide')].at(index).classList.add('active');
+
+    block.querySelector('.slideshow-buttons .active')?.classList.remove('active');
+    [...block.querySelectorAll('.slideshow-buttons button')].at(index).classList.add('active');
+
+    // automatically advance slides. Reset timer when user interacts with the slideshow
+    // autoplaySlides(); TODO
+  }
+
   const articles = await fetchArticles(config);
   const slides = articles.map((article, index) => {
     const card = document.createElement('div');
@@ -32,9 +43,22 @@ export default async function decorate(block) {
     return card;
   });
 
-  // TODO: add buttons
+  const slideshowButtons = document.createElement('div');
+  slideshowButtons.classList.add('slideshow-buttons');
+
+  articles.forEach((article, index) => {
+    const button = document.createElement('button');
+    button.ariaLabel = `go to Slide ${article.title}`;
+    if (index === 0) {
+      button.classList.add('active');
+    }
+    slideshowButtons.append(button);
+    button.addEventListener('click', () => goToSlide(index));
+    slideshowButtons.append(button);
+  });
 
   block.append(...slides);
+  block.append(slideshowButtons);
   // block.append(await createCarouselBlock(cards));
 }
 
