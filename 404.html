@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
   <title>Page not found</title>
   <script type="text/javascript">
@@ -35,6 +34,7 @@
       min-height: calc(100vh - var(--nav-height));
       display: flex;
       align-items: center;
+      justify-content: center;
     }
 
     main.error .error-number {
@@ -47,21 +47,18 @@
   </style>
   <link rel="stylesheet" href="/styles/lazy-styles.css">
 </head>
-
 <body>
-  <header></header>
-  <main class="error">
-    <div class="section">
-      <svg viewBox="1 0 38 18" class="error-number">
-        <text x="0" y="17">404</text>
-      </svg>
-      <h2 class="error-message">Page Not Found</h2>
-      <p class="button-container">
-        <a href="/" class="button secondary error-button-home">Go home</a>
-      </p>
-    </div>
-  </main>
-  <footer></footer>
+<header></header>
+<main class="error">
+  <div class="section">
+    <h1>Page Not Found</h1>
+    <p class="error-message">The page you requested couldn't be found - this could be due to a spelling error in the URL
+      or a removed page.</p>
+    <p class="button-container">
+      <a href="/" class="button secondary error-button-home">Go home</a>
+    </p>
+  </div>
+</main>
+<footer></footer>
 </body>
-
 </html>
