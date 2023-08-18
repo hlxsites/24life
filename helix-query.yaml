@@ -103,7 +103,7 @@ indices:
         value: attribute(el, "content")
   magazines:
     include:
-      - /magazine/**
+      - /magazine/*
     target: /magazines.json
     properties:
       title:

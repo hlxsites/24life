@@ -1,0 +1,56 @@
+.quote-wrapper {
+  padding: 0 15px;
+  margin: 40px auto ;
+}
+
+.quote {
+  position: relative;
+  max-width: 587px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.quote .quote-text {
+  color: var(--color-fitness);
+  font-size: 2em;
+  text-transform: uppercase;
+  font-style: italic;
+  letter-spacing: 0.05em;
+  line-height: 1.15;
+  font-weight: 500;
+  padding: 10px 0;
+  position: relative;
+}
+
+.quote .quote-author {
+  color: var(--label-text-color);
+  font-style: italic;
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-card-header);
+  line-height: 1.45;
+}
+
+.quote .quote-author > div::before {
+  content: "\2014";
+  display: inline;
+  margin-right: 5px;
+}
+
+.quote .quote-text > div::before {
+  content: open-quote;
+  top: 0;
+  bottom: auto;
+}
+
+.quote .quote-text > div::after {
+  content: close-quote;
+  top: auto;
+  bottom: 0;
+}
+
+@media only screen and (max-width: 767px) {
+  .quote .quote-text::before,
+  .quote .quote-text::after {
+    width: 100%;
+  }
+}
