@@ -8,13 +8,38 @@
 }
 
 .article-slides {
-  height: 600px;
+  height: 400px;
   position: relative;
 }
 
 .article-slides .slide {
   position: absolute;
-  /* TODO */
-  opacity: 0.5;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  background-color: #394c5a;
+  opacity: 0;
 }
 
+.article-slides .slide.active {
+  opacity: 1;
+}
+
+.article-slides .slide .image {
+  width: 70%;
+  height: 100%;
+}
+
+.article-slides .slide .image img {
+  object-fit: cover;
+  object-position: top;
+  width: 100%;
+  height: 100%;
+}
+
+
+.article-slides .slide .text {
+  color: var(--text-color-on-black-background);
+}
