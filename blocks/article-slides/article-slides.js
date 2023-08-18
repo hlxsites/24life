@@ -62,19 +62,16 @@ function setupSlideControls(block) {
   let autoSlideInterval = null;
   function autoplaySlides() {
     clearInterval(autoSlideInterval);
-    autoSlideInterval = setInterval(() => goToNextSlide(), 6000);
+    autoSlideInterval = setInterval(() => advanceSlides(+1), 6000);
   }
 
-  function goToNextSlide() {
+  function advanceSlides(diff) {
+    const allSlides = [...block.querySelectorAll('.slide')];
     const activeSlide = block.querySelector('.slide.active');
-    const nextSlide = activeSlide.nextElementSibling || block.querySelector('.slide');
-    goToSlide([...block.querySelectorAll('.slide')].indexOf(nextSlide));
-  }
+    const currentIndex = allSlides.indexOf(activeSlide);
 
-  function goToPrevSlide() {
-    const activeSlide = block.querySelector('.slide.active');
-    const prevSlide = activeSlide.previousElementSibling || block.querySelector('.slide:last-child');
-    goToSlide([...block.querySelectorAll('.slide')].indexOf(prevSlide));
+    const newSlideIndex = (allSlides.length + currentIndex + diff) % allSlides.length;
+    goToSlide(newSlideIndex);
   }
 
   /** detect swipe gestures on touch screens to advance slides */
@@ -85,9 +82,9 @@ function setupSlideControls(block) {
       const touchEndX = endEvent.changedTouches[0].screenX;
       const delta = touchEndX - touchStartX;
       if (delta < -5) {
-        goToNextSlide();
+        advanceSlides(+1);
       } else if (delta > 5) {
-        goToPrevSlide();
+        advanceSlides(-1);
       } else {
         // finger not moved enough, do nothing
       }
