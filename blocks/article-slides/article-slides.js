@@ -22,7 +22,25 @@ export default async function decorate(block) {
     [...block.querySelectorAll('.slideshow-buttons button')].at(index).classList.add('active');
 
     // automatically advance slides. Reset timer when user interacts with the slideshow
-    // autoplaySlides(); TODO
+    autoplaySlides();
+  }
+
+  let autoSlideInterval = null;
+  function autoplaySlides() {
+    clearInterval(autoSlideInterval);
+    autoSlideInterval = setInterval(() => goToNextSlide(), 6000);
+  }
+
+  function goToNextSlide() {
+    const activeSlide = block.querySelector('.slide.active');
+    const nextSlide = activeSlide.nextElementSibling || block.querySelector('.slide');
+    goToSlide([...block.querySelectorAll('.slide')].indexOf(nextSlide));
+  }
+
+  function goToPrevSlide() {
+    const activeSlide = block.querySelector('.slide.active');
+    const prevSlide = activeSlide.previousElementSibling || block.querySelector('.slide:last-child');
+    goToSlide([...block.querySelectorAll('.slide')].indexOf(prevSlide));
   }
 
   const articles = await fetchArticles(config);
@@ -32,7 +50,7 @@ export default async function decorate(block) {
     card.innerHTML = `
     <div class="image">${createOptimizedPicture(article.image, article.title, index === 0).outerHTML}</div>
     <div class="text">
-        <p class="section">${plainText(article.section)}</p>
+        <p class="subtitle">${plainText(article.section)}</p>
         <p class="title">${plainText(article.title)}</p>
         <p class="author">BY ${plainText(article.author)}</p>
     </div> `;
@@ -59,7 +77,26 @@ export default async function decorate(block) {
 
   block.append(...slides);
   block.append(slideshowButtons);
-  // block.append(await createCarouselBlock(cards));
+  autoplaySlides();
+
+  /** detect swipe gestures on touch screens to advance slides */
+  function gestureStart(event) {
+    const touchStartX = event.changedTouches[0].screenX;
+
+    function gestureEnd(endEvent) {
+      const touchEndX = endEvent.changedTouches[0].screenX;
+      const delta = touchEndX - touchStartX;
+      if (delta < -5) {
+        goToNextSlide();
+      } else if (delta > 5) {
+        goToPrevSlide();
+      } else {
+        // finger not moved enough, do nothing
+      }
+    }
+    block.addEventListener('touchend', gestureEnd, { once: true });
+  }
+  block.addEventListener('touchstart', gestureStart, false);
 }
 
 async function fetchArticles(config) {

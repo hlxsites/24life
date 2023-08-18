@@ -8,8 +8,16 @@
 }
 
 .article-slides {
-  height: 580px;
+  width: 100%;
   position: relative;
+  aspect-ratio: 600/686;
+}
+
+@media (min-width: 600px) {
+
+  .article-slides {
+    height: 580px;
+  }
 }
 
 .article-slides .slide {
@@ -19,6 +27,7 @@
   top: 0;
   left: 0;
   display: flex;
+  flex-direction: column;
   background-color: #394c5a;
   opacity: 0;
   transition: opacity 0.9s ease;
@@ -28,9 +37,19 @@
   opacity: 1;
 }
 
+@media (min-width: 600px) {
+  .article-slides .slide {
+    flex-direction: row;
+    height: 100%;
+  }
+}
+
 .article-slides .slide .image {
-  width: 60%;
+  flex: 0 0 66%;
   height: 100%;
+}
+@media (min-width: 600px) {
+
 }
 
 .article-slides .slide .image img {
@@ -44,31 +63,67 @@
 
 .article-slides .slide .text {
   color: var(--text-color-on-black-background);
-}
-
-
-.article-slides .slideshow-buttons {
-  position: absolute;
-  bottom: 4rem;
-  right: 4rem;
-  height: 20px;
+  align-self: center;
+  padding: 10px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  gap: 0.7rem;
+  height: 100%;
+
+  /* font size is relative to screen width */
+  font-size: 2vw;
 }
 
-.article-slides .slideshow-buttons button {
-  width: 1rem;
-  height: 1rem;
-  padding: 0;
+@media (min-width: 600px) {
+  .article-slides .slide .text {
+    height: 100%;
+    padding: 40px;
+  }
+}
+
+.article-slides .slide .text .subtitle {
+  text-transform: uppercase;
+  opacity: 50%;
+}
+
+.article-slides .slide .text .title {
   margin: 0;
-  border-radius: 50%;
-  border: none;
-  background-color: #bbb;
-  transition: background-color 0.3s ease;
+  font-size: 2.5em;
+  font-weight: bold;
+  line-height: 1;
 }
 
-.article-slides .slideshow-buttons button.active {
-  background-color: white;
+
+.article-slides .slide .text .author {
+  text-transform: uppercase;
+  opacity: 50%;
+}
+
+
+@media (min-width: 600px) {
+  .article-slides .slideshow-buttons {
+    position: absolute;
+    bottom: 4rem;
+    right: 7%;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 1vw;
+  }
+
+  .article-slides .slideshow-buttons button {
+    height: 1.5vw;
+    aspect-ratio: 1/1;
+    padding: 0;
+    margin: 0;
+    border-radius: 50%;
+    border: none;
+    background-color: #bbb;
+    transition: background-color 0.3s ease;
+  }
+
+  .article-slides .slideshow-buttons button.active {
+    background-color: white;
+  }
 }
 
