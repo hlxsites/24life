@@ -121,7 +121,6 @@ h4, h5, h6 {
   line-height: 1.25;
   margin-top: 1em;
   margin-bottom: .5em;
-  scroll-margin: calc(var(--nav-height) + 1em);
 }
 
 h1 {
@@ -151,6 +150,13 @@ h6 {
 p, dl, ol, ul, pre, blockquote {
   margin-top: 1em;
   margin-bottom: 1em;
+
+}
+
+p, h1, h2, h3, h4, h5, h6{
+  /* when scrolling to an element, make sure it's visible despise the
+   header nav being there. */
+  scroll-margin: calc(var(--nav-height) + 1em);
 }
 
 hr {
