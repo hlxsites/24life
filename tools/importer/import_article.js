@@ -1,27 +1,32 @@
 /* global WebImporter */
-/* eslint-disable no-console, class-methods-use-this */
+/* eslint-disable no-console, class-methods-use-this, no-restricted-syntax, no-unused-vars */
 
-const createMetadata = (main, document) => {
+const createMetadata = (main, document, params) => {
+  const { ldJSON } = params;
+
   const meta = {};
 
-  const title = document.querySelector('title');
-  if (title) {
-    meta.Title = title.textContent.replace(/[\n\t]/gm, '');
-  }
+  meta.Template = 'article';
+  meta.Description = document.querySelector('meta[property="og:description"]')
+    .content
+    .replace(/^- /, '');
 
-  meta.author = document.querySelector('.tfl-author');
+  meta.Collections = [...document.querySelectorAll('.tfl-page-title-wrap .tfl-the-tags a.tfl-tag')]
+    .map((tag) => tag.textContent.trim())
+    .join(', ');
 
-  const desc = document.querySelector('[property="og:description"]');
-  if (desc) {
-    meta.Description = desc.content;
-  }
+  meta.Section = ldJSON['@graph'].find((item) => item['@type'] === 'Article').articleSection;
 
-  const img = document.querySelector('[property="og:image"]');
-  if (img && img.content) {
-    const el = document.createElement('img');
-    el.src = img.content;
-    meta.Image = el;
-  }
+  meta.Author = ldJSON['@graph'].filter((item) => item['@type'] === 'Person')
+    .map((item) => item.name)
+    .join(', ');
+
+  meta.Keywords = ldJSON['@graph'].find((item) => item['@type'] === 'Article')
+    .keywords
+    .join(', ');
+
+  meta['Publication Date'] = ldJSON['@graph'].find((item) => item['@type'] === 'Article')
+    .datePublished;
 
   const block = WebImporter.Blocks.getMetadataBlock(document, meta);
   main.append(block);
@@ -30,6 +35,13 @@ const createMetadata = (main, document) => {
 };
 
 export default {
+  preprocess: ({
+    document, url, html, params,
+  }) => {
+    const ldJSON = document.querySelector('script[type="application/ld+json"]');
+    params.ldJSON = JSON.parse(ldJSON.textContent);
+  },
+
   /**
    * Apply DOM operations to the provided document and return
    * the root element to be then transformed to Markdown.
@@ -55,10 +67,36 @@ export default {
       '.breadcrumb',
       '.tfl-related-posts-box-wrappper',
       '.tfl-author-image',
+      '#disqus_thread',
     ]);
 
-    // create the metadata block and append it to the main element
-    createMetadata(main, document);
+    // currently not supporting magazine articles, TODO: handle
+    if (document.querySelector('.mb_YTPlayer')) {
+      throw new Error('Magazine article not supported');
+    }
+    if (!document.querySelector('.tfl-page-title-wrap')) {
+      throw new Error('only normal articles are supported');
+    }
+
+    // start with h1, then image
+    const h1 = main.querySelector('h1');
+    main.prepend(h1);
+    const img = main.querySelector('img');
+    h1.after(img);
+
+    createMetadata(main, document, params);
+
+    // after getting the metadata, remove extra elements
+    WebImporter.DOMUtils.remove(main, [
+      '.page-title.image-bg',
+      '.tfl-the-tags',
+      '.post-title',
+      '.post-meta',
+      '.tags.pull-right',
+    ]);
+    for (const entry of main.querySelectorAll('.tfl-author-entry')) {
+      entry.closest('.row').remove();
+    }
 
     return main;
   },
