@@ -102,6 +102,24 @@ function removeLinksFromImagesPointingToItself(main) {
   }
 }
 
+function moveFloatingImagesToNextLine(main, document) {
+  // e.g. https://www.24life.com/pack-your-bag/ has images that are part of the h3.
+  // when imported, we want the image to be after the heading, not before.
+  for (const img of main.querySelectorAll('h3 img.alignleft, h3 img.alignright')) {
+    const h3 = img.closest('h3');
+    const p = document.createElement('p');
+    p.appendChild(img);
+    h3.after(p);
+    console.log('h3', img.outerHTML);
+  }
+}
+
+function makeCaptionTextItalics(main, document) {
+  for (const caption of main.querySelectorAll('.wp-caption-text')) {
+    caption.innerHTML = `<em>${caption.innerHTML}</em>`;
+  }
+}
+
 export default {
   preprocess: ({
     document, url, html, params,
@@ -155,6 +173,9 @@ export default {
     createMetadata(main, document, params);
 
     removeLinksFromImagesPointingToItself(main);
+
+    moveFloatingImagesToNextLine(main, document);
+    makeCaptionTextItalics(main, document);
 
     // after getting the metadata, remove extra elements
     WebImporter.DOMUtils.remove(main, [
