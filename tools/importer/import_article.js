@@ -7,6 +7,53 @@ export function toClassName(name) {
     : '';
 }
 
+function toTitleCase(str) {
+  return str.replace(
+    /\w\S*/g,
+    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(),
+  );
+}
+
+function mapSections(articleSections) {
+  const categories = articleSections.map((articleSection) => {
+    // eslint-disable-next-line no-param-reassign
+    articleSection = articleSection.toLowerCase();
+    if (articleSection === 'mindset') {
+      return 'Focus';
+    }
+    if (articleSection === 'movement') {
+      return 'Fitness';
+    }
+    if (articleSection === 'nourishment') {
+      return 'Fuel';
+    }
+    if (articleSection === 'regeneration') {
+      return 'Recover';
+    }
+    return toTitleCase(articleSection);
+  });
+
+  return categories
+    .sort((a, b) => {
+      if (a === 'Focus' || a === 'Fitness' || a === 'Fuel' || a === 'Recover') {
+        return -1;
+      } if (b === 'Focus' || b === 'Fitness' || b === 'Fuel' || b === 'Recover') {
+        return 1;
+      }
+      return a.localeCompare(b);
+    });
+}
+
+function getPrimaryCategory(categories) {
+  for (const category of categories) {
+    if (category === 'Focus' || category === 'Fitness' || category === 'Fuel' || category === 'Recover') {
+      return category;
+    }
+  }
+  // of none of the special categories is present, return first one
+  return categories[0];
+}
+
 const createMetadata = (main, document, params) => {
   const { ldJSON } = params;
 
@@ -21,7 +68,8 @@ const createMetadata = (main, document, params) => {
     .map((tag) => tag.textContent.trim())
     .join(', ');
 
-  meta.Section = ldJSON['@graph'].find((item) => item['@type'] === 'Article').articleSection.join(', ');
+  params.categories = mapSections(ldJSON['@graph'].find((item) => item['@type'] === 'Article').articleSection);
+  meta.Category = params.categories.join(', ');
 
   meta.Author = ldJSON['@graph'].filter((item) => item['@type'] === 'Person')
     .map((item) => item.name)
@@ -39,14 +87,13 @@ const createMetadata = (main, document, params) => {
 
   // eslint-disable-next-line prefer-destructuring
   params.year = meta['Publication Date'].split('-')[0];
-  params.Section = meta.Section;
   return meta;
 };
 
 function removeLinksFromImagesPointingToItself(main) {
   for (const img of main.querySelectorAll('img')) {
     const link = img.closest('a');
-    if (link && link.href === img.src) {
+    if (link && link.href.includes('twentyfourlife.wpenginepowered') && link.href.endsWith('.jpg')) {
       link.replaceWith(img);
     }
   }
@@ -131,13 +178,14 @@ export default {
    * @return {string} The path
    */
   generateDocumentPath: ({
-    // eslint-disable-next-line no-unused-vars
     document, url, html, params,
   }) => {
     const filename = WebImporter.FileUtils.sanitizePath(new URL(url).pathname.replace(/\.html$/, '').replace(/\/$/, ''));
-    if (!params.Section || !params.year) {
-      throw new Error(`missing params section or year. ${JSON.stringify(params)}`);
+    const { categories, year } = params;
+    const category = getPrimaryCategory(categories);
+    if (!category || !year) {
+      throw new Error(`missing params category or year. ${JSON.stringify(params)}`);
     }
-    return `${toClassName(params.Section)}/${toClassName(params.year)}/${filename}`;
+    return `${toClassName(category)}/${toClassName(year)}/${filename}`;
   },
 };
