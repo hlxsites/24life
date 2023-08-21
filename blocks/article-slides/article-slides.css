@@ -1,0 +1,126 @@
+.section.article-slides-container {
+  padding: 0;
+}
+
+.section > .article-slides-wrapper {
+  max-width: unset;
+  margin: unset;
+}
+
+.article-slides {
+  width: 100%;
+  position: relative;
+  aspect-ratio: 600/686;
+}
+
+@media (min-width: 600px) {
+  .article-slides {
+    height: 580px;
+  }
+}
+
+.article-slides .slide {
+  display: flex;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  flex-direction: column;
+  background-color: #394c5a;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+
+.article-slides .slide.active {
+  opacity: 1;
+}
+
+@media (min-width: 600px) {
+  .article-slides .slide {
+    flex-direction: row;
+  }
+}
+
+.article-slides .slide .image {
+  flex: 0 0 66%;
+  height: 100%;
+}
+
+.article-slides .slide .image img {
+  object-fit: cover;
+  object-position: top;
+  width: 100%;
+  height: 100%;
+  filter: saturate(90%);
+}
+
+
+.article-slides .slide .text {
+  color: var(--text-color-on-black-background);
+  align-self: center;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+
+  /* font size is relative to screen width, but limited in min and max size.
+     the actual texts then use `em` to scale with this font size.
+   */
+  font-size: clamp(11px, 1.5vw, 16px);
+}
+
+@media (min-width: 600px) {
+  .article-slides .slide .text {
+    height: 100%;
+    padding: 40px;
+  }
+}
+
+.article-slides .slide .text .subtitle {
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.article-slides .slide .text .title {
+  margin: 0;
+  font-size: 2.5em;
+  font-weight: bold;
+  line-height: 1;
+}
+
+
+.article-slides .slide .text .author {
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+
+@media (min-width: 600px) {
+  .article-slides .slideshow-buttons {
+    position: absolute;
+    bottom: 4rem;
+    right: 7%;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 0.7vw;
+  }
+
+  .article-slides .slideshow-buttons button {
+    height: 1.1vw;
+    aspect-ratio: 1/1;
+    padding: 0;
+    margin: 0;
+    border-radius: 50%;
+    border: none;
+    background-color: #bbb;
+    transition: background-color 0.3s ease;
+  }
+
+  .article-slides .slideshow-buttons button.active {
+    background-color: white;
+  }
+}
+
