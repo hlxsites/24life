@@ -10,34 +10,37 @@ export function toClassName(name) {
 function toTitleCase(str) {
   return str.replace(
     /\w\S*/g,
-    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(),
+    (txt) => txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase(),
   );
 }
 
 function mapSections(articleSections) {
+  if (!articleSections) {
+    return ['uncategorized'];
+  }
   const categories = articleSections.map((articleSection) => {
     // eslint-disable-next-line no-param-reassign
     articleSection = articleSection.toLowerCase();
     if (articleSection === 'mindset') {
-      return 'Focus';
+      return 'focus';
     }
     if (articleSection === 'movement') {
-      return 'Fitness';
+      return 'fitness';
     }
     if (articleSection === 'nourishment') {
-      return 'Fuel';
+      return 'fuel';
     }
     if (articleSection === 'regeneration') {
-      return 'Recover';
+      return 'recover';
     }
-    return toTitleCase(articleSection);
+    return articleSection;
   });
 
   return categories
     .sort((a, b) => {
-      if (a === 'Focus' || a === 'Fitness' || a === 'Fuel' || a === 'Recover') {
+      if (a === 'focus' || a === 'fitness' || a === 'fuel' || a === 'recover') {
         return -1;
-      } if (b === 'Focus' || b === 'Fitness' || b === 'Fuel' || b === 'Recover') {
+      } if (b === 'focus' || b === 'fitness' || b === 'fuel' || b === 'recover') {
         return 1;
       }
       return a.localeCompare(b);
@@ -46,7 +49,7 @@ function mapSections(articleSections) {
 
 function getPrimaryCategory(categories) {
   for (const category of categories) {
-    if (category === 'Focus' || category === 'Fitness' || category === 'Fuel' || category === 'Recover') {
+    if (category === 'focus' || category === 'fitness' || category === 'fuel' || category === 'recover') {
       return category;
     }
   }
@@ -69,7 +72,7 @@ const createMetadata = (main, document, params) => {
     .join(', ');
 
   params.categories = mapSections(ldJSON['@graph'].find((item) => item['@type'] === 'Article').articleSection);
-  meta.Category = params.categories.join(', ');
+  meta.categories = params.categories.join(', ');
 
   meta.Author = ldJSON['@graph'].filter((item) => item['@type'] === 'Person')
     .map((item) => item.name)
@@ -184,7 +187,7 @@ export default {
     const { categories, year } = params;
     const category = getPrimaryCategory(categories);
     if (!category || !year) {
-      throw new Error(`missing params category or year. ${JSON.stringify(params)}`);
+      throw new Error(`missing params categories or year. ${JSON.stringify(params)}`);
     }
     return `${toClassName(category)}/${toClassName(year)}/${filename}`;
   },
