@@ -18,7 +18,7 @@ export default function decorate(block) {
 
   if (block.classList.contains('collections')) {
     block.parentElement.classList.add('column-collections-parent');
-    // query anchor tags in the block
+    // query anchor tags in the block and move the picture into the anchor
     const anchors = [...block.querySelectorAll('a')];
     anchors.forEach((anchor) => {
       const h2 = document.createElement('h2');
