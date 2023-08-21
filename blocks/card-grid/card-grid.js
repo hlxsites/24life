@@ -53,7 +53,7 @@ export default async function decorate(block) {
     const liCount = lis.length;
     lis.forEach(async (li, i) => {
       const articleURL = new URL(li.innerHTML);
-      const card = await fetchArticleAndCreateCard(articleURL.pathname, li);
+      await fetchArticleAndCreateCard(articleURL.pathname, li);
       // first item spans multiple rows
       if (i === 0 && liCount < rowCount) li.style.setProperty('--grid-row-span', rowCount - liCount + 1);
 
@@ -93,8 +93,7 @@ function removeEmptyLi(cell) {
 async function fetchArticleAndCreateCard(path, li) {
   return ffetch('/articles.json')
     // make sure all filters match
-    .filter((article) => article['path']?.toLowerCase() === path.toLowerCase(),
-    )
+    .filter((article) => article.path?.toLowerCase() === path.toLowerCase())
     .limit(1)
     .map(async (article) => {
       const wrapper = document.createElement('div');
@@ -105,7 +104,6 @@ async function fetchArticleAndCreateCard(path, li) {
       li.innerHTML = '';
       li.append(wrapper);
       await loadBlock(card);
-      //return wrapper;
     })
     .all();
 }
