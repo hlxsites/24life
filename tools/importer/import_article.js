@@ -1,6 +1,12 @@
 /* global WebImporter */
 /* eslint-disable no-console, class-methods-use-this, no-restricted-syntax, no-unused-vars */
 
+export function toClassName(name) {
+  return typeof name === 'string'
+    ? name.toLowerCase().replace(/[^0-9a-z]/gi, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
+    : '';
+}
+
 const createMetadata = (main, document, params) => {
   const { ldJSON } = params;
 
@@ -15,7 +21,7 @@ const createMetadata = (main, document, params) => {
     .map((tag) => tag.textContent.trim())
     .join(', ');
 
-  meta.Section = ldJSON['@graph'].find((item) => item['@type'] === 'Article').articleSection;
+  meta.Section = ldJSON['@graph'].find((item) => item['@type'] === 'Article').articleSection.join(', ');
 
   meta.Author = ldJSON['@graph'].filter((item) => item['@type'] === 'Person')
     .map((item) => item.name)
@@ -31,8 +37,20 @@ const createMetadata = (main, document, params) => {
   const block = WebImporter.Blocks.getMetadataBlock(document, meta);
   main.append(block);
 
+  // eslint-disable-next-line prefer-destructuring
+  params.year = meta['Publication Date'].split('-')[0];
+  params.Section = meta.Section;
   return meta;
 };
+
+function removeLinksFromImagesPointingToItself(main) {
+  for (const img of main.querySelectorAll('img')) {
+    const link = img.closest('a');
+    if (link && link.href === img.src) {
+      link.replaceWith(img);
+    }
+  }
+}
 
 export default {
   preprocess: ({
@@ -86,6 +104,8 @@ export default {
 
     createMetadata(main, document, params);
 
+    removeLinksFromImagesPointingToItself(main);
+
     // after getting the metadata, remove extra elements
     WebImporter.DOMUtils.remove(main, [
       '.page-title.image-bg',
@@ -113,5 +133,11 @@ export default {
   generateDocumentPath: ({
     // eslint-disable-next-line no-unused-vars
     document, url, html, params,
-  }) => WebImporter.FileUtils.sanitizePath(new URL(url).pathname.replace(/\.html$/, '').replace(/\/$/, '')),
+  }) => {
+    const filename = WebImporter.FileUtils.sanitizePath(new URL(url).pathname.replace(/\.html$/, '').replace(/\/$/, ''));
+    if (!params.Section || !params.year) {
+      throw new Error(`missing params section or year. ${JSON.stringify(params)}`);
+    }
+    return `${toClassName(params.Section)}/${toClassName(params.year)}/${filename}`;
+  },
 };

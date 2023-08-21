@@ -6,7 +6,6 @@
 /* global WebImporter */
 /* eslint-disable no-console, class-methods-use-this */
 
-// import { toClassName } from '../../scripts/lib-franklin';
 /**
  * Sanitizes a string for use as class name.
  * @param {string} name The unsanitized string
