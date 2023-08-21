@@ -156,6 +156,26 @@ function detectQuotes(main, document) {
   }
 }
 
+function detectYoutube(main, document) {
+  for (const iframe of main.querySelectorAll('iframe[src*="youtube.com"]')) {
+    const a = document.createElement('a');
+
+    let youtubeVideoId = '';
+    if (iframe.src.includes('youtube.com/watch?v=')) {
+      youtubeVideoId = new URL(iframe.src).searchParams.get('v');
+    } else if (iframe.src.includes('youtube.com/embed/') || iframe.src.includes('youtu.be/')) {
+      youtubeVideoId = new URL(iframe.src).pathname.split('/').pop();
+    }
+    if (youtubeVideoId) {
+      a.href = `https://www.youtube.com/watch?v=${youtubeVideoId}`;
+    } else {
+      throw new Error(`unknown youtube url: ${iframe.src}`);
+    }
+    a.textContent = a.href;
+    iframe.replaceWith(a);
+  }
+}
+
 export default {
   preprocess: ({
     document, url, html, params,
@@ -225,6 +245,7 @@ export default {
     makeCaptionTextItalics(main, document);
     detectColumns(main, document);
     detectQuotes(main, document);
+    detectYoutube(main, document);
     return main;
   },
 
