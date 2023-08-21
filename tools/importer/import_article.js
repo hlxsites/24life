@@ -122,23 +122,36 @@ function makeCaptionTextItalics(main, document) {
 
 function detectColumns(main, document) {
   const rows = [...main.querySelectorAll('.row :is([class^="col-"], [class*=" col-"])')]
-    // note: we ignore .col-sm-12, .col-md-12, .col-lg-12
-    .filter((col) => !col.classList.contains('col-sm-12')
-      && !col.classList.contains('col-md-12')
-      && !col.classList.contains('col-lg-12'))
+    // note: we ignore large columns like col-sm-12, col-md-10, etc.
+    .filter((col) => {
+      const width = [...col.classList].find((c) => c.includes('col-'))
+        .split('-')[2];
+      return width < 10;
+    })
     .map((col) => col.closest('.row'));
-
   const uniqueRows = [...new Set(rows)];
+
   for (const row of uniqueRows) {
     // convert row to columns block
-    const columns = [];
-    for (const col of row.querySelectorAll('[class^="col-"], [class*=" col-"]')) {
-      columns.push(col);
+    const columns = Array.from(row.querySelectorAll('[class^="col-"], [class*=" col-"]'));
+    if (columns.length) {
+      row.textContent = '';
+      row.append(WebImporter.DOMUtils.createTable([
+        ['Columns '],
+        columns,
+      ], document));
     }
-    row.textContent = '';
-    row.append(WebImporter.DOMUtils.createTable([
-      ['Columns '],
-      columns,
+  }
+}
+
+function detectQuotes(main, document) {
+  for (const quote of main.querySelectorAll('blockquote')) {
+    // create table
+
+    quote.replaceWith(WebImporter.DOMUtils.createTable([
+      ['Quote '],
+      ['Text', quote.textContent],
+      ['Author', ''],
     ], document));
   }
 }
@@ -195,12 +208,6 @@ export default {
 
     createMetadata(main, document, params);
 
-    removeLinksFromImagesPointingToItself(main);
-
-    moveFloatingImagesToNextLine(main, document);
-    makeCaptionTextItalics(main, document);
-    detectColumns(main, document);
-
     // after getting the metadata, remove extra elements
     WebImporter.DOMUtils.remove(main, [
       '.page-title.image-bg',
@@ -213,6 +220,11 @@ export default {
       entry.closest('.row').remove();
     }
 
+    removeLinksFromImagesPointingToItself(main);
+    moveFloatingImagesToNextLine(main, document);
+    makeCaptionTextItalics(main, document);
+    detectColumns(main, document);
+    detectQuotes(main, document);
     return main;
   },
 
