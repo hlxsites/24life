@@ -71,7 +71,6 @@
   top: 0;
   right: 0;
   left: 0;
-  /* bottom: 0; */
 }
 
 .block.teaser-grid>ul>li img {
@@ -86,7 +85,6 @@
   pointer-events: none;
   cursor: pointer;
   padding: 0 25px 30px;
-  /* color: white; */
 }
 
 .block.teaser-grid>ul>li h3 {
