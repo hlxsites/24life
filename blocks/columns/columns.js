@@ -21,11 +21,11 @@ export default function decorate(block) {
     // query anchor tags in the block
     const anchors = [...block.querySelectorAll('a')];
     anchors.forEach((anchor) => {
-      const newH1 = document.createElement('h2');
-      newH1.classList.add('columns-img-header');
-      newH1.innerHTML = anchor.textContent.toUpperCase();
+      const h2 = document.createElement('h2');
+      h2.classList.add('columns-img-header');
+      h2.innerHTML = anchor.textContent.toUpperCase();
       anchor.text = '';
-      anchor.append(newH1);
+      anchor.append(h2);
 
       const h1 = anchor.parentElement;
       const p = h1.nextElementSibling;
