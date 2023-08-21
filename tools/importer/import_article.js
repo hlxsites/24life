@@ -120,6 +120,29 @@ function makeCaptionTextItalics(main, document) {
   }
 }
 
+function detectColumns(main, document) {
+  const rows = [...main.querySelectorAll('.row :is([class^="col-"], [class*=" col-"])')]
+    // note: we ignore .col-sm-12, .col-md-12, .col-lg-12
+    .filter((col) => !col.classList.contains('col-sm-12')
+      && !col.classList.contains('col-md-12')
+      && !col.classList.contains('col-lg-12'))
+    .map((col) => col.closest('.row'));
+
+  const uniqueRows = [...new Set(rows)];
+  for (const row of uniqueRows) {
+    // convert row to columns block
+    const columns = [];
+    for (const col of row.querySelectorAll('[class^="col-"], [class*=" col-"]')) {
+      columns.push(col);
+    }
+    row.textContent = '';
+    row.append(WebImporter.DOMUtils.createTable([
+      ['Columns '],
+      columns,
+    ], document));
+  }
+}
+
 export default {
   preprocess: ({
     document, url, html, params,
@@ -176,6 +199,7 @@ export default {
 
     moveFloatingImagesToNextLine(main, document);
     makeCaptionTextItalics(main, document);
+    detectColumns(main, document);
 
     // after getting the metadata, remove extra elements
     WebImporter.DOMUtils.remove(main, [
