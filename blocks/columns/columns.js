@@ -23,12 +23,15 @@ export default function decorate(block) {
     anchors.forEach((anchor) => {
       const h2 = document.createElement('h2');
       h2.classList.add('columns-img-header');
-      h2.innerHTML = anchor.textContent.toUpperCase();
-      anchor.text = '';
+      h2.textContent = anchor.textContent;
+      anchor.textContent = '';
       anchor.append(h2);
 
-      const h1 = anchor.parentElement;
-      const p = h1.nextElementSibling;
+      // get closest header tag and replace anchor with it
+      const headerTag = anchor.closest('h1,h2,h3,h4,h5,h6');
+      // get the sibling paragraph which contains the picture
+      const p = headerTag.nextElementSibling;
+      headerTag.replaceWith(anchor);
       anchor.append(p.querySelector('picture'));
       p.remove();
     });
