@@ -67,6 +67,23 @@ function decorateVideoLinks(main) {
     });
 }
 
+function decorateSpotifyLinks(main) {
+  [...main.querySelectorAll('a')]
+    .filter(({ href }) => href.includes('open.spotify.com/embed'))
+    .forEach((link) => {
+      const iframe = document.createElement('iframe');
+      iframe.classList.add('spotify-embed');
+      iframe.width = 800;
+      iframe.height = 300;
+      iframe.src = link.href;
+      iframe.title = link.textContent;
+      iframe.frameborder = 0;
+      iframe.allow = 'encrypted-media';
+      iframe.allowfullscreen = true;
+      link.replaceWith(iframe);
+    });
+}
+
 /**
  * Builds all synthetic blocks in a container element.
  * @param {Element} main The container element
@@ -75,6 +92,7 @@ function buildAutoBlocks(main) {
   try {
     buildHeroBlock(main);
     decorateVideoLinks(main);
+    decorateSpotifyLinks(main);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Auto Blocking failed', error);
