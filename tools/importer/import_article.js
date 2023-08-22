@@ -64,7 +64,7 @@ export default {
     }
 
     removeLinksFromImagesPointingToItself(main);
-    moveFloatingImagesToNextLine(main, document);
+    moveFloatingImagesToSeparateLine(main, document);
     makeCaptionTextItalics(main, document);
     detectColumns(main, document);
     detectYoutube(main, document);
@@ -186,7 +186,7 @@ function removeLinksFromImagesPointingToItself(main) {
   }
 }
 
-function moveFloatingImagesToNextLine(main, document) {
+function moveFloatingImagesToSeparateLine(main, document) {
   // e.g. https://www.24life.com/pack-your-bag/ has images that are part of the h3.
   // when imported, we want the image to be after the heading, not before.
   for (const img of main.querySelectorAll('h3 img.alignleft, h3 img.alignright')) {
@@ -194,7 +194,18 @@ function moveFloatingImagesToNextLine(main, document) {
     const p = document.createElement('p');
     p.appendChild(img);
     h3.after(p);
-    console.log('h3', img.outerHTML);
+  }
+
+  // e.g. https://www.24life.com/with-hard-knocks-brett-kicks-things-up-a-notch/
+  // move images to their own paragraph
+  for (const img of main.querySelectorAll('p img.alignleft, p img.alignright')) {
+    const parent = img.closest('p');
+    console.log('parent.childNodeCount', parent.childNodes.length);
+    if (parent.childNodes.length > 1 && parent.firstChild === img) {
+      const p = document.createElement('p');
+      p.appendChild(img);
+      parent.before(p);
+    }
   }
 }
 
