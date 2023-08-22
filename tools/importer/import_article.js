@@ -1,6 +1,27 @@
 /* global WebImporter */
 /* eslint-disable no-console, class-methods-use-this, no-restricted-syntax, no-unused-vars */
 
+function fixDoubleBoldText(main, document) {
+  // e.g. https://www.24life.com/how-to-make-your-trip-to-the-gym-count/
+  [...main.querySelectorAll('b > strong')].forEach((strong) => {
+    const b = strong.closest('b');
+    const span = document.createElement('span');
+    span.append(...b.childNodes);
+    b.replaceWith(span);
+  });
+  [...main.querySelectorAll('strong > b')].forEach((b) => {
+    b.before(...b.childNodes);
+    b.remove();
+  });
+}
+
+function fixUnderscoreInLinks(main, document) {
+  [...main.querySelectorAll('a > u')].forEach((u) => {
+    u.before(...u.childNodes);
+    u.remove();
+  });
+}
+
 export default {
   preprocess: ({
     document, url, html, params,
@@ -63,6 +84,8 @@ export default {
       entry.closest('.row').remove();
     }
 
+    fixDoubleBoldText(main, document);
+    fixUnderscoreInLinks(main, document);
     removeLinksFromImagesPointingToItself(main);
     moveFloatingImagesToSeparateLine(main, document);
     makeCaptionTextItalics(main, document);
