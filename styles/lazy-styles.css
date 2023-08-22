@@ -143,6 +143,12 @@ main .youtube-video {
   height: auto;
   aspect-ratio: 9/5;
 }
+main .spotify-embed {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 800/300;
+  border: none;
+}
 
 main .library-metadata-wrapper {
   display: none;
