@@ -17,7 +17,7 @@ export default {
    * @param {object} params Object containing some parameters given by the import process.
    * @returns {HTMLElement} The root element to be transformed
    */
-  transformDOM: ({
+  transformDOM: async ({
     document, url, html, params,
   }) => {
     const main = document.body;
@@ -68,7 +68,7 @@ export default {
     makeCaptionTextItalics(main, document);
     detectColumns(main, document);
     detectYoutube(main, document);
-    articleEmbeds(main, document);
+    await articleEmbeds(main, document);
     detectQuotes(main, document);
     return main;
   },
@@ -260,15 +260,35 @@ function detectYoutube(main, document) {
   }
 }
 
-function articleEmbeds(main, document) {
-  for (const embed of main.querySelectorAll('iframe.wp-embedded-content')) {
-    console.log('embed', embed.src);
+async function articleEmbeds(main, document) {
+  await Promise.all([...main.querySelectorAll('iframe.wp-embedded-content')].map(async (embed) => {
     if (embed.src.startsWith('/') && embed.src.includes('/embed/')) {
+      // don't append elements from one doc to another. instead copy the HTML.
+      const embedDoc = await fetchDocument(embed.src);
+      WebImporter.DOMUtils.remove(embedDoc, ['.screen-reader-text']);
+
+      const linkUrl = embedDoc.querySelector('a').href;
+      const imageUrl = embedDoc.querySelector('img').src;
+      const title = embedDoc.querySelector('.wp-embed-heading').textContent;
+
+      const cell = document.createElement('div');
+      cell.innerHTML = `
+        <a href="${linkUrl}">
+          <img src="${imageUrl}" alt="${title}"/>
+          <h4>${title}</h4>
+        </a>
+      `;
+
       embed.replaceWith(WebImporter.DOMUtils.createTable([
         ['Columns (border)'],
-        ['TODO', embed.textContent],
-        ['TODO', ''],
+        [cell],
       ], document));
     }
-  }
+  }));
+}
+
+async function fetchDocument(path) {
+  const articleUrl = `http://localhost:3001${path}?host=https%3A%2F%2Fwww.24life.com`;
+  const response = await fetch(articleUrl);
+  return new DOMParser().parseFromString(await response.text(), 'text/html');
 }
