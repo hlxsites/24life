@@ -15,4 +15,25 @@ export default function decorate(block) {
       }
     });
   });
+
+  if (block.classList.contains('collections')) {
+    block.parentElement.classList.add('column-collections-parent');
+    // query anchor tags in the block and move the picture into the anchor
+    const anchors = [...block.querySelectorAll('a')];
+    anchors.forEach((anchor) => {
+      const h2 = document.createElement('h2');
+      h2.classList.add('columns-img-header');
+      h2.textContent = anchor.textContent;
+      anchor.textContent = '';
+      anchor.append(h2);
+
+      // get closest header tag and replace anchor with it
+      const headerTag = anchor.closest('h1,h2,h3,h4,h5,h6');
+      // get the sibling paragraph which contains the picture
+      const p = headerTag.nextElementSibling;
+      headerTag.replaceWith(anchor);
+      anchor.append(p.querySelector('picture'));
+      p.remove();
+    });
+  }
 }

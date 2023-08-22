@@ -7,6 +7,11 @@
   width: 100%;
 }
 
+div.column-collections-parent {
+  max-width: 100%;
+  margin: auto;
+}
+
 .columns > div > div {
   order: 1;
 }
@@ -22,6 +27,29 @@
 
 .columns > div > .columns-img-col img {
   display: block;
+}
+
+.columns h2.columns-img-header {
+  position: absolute;
+  margin-top: 10px;
+  margin-left: 10px;
+  color: var(--text-color-on-black-background);
+  font-size: 2rem;
+  font-weight: 350;
+  line-height: 1;
+}
+
+.columns.collections h2 {
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.columns-container:first-child .default-content-wrapper h1 {
+  letter-spacing: 15px;
+  font-weight: 450;
+  line-height: 1;
+  font-size: 2.5rem;
+  text-align: center;
 }
 
 @media (min-width: 900px) {
