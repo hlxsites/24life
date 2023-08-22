@@ -142,6 +142,7 @@ main .youtube-video {
   width: 100%;
   height: auto;
   aspect-ratio: 9/5;
+  border: none;
 }
 
 main .spotify-embed {
