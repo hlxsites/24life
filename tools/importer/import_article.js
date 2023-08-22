@@ -71,6 +71,7 @@ const createMetadata = (main, document, params) => {
     .map((tag) => tag.textContent.trim())
     .join(', ');
 
+  // TODO: have only one category?
   params.categories = mapSections(ldJSON['@graph'].find((item) => item['@type'] === 'Article').articleSection);
   meta.categories = params.categories.join(', ');
 
