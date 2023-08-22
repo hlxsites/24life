@@ -14,18 +14,19 @@ function toTitleCase(str) {
   );
 }
 
-function mapSections(articleSections) {
+function getCategoryFromSection(articleSections) {
   if (!articleSections) {
-    return ['uncategorized'];
+    return 'fitness';
   }
-  const categories = articleSections.map((articleSection) => {
-    // eslint-disable-next-line no-param-reassign
+  for (let articleSection of articleSections) {
     articleSection = articleSection.toLowerCase();
-    if (articleSection === 'mindset') {
+
+    if (articleSection === 'mindset'
+      || articleSection === 'lifestyle'
+      || articleSection === 'discover'
+      || articleSection === 'flexibility'
+      || articleSection === 'motivate') {
       return 'focus';
-    }
-    if (articleSection === 'movement') {
-      return 'fitness';
     }
     if (articleSection === 'nourishment') {
       return 'fuel';
@@ -33,28 +34,19 @@ function mapSections(articleSections) {
     if (articleSection === 'regeneration') {
       return 'recover';
     }
-    return articleSection;
-  });
-
-  return categories
-    .sort((a, b) => {
-      if (a === 'focus' || a === 'fitness' || a === 'fuel' || a === 'recover') {
-        return -1;
-      } if (b === 'focus' || b === 'fitness' || b === 'fuel' || b === 'recover') {
-        return 1;
-      }
-      return a.localeCompare(b);
-    });
+  }
+  // fitness is the catch-all if nothing else matches
+  return 'fitness';
 }
 
-function getPrimaryCategory(categories) {
-  for (const category of categories) {
-    if (category === 'focus' || category === 'fitness' || category === 'fuel' || category === 'recover') {
-      return category;
-    }
+function getAdditionalKeywordsFromSection(articleSections) {
+  if (!articleSections) {
+    return [];
   }
-  // of none of the special categories is present, return first one
-  return categories[0];
+  return articleSections.filter((section) => section !== 'mindset'
+    && section !== 'movement'
+    && section !== 'nourishment'
+    && section !== 'regeneration');
 }
 
 const createMetadata = (main, document, params) => {
@@ -71,26 +63,24 @@ const createMetadata = (main, document, params) => {
     .map((tag) => tag.textContent.trim())
     .join(', ');
 
-  // TODO: have only one category?
-  params.categories = mapSections(ldJSON['@graph'].find((item) => item['@type'] === 'Article').articleSection);
-  meta.categories = params.categories.join(', ');
+  meta.Category = getCategoryFromSection(ldJSON['@graph'].find((item) => item['@type'] === 'Article').articleSection);
 
-  meta.Author = ldJSON['@graph'].filter((item) => item['@type'] === 'Person')
+  meta.Authors = ldJSON['@graph'].filter((item) => item['@type'] === 'Person')
     .map((item) => item.name)
     .join(', ');
 
-  meta.Keywords = ldJSON['@graph'].find((item) => item['@type'] === 'Article')
-    .keywords
-    .join(', ');
+  const pageKeywords = ldJSON['@graph'].find((item) => item['@type'] === 'Article').keywords;
+  const otherCategories = getAdditionalKeywordsFromSection(ldJSON['@graph'].find((item) => item['@type'] === 'Article').articleSection);
+  meta.Keywords = pageKeywords.concat(...otherCategories).join(', ');
 
-  meta['Publication Date'] = ldJSON['@graph'].find((item) => item['@type'] === 'Article')
-    .datePublished;
+  meta['Publication Date'] = ldJSON['@graph'].find((item) => item['@type'] === 'Article').datePublished;
 
   const block = WebImporter.Blocks.getMetadataBlock(document, meta);
   main.append(block);
 
   // eslint-disable-next-line prefer-destructuring
   params.year = meta['Publication Date'].split('-')[0];
+  params.category = meta.Category;
   return meta;
 };
 
@@ -278,8 +268,7 @@ export default {
     document, url, html, params,
   }) => {
     const filename = WebImporter.FileUtils.sanitizePath(new URL(url).pathname.replace(/\.html$/, '').replace(/\/$/, ''));
-    const { categories, year } = params;
-    const category = getPrimaryCategory(categories);
+    const { category, year } = params;
     if (!category || !year) {
       throw new Error(`missing params categories or year. ${JSON.stringify(params)}`);
     }
