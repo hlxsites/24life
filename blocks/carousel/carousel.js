@@ -26,9 +26,13 @@ export default async function decorate(block) {
     block.scrollTo({ top: 0, left: newOffset, behavior: smooth });
   }
 
-  // set initial position
-  requestAnimationFrame(() => {
-    block.scrollTo({ top: 0, left: originalSlides[0].offsetLeft, behavior: 'instant' });
+  // set initial position, delay scrolling until the elements are properly laid out
+  requestAnimationFrame(function initialScroll() {
+    if (originalSlides[0].offsetLeft > 0) {
+      block.scrollTo({ top: 0, left: originalSlides[0].offsetLeft, behavior: 'instant' });
+    } else {
+      setTimeout(initialScroll, 200);
+    }
   });
 
   // once the scroll is finished, jump back to an original slide in the middle
