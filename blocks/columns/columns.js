@@ -14,28 +14,28 @@ export default function decorate(block) {
       }
     });
   });
-  columnCollectionsBlock(block);
+  if (block.classList.contains('collections')) {
+    columnCollectionsBlock(block);
+  }
 }
 
 function columnCollectionsBlock(block) {
-  if (block.classList.contains('collections')) {
-    block.parentElement.classList.add('column-collections-parent');
-    for (const row of block.children) {
-      for (const cell of row.children) {
-        if (cell.children.length !== 0) {
-          const link = cell.querySelector('a');
-          const image = cell.querySelector('picture');
-          const h2 = document.createElement('h2');
-          h2.classList.add('columns-img-header');
-          h2.textContent = link.textContent;
-          link.textContent = '';
-          link.className = 'columns-collections-img-link';
-          link.append(h2);
-          link.append(image);
+  block.parentElement.classList.add('column-collections-parent');
+  for (const row of block.children) {
+    for (const cell of row.children) {
+      if (cell.children.length !== 0) {
+        const link = cell.querySelector('a');
+        const image = cell.querySelector('picture');
+        const h2 = document.createElement('h2');
+        h2.classList.add('columns-img-header');
+        h2.textContent = link.textContent;
+        link.textContent = '';
+        link.className = 'columns-collections-img-link';
+        link.append(h2);
+        link.append(image);
 
-          cell.innerHTML = '';
-          cell.append(link);
-        }
+        cell.innerHTML = '';
+        cell.append(link);
       }
     }
   }
