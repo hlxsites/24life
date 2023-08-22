@@ -2,7 +2,6 @@ import {
   sampleRUM,
   loadHeader,
   loadFooter,
-  buildBlock,
   decorateBlocks,
   decorateButtons,
   decorateIcons,
@@ -11,9 +10,6 @@ import {
   getMetadata,
   loadBlocks,
   loadCSS,
-  loadFooter,
-  loadHeader,
-  sampleRUM,
   waitForLCP,
 } from './lib-franklin.js';
 
