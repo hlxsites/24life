@@ -1,7 +1,6 @@
 export default function decorate(block) {
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
-
   // setup image columns
   [...block.children].forEach((row) => {
     [...row.children].forEach((col) => {
@@ -15,25 +14,29 @@ export default function decorate(block) {
       }
     });
   });
-
   if (block.classList.contains('collections')) {
-    block.parentElement.classList.add('column-collections-parent');
-    // query anchor tags in the block and move the picture into the anchor
-    const anchors = [...block.querySelectorAll('a')];
-    anchors.forEach((anchor) => {
-      const h2 = document.createElement('h2');
-      h2.classList.add('columns-img-header');
-      h2.textContent = anchor.textContent;
-      anchor.textContent = '';
-      anchor.append(h2);
+    columnCollectionsBlock(block);
+  }
+}
 
-      // get closest header tag and replace anchor with it
-      const headerTag = anchor.closest('h1,h2,h3,h4,h5,h6');
-      // get the sibling paragraph which contains the picture
-      const p = headerTag.nextElementSibling;
-      headerTag.replaceWith(anchor);
-      anchor.append(p.querySelector('picture'));
-      p.remove();
-    });
+function columnCollectionsBlock(block) {
+  block.parentElement.classList.add('column-collections-parent');
+  for (const row of block.children) {
+    for (const cell of row.children) {
+      if (cell.children.length !== 0) {
+        const link = cell.querySelector('a');
+        const image = cell.querySelector('picture');
+        const h2 = document.createElement('h2');
+        h2.classList.add('columns-img-header');
+        h2.textContent = link.textContent;
+        link.textContent = '';
+        link.className = 'columns-collections-img-link';
+        link.append(h2);
+        link.append(image);
+
+        cell.innerHTML = '';
+        cell.append(link);
+      }
+    }
   }
 }
