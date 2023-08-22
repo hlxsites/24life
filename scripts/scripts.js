@@ -1,16 +1,17 @@
 import {
-  sampleRUM,
   buildBlock,
-  loadHeader,
-  loadFooter,
+  decorateBlocks,
   decorateButtons,
   decorateIcons,
   decorateSections,
-  decorateBlocks,
   decorateTemplateAndTheme,
-  waitForLCP,
+  getMetadata,
   loadBlocks,
-  loadCSS, getMetadata,
+  loadCSS,
+  loadFooter,
+  loadHeader,
+  sampleRUM,
+  waitForLCP,
 } from './lib-franklin.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
@@ -28,6 +29,40 @@ function buildHeroBlock(main) {
     section.append(buildBlock('hero', { elems: [picture, h1] }));
     main.prepend(section);
   }
+}
+
+export function decorateLinkedPictures(main, processInBlocks = true) {
+  /* MS Word online does not support linked images. As a workaround use any links
+  that are directly after the image. */
+  [...main.querySelectorAll('picture + br + a')]
+    .filter((a) => a.textContent.trim().startsWith('http'))
+    // don't decorate if already in a block. Instead, the block should call this function.
+    .filter((a) => !a.closest('div.block') || processInBlocks)
+    .forEach((a) => {
+      const br = a.previousElementSibling;
+      const pictureEl = br.previousElementSibling;
+      pictureEl.remove();
+      br.remove();
+      a.innerHTML = '';
+      a.appendChild(pictureEl);
+      // make sure the link is not decorated as a button
+      a.parentNode.classList.remove('button-container');
+      a.className = '';
+    });
+
+  [...main.querySelectorAll('picture + a')]
+  // don't decorate if already in a block. Instead, the block should call this function.
+    .filter((a) => !a.closest('div.block') || processInBlocks)
+    .filter((a) => a.textContent.trim().startsWith('http'))
+    .forEach((a) => {
+      const pictureEl = a.previousElementSibling;
+      pictureEl.remove();
+      a.innerHTML = '';
+      a.appendChild(pictureEl);
+      // make sure the link is not decorated as a button
+      a.parentNode.classList.remove('button-container');
+      a.className = '';
+    });
 }
 
 /**
@@ -93,6 +128,7 @@ function buildAutoBlocks(main) {
     buildHeroBlock(main);
     decorateVideoLinks(main);
     decorateSpotifyLinks(main);
+    decorateLinkedPictures(main, false);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Auto Blocking failed', error);
