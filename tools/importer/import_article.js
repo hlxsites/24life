@@ -5,8 +5,7 @@ export default {
   preprocess: ({
     document, url, html, params,
   }) => {
-    const ldJSON = document.querySelector('script[type="application/ld+json"]');
-    params.ldJSON = JSON.parse(ldJSON.textContent);
+    params.ldJSON = JSON.parse(document.querySelector('script[type="application/ld+json"]').textContent);
   },
 
   /**
@@ -19,10 +18,8 @@ export default {
    * @returns {HTMLElement} The root element to be transformed
    */
   transformDOM: ({
-    // eslint-disable-next-line no-unused-vars
     document, url, html, params,
   }) => {
-    // define the main element: the one that will be transformed to Markdown
     const main = document.body;
 
     // use helper method to remove header, footer, etc.
@@ -268,7 +265,7 @@ function articleEmbeds(main, document) {
     console.log('embed', embed.src);
     if (embed.src.startsWith('/') && embed.src.includes('/embed/')) {
       embed.replaceWith(WebImporter.DOMUtils.createTable([
-        ['Columns '],
+        ['Columns (border)'],
         ['TODO', embed.textContent],
         ['TODO', ''],
       ], document));
