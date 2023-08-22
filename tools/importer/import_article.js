@@ -177,6 +177,19 @@ function detectYoutube(main, document) {
   }
 }
 
+function articleEmbeds(main, document) {
+  for (const embed of main.querySelectorAll('iframe.wp-embedded-content')) {
+    console.log('embed', embed.src);
+    if (embed.src.startsWith('/') && embed.src.includes('/embed/')) {
+      embed.replaceWith(WebImporter.DOMUtils.createTable([
+        ['Columns '],
+        ['TODO', embed.textContent],
+        ['TODO', ''],
+      ], document));
+    }
+  }
+}
+
 export default {
   preprocess: ({
     document, url, html, params,
@@ -211,6 +224,7 @@ export default {
       '.tfl-related-posts-box-wrappper',
       '.tfl-author-image',
       '#disqus_thread',
+      'blockquote.wp-embedded-content',
     ]);
 
     // currently not supporting magazine articles, TODO: handle
@@ -245,8 +259,9 @@ export default {
     moveFloatingImagesToNextLine(main, document);
     makeCaptionTextItalics(main, document);
     detectColumns(main, document);
-    detectQuotes(main, document);
     detectYoutube(main, document);
+    articleEmbeds(main, document);
+    detectQuotes(main, document);
     return main;
   },
 
