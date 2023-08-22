@@ -156,7 +156,8 @@ const createMetadata = (main, document, params) => {
     .map((tag) => tag.textContent.trim())
     .join(', ');
 
-  meta.Category = getCategoryFromSection(ldJSON['@graph'].find((item) => item['@type'] === 'Article').articleSection);
+  // "meta.category" is not needed, it is added automatically by metadata.xlsx at runtime
+  params.category = getCategoryFromSection(ldJSON['@graph'].find((item) => item['@type'] === 'Article').articleSection);
 
   meta.Authors = ldJSON['@graph'].filter((item) => item['@type'] === 'Person')
     .map((item) => item.name)
@@ -173,7 +174,6 @@ const createMetadata = (main, document, params) => {
 
   // eslint-disable-next-line prefer-destructuring
   params.year = meta['Publication Date'].split('-')[0];
-  params.category = meta.Category;
   return meta;
 };
 
