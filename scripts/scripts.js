@@ -2,17 +2,61 @@ import {
   sampleRUM,
   loadHeader,
   loadFooter,
+  decorateBlocks,
   decorateButtons,
   decorateIcons,
   decorateSections,
-  decorateBlocks,
   decorateTemplateAndTheme,
-  waitForLCP,
+  getMetadata,
   loadBlocks,
-  loadCSS, getMetadata,
+  loadCSS,
+  waitForLCP,
 } from './lib-franklin.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
+
+export function decorateLinkedPictures(container, processInBlocks = true) {
+  /* MS Word online does not support linked images. As a workaround use any links
+  that are directly after the image. */
+
+  // picture + br + a in the same paragraph
+  [...container.querySelectorAll('picture + br + a, picture + a')]
+  // don't decorate if already in a block. Instead, the block should call this function.
+    .filter((a) => !a.closest('div.block') || processInBlocks)
+  // link text is an unformatted URL paste
+    .filter((a) => a.textContent.trim().startsWith('http'))
+    .forEach((a) => {
+      const br = a.previousElementSibling;
+      let picture = br.previousElementSibling;
+      if (br.tagName === 'PICTURE') picture = br;
+      picture.remove();
+      br.remove();
+      a.innerHTML = picture.outerHTML;
+      // make sure the link is not decorated as a button
+      a.parentNode.classList.remove('button-container');
+      a.className = '';
+    });
+
+  // with link and image in separate paragraphs
+  [...container.querySelectorAll('p > a[href]')]
+  // don't decorate if already in a block. Instead, the block should call this function.
+    .filter((a) => !a.closest('div.block') || processInBlocks)
+  // link (in a <p>) has no siblings
+    .filter((a) => a.parentNode.childElementCount === 1)
+  // is preceded by an image (in a <p>) and image has no other siblings
+    .filter((a) => a.parentNode.previousElementSibling?.firstElementChild?.tagName === 'PICTURE')
+    .filter((a) => a.parentNode.previousElementSibling?.childElementCount === 1)
+  // link text is an unformatted URL paste
+    .filter((a) => a.textContent.trim().startsWith('http'))
+    .forEach((a) => {
+      const picture = a.parentNode.previousElementSibling.firstElementChild;
+      picture.parentNode.remove();
+      a.innerHTML = picture.outerHTML;
+      // make sure the link is not decorated as a button
+      a.parentNode.classList.remove('button-container');
+      a.className = '';
+    });
+}
 
 /**
  * load fonts.css and set a session storage flag
@@ -76,6 +120,7 @@ function buildAutoBlocks(main) {
   try {
     decorateVideoLinks(main);
     decorateSpotifyLinks(main);
+    decorateLinkedPictures(main, false);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Auto Blocking failed', error);
