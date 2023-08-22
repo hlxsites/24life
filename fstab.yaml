@@ -1,6 +1,2 @@
 mountpoints:
   /: https://adobe.sharepoint.com/sites/HelixProjects/Shared%20Documents/sites/24life
-
-folders:
-  /category/: /category/default
-  /tag/: /tag/default
