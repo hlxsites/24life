@@ -136,10 +136,13 @@ function getAdditionalKeywordsFromSection(articleSections) {
   if (!articleSections) {
     return [];
   }
-  return articleSections.filter((section) => section !== 'mindset'
-    && section !== 'movement'
-    && section !== 'nourishment'
-    && section !== 'regeneration');
+  return articleSections.filter((section) => {
+    const lowercaseSection = section.toLowerCase();
+    return lowercaseSection !== 'mindset'
+        && lowercaseSection !== 'movement'
+        && lowercaseSection !== 'nourishment'
+        && lowercaseSection !== 'regeneration';
+  });
 }
 
 const createMetadata = (main, document, params) => {
