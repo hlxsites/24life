@@ -33,7 +33,7 @@ div.column-collections-parent {
   position: absolute;
   margin-top: 10px;
   margin-left: 10px;
-  color: var(--background-color);
+  color: var(--text-color-on-black-background);
   font-size: 2rem;
   font-weight: 350;
   line-height: 1;
