@@ -24,7 +24,7 @@ export default async function decorate(doc) {
   firstSection.parentElement.append(newSection);
 
   newSectionWrapper.append(createSocialMediaButtons());
-  getMetadata('author').split(',').forEach((author) => {
+  getMetadata('authors').split(',').forEach((author) => {
     newSectionWrapper.append(createAuthorBlock(author));
   });
   newSectionWrapper.append(createArticleCarousel());
@@ -49,7 +49,7 @@ function createSectionWithHeroBlock(h1, img) {
       ['title', getMetadata('og:title')],
       ['image', getMetadata('og:image')],
       ['collections', getMetadata('collections')],
-      ['author', getMetadata('author')],
+      ['author', getMetadata('authors')],
     ],
   );
   wrapper.append(newBlock);
