@@ -67,7 +67,7 @@ export default {
       entry.closest('.row').remove();
     }
 
-    fixEmptySpan(main, document);
+    removeUnencessarySpan(main, document);
     fixDoubleBoldText(main, document);
     fixBoldedWhitespace(main, document);
     fixUnderscoreInLinks(main, document);
@@ -388,9 +388,18 @@ function fixInvalidLists(main, document) {
   }
 }
 
-function fixEmptySpan(main, document) {
+function removeUnencessarySpan(main, document) {
   main.querySelectorAll('span').forEach((el) => {
     if (el.textContent.trim() === '') {
+      el.before(...el.childNodes);
+      el.remove();
+    }
+  });
+
+  // e.g. https://www.24life.com/surprising-superfoods/
+  main.querySelectorAll('strong > span').forEach((el) => {
+    // if there are no child elements, remove the span and move child nodes
+    if (el.children.length === 0) {
       el.before(...el.childNodes);
       el.remove();
     }
