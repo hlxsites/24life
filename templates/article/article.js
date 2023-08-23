@@ -16,12 +16,18 @@ export default async function decorate(doc) {
   const firstContent = doc.querySelector('main .section .default-content-wrapper');
   firstContent.before(createSocialMediaButtons());
 
-  const lastContent = [...doc.querySelectorAll('main .section .default-content-wrapper')].at(-1);
-  lastContent.append(createSocialMediaButtons());
+  const newSection = document.createElement('div');
+  newSection.classList.add('section');
+  const newSectionWrapper = document.createElement('div');
+  newSectionWrapper.classList.add('default-content-wrapper');
+  newSection.append(newSectionWrapper);
+  firstSection.parentElement.append(newSection);
+
+  newSectionWrapper.append(createSocialMediaButtons());
   getMetadata('author').split(',').forEach((author) => {
-    lastContent.append(createAuthorBlock(author));
+    newSectionWrapper.append(createAuthorBlock(author));
   });
-  lastContent.append(createArticleCarousel());
+  newSectionWrapper.append(createArticleCarousel());
 }
 
 function createNewSection() {
