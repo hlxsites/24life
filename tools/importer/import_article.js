@@ -98,6 +98,42 @@ export default {
   },
 };
 
+const createMetadata = (main, document, params) => {
+  const { ldJSON } = params;
+
+  const meta = {};
+
+  meta.Description = document.querySelector('meta[property="og:description"]')
+    .content
+    .replace(/^- /, '');
+  meta.Description = removeOldSectionNamesFromDescriptin(meta.Description);
+
+  meta.Collections = [...document.querySelectorAll('.tfl-page-title-wrap .tfl-the-tags a.tfl-tag')]
+    .map((tag) => tag.textContent.trim())
+    .join(', ');
+
+  // "meta.section" is not needed, it is added automatically by metadata.xlsx at runtime
+  params.section = getMainSectionFromArticleSection(ldJSON['@graph'].find((item) => item['@type'] === 'Article').articleSection);
+
+  // additional categories
+  meta.Categories = getAdditionalCategoriesFromArticleSection(ldJSON['@graph'].find((item) => item['@type'] === 'Article').articleSection);
+
+  meta.Authors = ldJSON['@graph'].filter((item) => item['@type'] === 'Person')
+    .map((item) => item.name)
+    .join(', ');
+
+  meta.Keywords = ldJSON['@graph'].find((item) => item['@type'] === 'Article').keywords.join(', ');
+
+  meta['Publication Date'] = ldJSON['@graph'].find((item) => item['@type'] === 'Article').datePublished;
+
+  const block = WebImporter.Blocks.getMetadataBlock(document, meta);
+  main.append(block);
+
+  // eslint-disable-next-line prefer-destructuring
+  params.year = meta['Publication Date'].split('-')[0];
+  return meta;
+};
+
 export function toClassName(name) {
   return typeof name === 'string'
     ? name.toLowerCase().replace(/[^0-9a-z]/gi, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
@@ -149,46 +185,21 @@ function getAdditionalCategoriesFromArticleSection(articleSections) {
   });
 }
 
-function emptyLine(document) {
-  const p = document.createElement('p');
-  p.innerHTML = ' &nbsp;  &nbsp; ';
-  return p;
+function removeOldSectionNamesFromDescriptin(description) {
+  if (description.toLowerCase().startsWith('mindset - ')) {
+    return description.substring('mindset - '.length);
+  }
+  if (description.toLowerCase().startsWith('movement - ')) {
+    return description.substring('movement - '.length);
+  }
+  if (description.toLowerCase().startsWith('nourishment - ')) {
+    return description.substring('nourishment - '.length);
+  }
+  if (description.toLowerCase().startsWith('regeneration - ')) {
+    return description.substring('regeneration - '.length);
+  }
+  return description;
 }
-
-const createMetadata = (main, document, params) => {
-  const { ldJSON } = params;
-
-  const meta = {};
-
-  meta.Description = document.querySelector('meta[property="og:description"]')
-    .content
-    .replace(/^- /, '');
-
-  meta.Collections = [...document.querySelectorAll('.tfl-page-title-wrap .tfl-the-tags a.tfl-tag')]
-    .map((tag) => tag.textContent.trim())
-    .join(', ');
-
-  // "meta.section" is not needed, it is added automatically by metadata.xlsx at runtime
-  params.section = getMainSectionFromArticleSection(ldJSON['@graph'].find((item) => item['@type'] === 'Article').articleSection);
-
-  // additional categories
-  meta.Categories = getAdditionalCategoriesFromArticleSection(ldJSON['@graph'].find((item) => item['@type'] === 'Article').articleSection);
-
-  meta.Authors = ldJSON['@graph'].filter((item) => item['@type'] === 'Person')
-    .map((item) => item.name)
-    .join(', ');
-
-  meta.Keywords = ldJSON['@graph'].find((item) => item['@type'] === 'Article').keywords.join(', ');
-
-  meta['Publication Date'] = ldJSON['@graph'].find((item) => item['@type'] === 'Article').datePublished;
-
-  const block = WebImporter.Blocks.getMetadataBlock(document, meta);
-  main.append(block);
-
-  // eslint-disable-next-line prefer-destructuring
-  params.year = meta['Publication Date'].split('-')[0];
-  return meta;
-};
 
 function removeLinksFromImagesPointingToItself(main) {
   for (const img of main.querySelectorAll('img')) {
