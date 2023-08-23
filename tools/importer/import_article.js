@@ -90,11 +90,11 @@ export default {
     document, url, html, params,
   }) => {
     const filename = WebImporter.FileUtils.sanitizePath(new URL(url).pathname.replace(/\.html$/, '').replace(/\/$/, ''));
-    const { category, year } = params;
-    if (!category || !year) {
-      throw new Error(`missing params categories or year. ${JSON.stringify(params)}`);
+    const { section, year } = params;
+    if (!section || !year) {
+      throw new Error(`missing params section or year. ${JSON.stringify(params)}`);
     }
-    return `${toClassName(category)}/${toClassName(year)}/${filename}`;
+    return `${toClassName(section)}/${toClassName(year)}/${filename}`;
   },
 };
 
@@ -111,7 +111,7 @@ function toTitleCase(str) {
   );
 }
 
-function getCategoryFromSection(articleSections) {
+function getMainSectionFromArticleSection(articleSections) {
   if (!articleSections) {
     return 'fitness';
   }
@@ -136,7 +136,7 @@ function getCategoryFromSection(articleSections) {
   return 'fitness';
 }
 
-function getAdditionalKeywordsFromSection(articleSections) {
+function getAdditionalCategoriesFromArticleSection(articleSections) {
   if (!articleSections) {
     return [];
   }
@@ -149,12 +149,17 @@ function getAdditionalKeywordsFromSection(articleSections) {
   });
 }
 
+function emptyLine(document) {
+  const p = document.createElement('p');
+  p.innerHTML = ' &nbsp;  &nbsp; ';
+  return p;
+}
+
 const createMetadata = (main, document, params) => {
   const { ldJSON } = params;
 
   const meta = {};
 
-  meta.Template = 'article';
   meta.Description = document.querySelector('meta[property="og:description"]')
     .content
     .replace(/^- /, '');
@@ -163,16 +168,17 @@ const createMetadata = (main, document, params) => {
     .map((tag) => tag.textContent.trim())
     .join(', ');
 
-  // "meta.category" is not needed, it is added automatically by metadata.xlsx at runtime
-  params.category = getCategoryFromSection(ldJSON['@graph'].find((item) => item['@type'] === 'Article').articleSection);
+  // "meta.section" is not needed, it is added automatically by metadata.xlsx at runtime
+  params.section = getMainSectionFromArticleSection(ldJSON['@graph'].find((item) => item['@type'] === 'Article').articleSection);
+
+  // additional categories
+  meta.Categories = getAdditionalCategoriesFromArticleSection(ldJSON['@graph'].find((item) => item['@type'] === 'Article').articleSection);
 
   meta.Authors = ldJSON['@graph'].filter((item) => item['@type'] === 'Person')
     .map((item) => item.name)
     .join(', ');
 
-  const pageKeywords = ldJSON['@graph'].find((item) => item['@type'] === 'Article').keywords;
-  const otherCategories = getAdditionalKeywordsFromSection(ldJSON['@graph'].find((item) => item['@type'] === 'Article').articleSection);
-  meta.Keywords = pageKeywords.concat(...otherCategories).join(', ');
+  meta.Keywords = ldJSON['@graph'].find((item) => item['@type'] === 'Article').keywords.join(', ');
 
   meta['Publication Date'] = ldJSON['@graph'].find((item) => item['@type'] === 'Article').datePublished;
 
