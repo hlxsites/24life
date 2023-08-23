@@ -25,8 +25,8 @@ indices:
       section:
         select: head > meta[name="section"]
         value: attribute(el, "content")
-      author:
-        select: head > meta[name="author"]
+      authors:
+        select: head > meta[name="authors"]
         value: attribute(el, "content")
       image:
         select: head > meta[property="og:image"]
@@ -61,11 +61,11 @@ indices:
       collections:
         select: head > meta[name="collections"]
         value: attribute(el, "content")
-      section:
-        select: head > meta[name="section"]
+      category:
+        select: head > meta[name="category"]
         value: attribute(el, "content")
-      author:
-        select: head > meta[name="author"]
+      authors:
+        select: head > meta[name="authors"]
         value: attribute(el, "content")
       tags:
         select: head > meta[name="tags"]
