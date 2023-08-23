@@ -215,13 +215,14 @@ function useHighresImagesAndRemoveLinks(main) {
 
 function fixBoldedWhitespace(main, document) {
   // e.g. https://www.24life.com/all-eyes-on-sugar-what-you-should-know-about-the-fdas-new-nutrition-labels/
-  for (const strong of main.querySelectorAll('strong')) {
+  for (const strong of main.querySelectorAll('strong, b')) {
     if (strong.textContent.trim() === '') {
       // keep content, but remove strong tag
       strong.before(...strong.childNodes);
       strong.remove();
     }
   }
+
   // move whitespace outside bolding
   // e.g. https://www.24life.com/sports-specific-training-tennis/
   for (const strong of main.querySelectorAll('strong')) {
