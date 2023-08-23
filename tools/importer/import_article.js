@@ -68,6 +68,7 @@ export default {
     }
 
     fixDoubleBoldText(main, document);
+    fixBoldedWhitespace(main, document);
     fixUnderscoreInLinks(main, document);
     removeLinksFromImagesPointingToItself(main);
     moveFloatingImagesToSeparateLine(main, document);
@@ -205,6 +206,17 @@ function removeLinksFromImagesPointingToItself(main) {
     const link = img.closest('a');
     if (link && link.href.includes('twentyfourlife.wpenginepowered') && link.href.endsWith('.jpg')) {
       link.replaceWith(img);
+    }
+  }
+}
+
+function fixBoldedWhitespace(main, document) {
+  // e.g. https://www.24life.com/all-eyes-on-sugar-what-you-should-know-about-the-fdas-new-nutrition-labels/
+  for (const strong of main.querySelectorAll('strong')) {
+    if (strong.textContent.trim() === '') {
+      // keep content, but remove strong tag
+      strong.before(...strong.childNodes);
+      strong.remove();
     }
   }
 }
