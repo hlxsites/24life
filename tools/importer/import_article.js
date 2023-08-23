@@ -49,7 +49,7 @@ export default {
     let img = main.querySelector('img');
     if (!img) {
       img = document.createElement('img');
-      img.src = 'https://main--24life--hlxsites.hlx.page/dummy-article-hero-image/media_127d7667d1e27556e2e4570b95d44f0dfc591529a.png?width=2000&format=webply&optimize=medium';
+      img.src = 'http://localhost:3001/dummy-article-hero-image/media_127d7667d1e27556e2e4570b95d44f0dfc591529a.png?host=https%3A%2F%2Fmain--24life--hlxsites.hlx.page';
     }
     h1.after(img);
 
