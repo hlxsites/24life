@@ -47,7 +47,7 @@ indices:
         select: head > meta[name="publication-date"]
         value: parseTimestamp(attribute(el, "content"), MM/DD/YYYY)
       content:
-        select: main > section:nth-of-type(2)
+        select: main
         value: textContent(el)
       template:
         select: head > meta[name="template"]
@@ -60,16 +60,13 @@ indices:
         value: attribute(el, "content")
       collections:
         select: head > meta[name="collections"]
-        value: attribute(el, "content")
-      category:
+        values: attribute(el, "content")
+      categories:
         select: head > meta[name="category"]
-        value: attribute(el, "content")
+        values: attribute(el, "content")
       authors:
         select: head > meta[name="authors"]
-        value: attribute(el, "content")
-      tags:
-        select: head > meta[name="tags"]
-        value: attribute(el, "content")
+        values: attribute(el, "content")
       image:
         select: head > meta[property="og:image"]
         value: match(attribute(el, "content"), "https:\/\/[^/]+(/.*)")
