@@ -71,7 +71,7 @@ export default {
     fixDoubleBoldText(main, document);
     fixBoldedWhitespace(main, document);
     fixUnderscoreInLinks(main, document);
-    removeLinksFromImagesPointingToItself(main);
+    useHighresImagesAndRemoveLinks(main, document);
     moveFloatingImagesToSeparateLine(main, document);
     makeCaptionTextItalics(main, document);
     detectColumns(main, document);
@@ -202,10 +202,12 @@ function removeOldSectionNamesFromDescriptin(description) {
   return description;
 }
 
-function removeLinksFromImagesPointingToItself(main) {
+function useHighresImagesAndRemoveLinks(main) {
   for (const img of main.querySelectorAll('img')) {
     const link = img.closest('a');
-    if (link && link.href.includes('twentyfourlife.wpenginepowered') && link.href.endsWith('.jpg')) {
+    if (link && link.href.includes('twentyfourlife.wpenginepowered.com')) {
+      // use the highres image from the link instead of the lowres image from the img
+      img.src = link.href;
       link.replaceWith(img);
     }
   }
