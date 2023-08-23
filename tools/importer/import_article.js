@@ -342,4 +342,10 @@ function fixInvalidLists(main, document) {
       li.innerHTML = li.innerHTML.replaceAll('\n• ', '<li>');
     }
   }
+
+  // e.g. https://www.24life.com/fermented-food-whats-the-fuss/
+  for (const ul of main.querySelectorAll('ul > ul')) {
+    ul.before(...ul.childNodes);
+    ul.remove();
+  }
 }
