@@ -247,11 +247,14 @@ function detectColumns(main, document) {
 
 function detectQuotes(main, document) {
   for (const quote of main.querySelectorAll('blockquote')) {
-    // create table
+    let text = quote.textContent.trim();
+    if (text.startsWith('“') && text.endsWith('”')) {
+      text = text.substring(1, text.length - 1);
+    }
 
     quote.replaceWith(WebImporter.DOMUtils.createTable([
       ['Quote '],
-      ['Text', quote.textContent],
+      ['Text', text],
       ['Author', ''],
     ], document));
   }
