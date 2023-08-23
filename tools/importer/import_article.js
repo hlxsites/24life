@@ -67,6 +67,7 @@ export default {
       entry.closest('.row').remove();
     }
 
+    fixEmptySpan(main, document);
     fixDoubleBoldText(main, document);
     fixBoldedWhitespace(main, document);
     fixUnderscoreInLinks(main, document);
@@ -217,6 +218,13 @@ function fixBoldedWhitespace(main, document) {
       // keep content, but remove strong tag
       strong.before(...strong.childNodes);
       strong.remove();
+    }
+  }
+  // move whitespace outside bolding
+  // e.g. https://www.24life.com/sports-specific-training-tennis/
+  for (const strong of main.querySelectorAll('strong')) {
+    if (strong.outerHTML.includes(' </strong>')) {
+      strong.parentElement.innerHTML = strong.parentElement.innerHTML.replaceAll(' </strong>', '</strong> ');
     }
   }
 }
@@ -376,4 +384,13 @@ function fixInvalidLists(main, document) {
     ul.before(...ul.childNodes);
     ul.remove();
   }
+}
+
+function fixEmptySpan(main, document) {
+  main.querySelectorAll('span').forEach((el) => {
+    if (el.textContent.trim() === '') {
+      el.before(...el.childNodes);
+      el.remove();
+    }
+  });
 }
