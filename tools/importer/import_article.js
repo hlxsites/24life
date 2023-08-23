@@ -17,7 +17,7 @@ export default {
    * @param {object} params Object containing some parameters given by the import process.
    * @returns {HTMLElement} The root element to be transformed
    */
-  transformDOM: async ({
+  transform: async ({
     document, url, html, params,
   }) => {
     const main = document.body;
@@ -46,7 +46,11 @@ export default {
     // start with h1, then image
     const h1 = main.querySelector('h1');
     main.prepend(h1);
-    const img = main.querySelector('img');
+    let img = main.querySelector('img');
+    if (!img) {
+      img = document.createElement('img');
+      img.src = 'https://main--24life--hlxsites.hlx.page/dummy-article-hero-image/media_127d7667d1e27556e2e4570b95d44f0dfc591529a.png?width=2000&format=webply&optimize=medium';
+    }
     h1.after(img);
 
     createMetadata(main, document, params);
@@ -74,27 +78,22 @@ export default {
     detectQuotes(main, document);
     fixInvalidLists(main, document);
 
-    return main;
-  },
-
-  /**
-   * Return a path that describes the document being transformed (file name, nesting...).
-   * The path is then used to create the corresponding Word document.
-   * @param {HTMLDocument} document The document
-   * @param {string} url The url of the page imported
-   * @param {string} html The raw html (the document is cleaned up during preprocessing)
-   * @param {object} params Object containing some parameters given by the import process.
-   * @return {string} The path
-   */
-  generateDocumentPath: ({
-    document, url, html, params,
-  }) => {
-    const filename = WebImporter.FileUtils.sanitizePath(new URL(url).pathname.replace(/\.html$/, '').replace(/\/$/, ''));
+    const filename = new URL(url).pathname
+      .replace(/\/$/, '')
+      // eslint-disable-next-line prefer-regex-literals
+      .replace(new RegExp('^/'), '');
     const { section, year } = params;
     if (!section || !year) {
       throw new Error(`missing params section or year. ${JSON.stringify(params)}`);
     }
-    return `${toClassName(section)}/${toClassName(year)}/${filename}`;
+    const newPath = WebImporter.FileUtils.sanitizePath(`${toClassName(section)}/${toClassName(year)}/${filename}`);
+    return {
+      element: main,
+      path: newPath,
+      report: {
+        previewUrl: `https://main--24life--hlxsites.hlx.page${newPath}`,
+      },
+    };
   },
 };
 
