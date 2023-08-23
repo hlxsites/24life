@@ -61,7 +61,8 @@ export default async function decorate(block) {
     });
   });
 
-  block.innerHTML = grid.outerHTML;
+  block.textContent = '';
+  block.append(grid);
 }
 
 /**
@@ -91,10 +92,10 @@ function removeEmptyLi(cell) {
 }
 
 async function fetchArticleAndCreateCard(path, li) {
-  return ffetch('/articles.json')
+  const articles = await ffetch('/articles.json').all();
+  await Promise.all(articles
     // make sure all filters match
     .filter((article) => article.path?.toLowerCase() === path.toLowerCase())
-    .limit(1)
     .map(async (article) => {
       const wrapper = document.createElement('div');
       const card = createCardBlock(article, wrapper);
@@ -104,6 +105,5 @@ async function fetchArticleAndCreateCard(path, li) {
       li.innerHTML = '';
       li.append(wrapper);
       await loadBlock(card);
-    })
-    .all();
+    }));
 }
