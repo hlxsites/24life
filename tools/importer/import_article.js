@@ -72,6 +72,7 @@ export default {
     detectYoutube(main, document);
     await articleEmbeds(main, document);
     detectQuotes(main, document);
+    fixInvalidLists(main, document);
 
     return main;
   },
@@ -332,4 +333,13 @@ function fixUnderscoreInLinks(main, document) {
     u.before(...u.childNodes);
     u.remove();
   });
+}
+
+function fixInvalidLists(main, document) {
+  // e.g. https://www.24life.com/ideas-for-a-valentines-day-date/
+  for (const li of main.querySelectorAll('ul li')) {
+    if (!li.previousElementSibling && !li.nextElementSibling && li.textContent.includes('\n• ')) {
+      li.innerHTML = li.innerHTML.replaceAll('\n• ', '<li>');
+    }
+  }
 }
