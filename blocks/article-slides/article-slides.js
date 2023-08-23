@@ -15,8 +15,9 @@ export default async function decorate(block) {
 
   const articles = await fetchArticles(config);
   articles.forEach((article, index) => {
-    const slide = document.createElement('div');
+    const slide = document.createElement('a');
     slide.classList.add('slide');
+    slide.href = article.path;
     slide.innerHTML = `
       <div class="image">${createOptimizedPicture(article.image, article.title, index === 0).outerHTML}</div>
       <div class="text">
