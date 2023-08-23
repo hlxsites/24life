@@ -34,7 +34,7 @@ export default function decorate(block) {
 
   const authorLinks = document.createElement('span');
   authorLinks.append('By ');
-  data.author.split(',').forEach((author, index) => {
+  data.authors.split(',').forEach((author, index) => {
     const authorLink = document.createElement('a');
     authorLink.href = `/author/${toClassName(author)}`;
     authorLink.textContent = author;

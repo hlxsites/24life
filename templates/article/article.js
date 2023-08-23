@@ -49,7 +49,7 @@ function createSectionWithHeroBlock(h1, img) {
       ['title', getMetadata('og:title')],
       ['image', getMetadata('og:image')],
       ['collections', getMetadata('collections')],
-      ['author', getMetadata('authors')],
+      ['authors', getMetadata('authors')],
     ],
   );
   wrapper.append(newBlock);
