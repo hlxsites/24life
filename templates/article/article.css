@@ -1,3 +1,7 @@
+body.article main .default-content-wrapper {
+    --current-link-color: var(--link-color-default-content);
+}
+
 body.article main .article-social-media-buttons {
     display: flex;
     justify-content: center;
@@ -17,6 +21,8 @@ body.article main .article-social-media-buttons a:hover svg {
 
 body.article main .article-carousel-wrapper {
     margin: 4rem 0;
+
+    --current-link-color: var(--link-color);
 }
 
 @media (min-width: 900px) {
