@@ -9,14 +9,14 @@ export default {
   },
 
   /**
-   * Apply DOM operations to the provided document and return
-   * the root element to be then transformed to Markdown.
-   * @param {HTMLDocument} document The document
-   * @param {string} url The url of the page imported
-   * @param {string} html The raw html (the document is cleaned up during preprocessing)
-   * @param {object} params Object containing some parameters given by the import process.
-   * @returns {HTMLElement} The root element to be transformed
-   */
+     * Apply DOM operations to the provided document and return
+     * the root element to be then transformed to Markdown.
+     * @param {HTMLDocument} document The document
+     * @param {string} url The url of the page imported
+     * @param {string} html The raw html (the document is cleaned up during preprocessing)
+     * @param {object} params Object containing some parameters given by the import process.
+     * @returns {HTMLElement} The root element to be transformed
+     */
   transform: async ({
     document, url, html, params,
   }) => {
@@ -71,6 +71,7 @@ export default {
     fixDoubleBoldText(main, document);
     fixdoubleItalicText(main, document);
     fixBoldedOrItalicWhitespace(main, document);
+    moveWhitespaceOutsideTag(main, document);
     fixBoldMissingSpace(main, document);
     fixUnderscoreInLinks(main, document);
     fixBoldedLinks(main, document);
@@ -85,7 +86,7 @@ export default {
 
     const filename = new URL(url).pathname
       .replace(/\/$/, '')
-      // eslint-disable-next-line prefer-regex-literals
+    // eslint-disable-next-line prefer-regex-literals
       .replace(new RegExp('^/'), '');
     const { section, year } = params;
     if (!section || !year) {
@@ -159,10 +160,10 @@ function getMainSectionFromArticleSection(articleSections) {
     articleSection = articleSection.toLowerCase();
 
     if (articleSection === 'mindset'
-      || articleSection === 'lifestyle'
-      || articleSection === 'discover'
-      || articleSection === 'flexibility'
-      || articleSection === 'motivate') {
+            || articleSection === 'lifestyle'
+            || articleSection === 'discover'
+            || articleSection === 'flexibility'
+            || articleSection === 'motivate') {
       return 'focus';
     }
     if (articleSection === 'nourishment') {
@@ -183,9 +184,9 @@ function getAdditionalCategoriesFromArticleSection(articleSections) {
   return articleSections.filter((section) => {
     const lowercaseSection = section.toLowerCase();
     return lowercaseSection !== 'mindset'
-        && lowercaseSection !== 'movement'
-        && lowercaseSection !== 'nourishment'
-        && lowercaseSection !== 'regeneration';
+            && lowercaseSection !== 'movement'
+            && lowercaseSection !== 'nourishment'
+            && lowercaseSection !== 'regeneration';
   });
 }
 
@@ -225,12 +226,16 @@ function fixBoldedOrItalicWhitespace(main, document) {
       strong.remove();
     }
   }
+}
 
-  // move whitespace outside bolding/em
+function moveWhitespaceOutsideTag(main, document) {
+  // move whitespace outside strong/b/em
   // e.g. https://www.24life.com/sports-specific-training-tennis/
-  for (const el of main.querySelectorAll('strong, b, em')) {
+  // apply to all inline elements
+  for (const el of main.querySelectorAll('a, abbr, acronym, b, bdo, big, button, cite, code, dfn, em, i, img, input, kbd, label, map, output, q, samp, script, small, span, strong, sub, sup, tt, var')) {
     if (el.outerHTML.includes(` </${el.tagName.toLowerCase()}>`)) {
-      el.parentElement.innerHTML = el.parentElement.innerHTML.replaceAll(` </${el.tagName.toLowerCase()}>`, `</${el.tagName.toLowerCase()}> `);
+      el.innerHTML = el.innerHTML.trimEnd();
+      el.after(' ');
     }
   }
 }
@@ -282,7 +287,7 @@ function makeCaptionTextItalics(main, document) {
 
 function detectColumns(main, document) {
   const rows = [...main.querySelectorAll('.row :is([class^="col-"], [class*=" col-"])')]
-    // note: we ignore large columns like col-sm-12, col-md-10, etc.
+  // note: we ignore large columns like col-sm-12, col-md-10, etc.
     .filter((col) => {
       const width = [...col.classList].find((c) => c.includes('col-'))
         .split('-')[2];
