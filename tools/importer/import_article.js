@@ -70,7 +70,7 @@ export default {
     removeUnencessarySpan(main, document);
     fixDoubleBoldText(main, document);
     fixdoubleItalicText(main, document);
-    fixBoldedWhitespace(main, document);
+    fixBoldedOrItalicWhitespace(main, document);
     fixBoldMissingSpace(main, document);
     fixUnderscoreInLinks(main, document);
     fixBoldedLinks(main, document);
@@ -216,9 +216,9 @@ function useHighresImagesAndRemoveLinks(main) {
   }
 }
 
-function fixBoldedWhitespace(main, document) {
+function fixBoldedOrItalicWhitespace(main, document) {
   // e.g. https://www.24life.com/all-eyes-on-sugar-what-you-should-know-about-the-fdas-new-nutrition-labels/
-  for (const strong of main.querySelectorAll('strong, b')) {
+  for (const strong of main.querySelectorAll('strong, b, em')) {
     if (strong.textContent.trim() === '') {
       // keep content, but remove strong tag
       strong.before(...strong.childNodes);
@@ -226,11 +226,11 @@ function fixBoldedWhitespace(main, document) {
     }
   }
 
-  // move whitespace outside bolding
+  // move whitespace outside bolding/em
   // e.g. https://www.24life.com/sports-specific-training-tennis/
-  for (const strong of main.querySelectorAll('strong')) {
-    if (strong.outerHTML.includes(' </strong>')) {
-      strong.parentElement.innerHTML = strong.parentElement.innerHTML.replaceAll(' </strong>', '</strong> ');
+  for (const el of main.querySelectorAll('strong, b, em')) {
+    if (el.outerHTML.includes(` </${el.tagName.toLowerCase()}>`)) {
+      el.parentElement.innerHTML = el.parentElement.innerHTML.replaceAll(` </${el.tagName.toLowerCase()}>`, `</${el.tagName.toLowerCase()}> `);
     }
   }
 }
@@ -436,7 +436,7 @@ function removeUnencessarySpan(main, document) {
   });
 
   // e.g. https://www.24life.com/surprising-superfoods/
-  main.querySelectorAll('strong > span').forEach((el) => {
+  main.querySelectorAll('strong > span, em > span').forEach((el) => {
     // if there are no child elements, remove the span and move child nodes
     if (el.children.length === 0) {
       el.before(...el.childNodes);
