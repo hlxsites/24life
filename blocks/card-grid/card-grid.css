@@ -21,6 +21,7 @@
     grid-column: 1; /* Spans the first column */
     grid-row: span 2; /* Spans 2 rows */
   }
+
   .block.card-grid > a:not(:first-child) {
     grid-column: 2; /* Second column */
   }
@@ -38,6 +39,7 @@
     grid-column: 1; /* Second column */
     grid-row: 1;
   }
+  
   .block.card-grid.right > a:nth-child(3) {
     grid-column: 1; /* Second column */
     grid-row: 2;
