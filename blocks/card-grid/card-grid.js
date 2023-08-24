@@ -4,9 +4,6 @@ import {
 import ffetch from '../../scripts/ffetch.js';
 import { createCardBlock } from '../card/card.js';
 
-// call articles once for block
-const articles = await ffetch('/articles.json').chunks(700).all();
-
 export default async function decorate(block) {
   const links = [...block.querySelectorAll('a')];
 
@@ -20,6 +17,7 @@ export default async function decorate(block) {
 }
 
 async function fetchArticleAndCreateCard(path, link) {
+  const articles = await ffetch('/articles.json').chunks(700).all();
   await Promise.all(articles
     // find the matching article via the path
     .filter((article) => article.path?.toLowerCase() === path.toLowerCase())
