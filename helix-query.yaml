@@ -62,7 +62,7 @@ indices:
         select: head > meta[name="collections"]
         values: attribute(el, "content")
       categories:
-        select: head > meta[name="category"]
+        select: head > meta[name="categories"]
         values: attribute(el, "content")
       authors:
         select: head > meta[name="authors"]
