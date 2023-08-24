@@ -1,10 +1,24 @@
 .columns > div {
   display: flex;
   flex-direction: column;
+
+  --current-link-color: var(--link-color-default-content);
+}
+
+.columns a {
+  font-weight: bold;
 }
 
 .columns img {
   width: 100%;
+}
+
+.columns.small-image img {
+  height: 15rem;
+  width: auto;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  object-position: top;
 }
 
 div.column-collections-parent {
@@ -38,6 +52,8 @@ div.column-collections-parent {
   font-weight: 350;
   line-height: 1;
 }
+
+
 
 .columns.collections h2 {
   margin-top: 10px;
