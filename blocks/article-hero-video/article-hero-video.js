@@ -6,12 +6,34 @@ export default function decorate(block) {
   const picture = block.querySelector('picture');
   block.innerText = '';
 
+  const over900px = window.matchMedia('(min-width: 900px)');
   // create boolean to indicate if we have a video
   let hasVideo = false;
+  // create video container named article-hero-video
+  const videoContainer = document.createElement('div');
+  videoContainer.classList.add('article-hero-video-iframe-container');
   if (data?.video) {
     hasVideo = true;
-    block.append(buildIframe(data?.video));
+    if (over900px.matches) {
+      videoContainer.append(buildIframe(data?.video));
+    }
   }
+  block.append(videoContainer);
+
+  // add change event listener
+  over900px.addEventListener('change', (e) => {
+    if (e.matches) {
+      // check if we have existing iframe in video container
+      if (videoContainer.querySelector('iframe')) {
+        return;
+      }
+      videoContainer.append(buildIframe(data?.video));
+    } else {
+      videoContainer.innerHTML = '';
+      // remove overlay div
+      block.querySelector('.article-hero-video-overlay').remove();
+    }
+  });
 
   // add overlay div to avoid clicks on video
   const overlay = document.createElement('div');
@@ -65,7 +87,7 @@ function buildIframe(url) {
   iframe.height = '100%';
   iframe.src = `https://www.youtube-nocookie.com/embed/${youtubeVideoId}?autoplay=1&controls=0&mute=1&loop=1&playlist=${youtubeVideoId}&rel=0&playsinline=1&modestbranding=1&cc_load_policy=1&disablekb=1&enablejsapi=1&loop=1&color=white&iv_load_policy=3`;
   iframe.title = 'YouTube video player';
-  iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+  iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;';
   iframe.allowfullscreen = true;
   iframe.frameborder = '0';
   return iframe;
