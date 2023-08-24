@@ -6,15 +6,26 @@ export default function decorate(block) {
   const picture = block.querySelector('picture');
   block.innerText = '';
 
+  // create boolean to indicate if we have a video
+  let hasVideo = false;
   if (data?.video) {
+    hasVideo = true;
     block.append(buildIframe(data?.video));
   }
+
+  // add overlay div to avoid clicks on video
+  const overlay = document.createElement('div');
+  overlay.classList.add('article-hero-video-overlay');
+  block.append(overlay);
 
   // create image container div
   const imageContainer = document.createElement('div');
   imageContainer.classList.add('article-hero-video-image-container');
   picture.classList.add('article-hero-video-image');
   imageContainer.append(picture);
+  if (!hasVideo) {
+    imageContainer.style.display = 'unset';
+  }
   // append image container to block
   block.append(imageContainer);
 
