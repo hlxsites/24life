@@ -67,14 +67,10 @@ export default {
       entry.closest('.row').remove();
     }
 
-    removeUnencessarySpan(main, document);
-    fixDoubleBoldText(main, document);
-    fixdoubleItalicText(main, document);
-    fixBoldedOrItalicWhitespace(main, document);
-    moveWhitespaceOutsideTag(main, document);
-    fixBoldMissingSpace(main, document);
-    fixUnderscoreInLinks(main, document);
-    fixBoldedLinks(main, document);
+    // work around limitations of the importer:
+    cleanupForImportCompatibility(main, document);
+
+    // adjust content specific to 24life
     useHighresImagesAndRemoveLinks(main, document);
     moveFloatingImagesToSeparateLine(main, document);
     makeCaptionTextItalics(main, document);
@@ -138,6 +134,121 @@ const createMetadata = (main, document, params) => {
   params.year = meta['Publication Date'].split('-')[0];
   return meta;
 };
+
+/** There are a bunch of issues with hlx importer around bold text, which adds ** to the
+ * final document. This is to prevent these issues. */
+function cleanupForImportCompatibility(main, document) {
+  function moveWhitespaceOutsideTag() {
+    // move whitespace outside strong/b/em etc.
+    // e.g. https://www.24life.com/sports-specific-training-tennis/
+    // apply to all inline elements
+    for (const el of main.querySelectorAll('a, abbr, acronym, b, bdo, big, button, cite, code, dfn, em, i, img, input, kbd, label, map, output, q, samp, script, small, span, strong, sub, sup, tt, var')) {
+      if (el.tag === 'I') {
+        console.log(el.outerHTML);
+      }
+      if (el.outerHTML.includes(` </${el.tagName.toLowerCase()}>`)) {
+        el.innerHTML = el.innerHTML.trimEnd();
+        el.after(' ');
+      }
+    }
+
+    // remove empty tags
+    // e.g. https://www.24life.com/energy-management-hormones/
+    for (const el of main.querySelectorAll('a, abbr, acronym, b, bdo, big, button, cite, code, dfn, em, i, img, input, kbd, label, map, output, q, samp, script, small, span, strong, sub, sup, tt, var')) {
+      if (el.innerHTML.trim() === '') {
+        el.remove();
+      }
+    }
+  }
+
+  function removeUnnecessarySpan() {
+    // e.g. https://www.24life.com/surprising-superfoods/
+    main.querySelectorAll('strong > span, em > span').forEach((el) => {
+      // if there are no child elements, remove the span and move child nodes
+      if (el.children.length === 0) {
+        el.before(...el.childNodes);
+        el.remove();
+      }
+    });
+  }
+
+  function fixDoubleBoldText() {
+    // e.g. https://www.24life.com/how-to-make-your-trip-to-the-gym-count/
+    [...main.querySelectorAll('b > strong')].forEach((strong) => {
+      const b = strong.closest('b');
+      const span = document.createElement('span');
+      span.append(...b.childNodes);
+      b.replaceWith(span);
+    });
+    [...main.querySelectorAll('strong > b')].forEach((b) => {
+      b.before(...b.childNodes);
+      b.remove();
+    });
+  }
+
+  function fixdoubleItalicText() {
+    for (const em of main.querySelectorAll('em > em')) {
+      em.before(...em.childNodes);
+      em.remove();
+    }
+  }
+
+  // seems fixed:
+  // function fixBoldedOrItalicWhitespace() {
+  //   // e.g. https://www.24life.com/all-eyes-on-sugar-what-you-should-know-about-the-fdas-new-nutrition-labels/
+  //   for (const strong of main.querySelectorAll('strong, b, em')) {
+  //     if (strong.textContent.trim() === '') {
+  //       // keep content, but remove strong tag
+  //       strong.before(...strong.childNodes);
+  //       strong.remove();
+  //     }
+  //   }
+  // }
+
+  function fixBoldMissingSpace() {
+    // e.g. https://www.24life.com/traveling-transformation/
+    // bug: https://github.com/adobe/helix-importer/issues/214
+    for (const strong of main.querySelectorAll('strong, b')) {
+      if (!strong.parentElement) {
+        // ignore detached nodes
+        // eslint-disable-next-line no-continue
+        continue;
+      }
+      if (strong.outerHTML.includes(':</strong>')) {
+        // after a colon we can assume a space is ok to have
+        strong.parentElement.innerHTML = strong.parentElement.innerHTML.replaceAll(':</strong>', ':</strong> ');
+      }
+    }
+  }
+
+  function fixUnderscoreInLinks() {
+    [...main.querySelectorAll('a > u')].forEach((u) => {
+      u.before(...u.childNodes);
+      u.remove();
+    });
+  }
+
+  function fixBoldedLinks() {
+    [...main.querySelectorAll('a > b, a > strong')].forEach((strong) => {
+      strong.before(...strong.childNodes);
+      strong.remove();
+    });
+    [...main.querySelectorAll('b > a, strong > a')].forEach((a) => {
+      const strong = a.closest('b, strong');
+      strong.before(...strong.childNodes);
+      strong.remove();
+    });
+  }
+
+  moveWhitespaceOutsideTag(main, document);
+  removeUnnecessarySpan(main, document);
+  fixDoubleBoldText(main, document);
+  fixdoubleItalicText(main, document);
+  // fixBoldedOrItalicWhitespace(main, document);
+  fixBoldMissingSpace(main, document);
+  fixUnderscoreInLinks(main, document);
+  fixBoldedLinks(main, document);
+}
 
 export function toClassName(name) {
   return typeof name === 'string'
@@ -213,45 +324,6 @@ function useHighresImagesAndRemoveLinks(main) {
       // use the highres image from the link instead of the lowres image from the img
       img.src = link.href;
       link.replaceWith(img);
-    }
-  }
-}
-
-function fixBoldedOrItalicWhitespace(main, document) {
-  // e.g. https://www.24life.com/all-eyes-on-sugar-what-you-should-know-about-the-fdas-new-nutrition-labels/
-  for (const strong of main.querySelectorAll('strong, b, em')) {
-    if (strong.textContent.trim() === '') {
-      // keep content, but remove strong tag
-      strong.before(...strong.childNodes);
-      strong.remove();
-    }
-  }
-}
-
-function moveWhitespaceOutsideTag(main, document) {
-  // move whitespace outside strong/b/em
-  // e.g. https://www.24life.com/sports-specific-training-tennis/
-  // apply to all inline elements
-  for (const el of main.querySelectorAll('a, abbr, acronym, b, bdo, big, button, cite, code, dfn, em, i, img, input, kbd, label, map, output, q, samp, script, small, span, strong, sub, sup, tt, var')) {
-    if (el.outerHTML.includes(` </${el.tagName.toLowerCase()}>`)) {
-      el.innerHTML = el.innerHTML.trimEnd();
-      el.after(' ');
-    }
-  }
-}
-
-function fixBoldMissingSpace(main, document) {
-  // e.g. https://www.24life.com/traveling-transformation/
-  // bug: https://github.com/adobe/helix-importer/issues/214
-  for (const strong of main.querySelectorAll('strong, b')) {
-    if (!strong.parentElement) {
-      // ignore detached nodes
-      // eslint-disable-next-line no-continue
-      continue;
-    }
-    if (strong.outerHTML.includes(':</strong>')) {
-      // after a colon we can assume a space is ok to have
-      strong.parentElement.innerHTML = strong.parentElement.innerHTML.replaceAll(':</strong>', ':</strong> ');
     }
   }
 }
@@ -377,46 +449,6 @@ async function fetchDocument(path) {
   return new DOMParser().parseFromString(await response.text(), 'text/html');
 }
 
-function fixDoubleBoldText(main, document) {
-  // e.g. https://www.24life.com/how-to-make-your-trip-to-the-gym-count/
-  [...main.querySelectorAll('b > strong')].forEach((strong) => {
-    const b = strong.closest('b');
-    const span = document.createElement('span');
-    span.append(...b.childNodes);
-    b.replaceWith(span);
-  });
-  [...main.querySelectorAll('strong > b')].forEach((b) => {
-    b.before(...b.childNodes);
-    b.remove();
-  });
-}
-
-function fixdoubleItalicText(main, document) {
-  for (const em of main.querySelectorAll('em > em')) {
-    em.before(...em.childNodes);
-    em.remove();
-  }
-}
-
-function fixUnderscoreInLinks(main, document) {
-  [...main.querySelectorAll('a > u')].forEach((u) => {
-    u.before(...u.childNodes);
-    u.remove();
-  });
-}
-
-function fixBoldedLinks(main, document) {
-  [...main.querySelectorAll('a > b, a > strong')].forEach((strong) => {
-    strong.before(...strong.childNodes);
-    strong.remove();
-  });
-  [...main.querySelectorAll('b > a, strong > a')].forEach((a) => {
-    const strong = a.closest('b, strong');
-    strong.before(...strong.childNodes);
-    strong.remove();
-  });
-}
-
 function fixInvalidLists(main, document) {
   // e.g. https://www.24life.com/ideas-for-a-valentines-day-date/
   for (const li of main.querySelectorAll('ul li')) {
@@ -430,22 +462,4 @@ function fixInvalidLists(main, document) {
     ul.before(...ul.childNodes);
     ul.remove();
   }
-}
-
-function removeUnencessarySpan(main, document) {
-  main.querySelectorAll('span').forEach((el) => {
-    if (el.textContent.trim() === '') {
-      el.before(...el.childNodes);
-      el.remove();
-    }
-  });
-
-  // e.g. https://www.24life.com/surprising-superfoods/
-  main.querySelectorAll('strong > span, em > span').forEach((el) => {
-    // if there are no child elements, remove the span and move child nodes
-    if (el.children.length === 0) {
-      el.before(...el.childNodes);
-      el.remove();
-    }
-  });
 }
