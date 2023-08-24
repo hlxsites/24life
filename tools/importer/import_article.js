@@ -233,6 +233,10 @@ function cleanupForImportCompatibility(main, document) {
     });
     [...main.querySelectorAll('b > a, strong > a')].forEach((a) => {
       const strong = a.closest('b, strong');
+      if (!strong) {
+        // if this happens (which it should not) ignore it
+        return;
+      }
       strong.before(...strong.childNodes);
       strong.remove();
     });
