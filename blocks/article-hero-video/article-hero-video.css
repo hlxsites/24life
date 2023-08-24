@@ -25,7 +25,7 @@ div.article-hero-video-title-container {
     transform: translate(-50%, -50%);
     width: auto;
     height: auto;
-    min-width: 65%;
+    min-width: 80%;
     padding: 0;
     margin: 0;
     color: #fff;
@@ -73,6 +73,12 @@ div.article-hero-video-image-container{
     filter: brightness(0.80);
 }
 
+.article-hero-video img{
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+}
+
 @media screen and (min-width: 600px) {
     h1.article-hero-video-title {
         font-size: 50px;
@@ -93,6 +99,10 @@ div.article-hero-video-image-container{
 }
 
 @media screen and (min-width: 1200px) {
+    div.article-hero-video-title-container {
+        min-width: 65%;
+    }
+
     div.article-hero-video-image-container {
         display: none;
     }
