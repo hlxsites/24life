@@ -45,6 +45,14 @@ div.column-collections-parent {
   line-height: 1;
 }
 
+.columns.small-image img {
+  height: 15rem;
+  width: auto;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+    object-position: top;
+}
+
 .columns.collections h2 {
   margin-top: 10px;
   margin-bottom: 5px;
