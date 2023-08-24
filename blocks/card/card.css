@@ -33,6 +33,7 @@
   font-weight: 600;
   color: var(--category-text-color);
   margin-right: 1.1em;
+  text-transform: uppercase;
 }
 
 .card .card-collections a:hover {
