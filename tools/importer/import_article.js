@@ -70,6 +70,7 @@ export default {
     removeUnencessarySpan(main, document);
     fixDoubleBoldText(main, document);
     fixBoldedWhitespace(main, document);
+    fixBoldMissingSpace(main, document);
     fixUnderscoreInLinks(main, document);
     fixBoldedLinks(main, document);
     useHighresImagesAndRemoveLinks(main, document);
@@ -229,6 +230,22 @@ function fixBoldedWhitespace(main, document) {
   for (const strong of main.querySelectorAll('strong')) {
     if (strong.outerHTML.includes(' </strong>')) {
       strong.parentElement.innerHTML = strong.parentElement.innerHTML.replaceAll(' </strong>', '</strong> ');
+    }
+  }
+}
+
+function fixBoldMissingSpace(main, document) {
+  // e.g. https://www.24life.com/traveling-transformation/
+  // bug: https://github.com/adobe/helix-importer/issues/214
+  for (const strong of main.querySelectorAll('strong, b')) {
+    if (!strong.parentElement) {
+      // ignore detached nodes
+      // eslint-disable-next-line no-continue
+      continue;
+    }
+    if (strong.outerHTML.includes(':</strong>')) {
+      // after a colon we can assume a space is ok to have
+      strong.parentElement.innerHTML = strong.parentElement.innerHTML.replaceAll(':</strong>', ':</strong> ');
     }
   }
 }
