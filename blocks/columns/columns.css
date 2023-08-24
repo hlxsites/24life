@@ -1,6 +1,12 @@
 .columns > div {
   display: flex;
   flex-direction: column;
+
+  --current-link-color: var(--link-color-default-content);
+}
+
+.columns a {
+  font-weight: bold;
 }
 
 .columns img {
