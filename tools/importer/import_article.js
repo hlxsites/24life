@@ -76,7 +76,8 @@ export default {
     useHighresImagesAndRemoveLinks(main, document);
     moveFloatingImagesToSeparateLine(main, document);
     makeCaptionTextItalics(main, document);
-    detectColumns(main, document);
+    detectColumns(main, document, url);
+    detectRulers(main, document, url);
     detectYoutube(main, document);
     await articleEmbeds(main, document);
     detectQuotes(main, document);
@@ -369,7 +370,18 @@ function makeCaptionTextItalics(main, document) {
   }
 }
 
-function detectColumns(main, document) {
+function detectRulers(main, document, url) {
+  if (url === 'http://localhost:3001/24-feel-good-worth-the-listen-podcasts-to-energize-your-holiday-shopping-experience/?host=https%3A%2F%2Fwww.24life.com') {
+    for (const th of main.querySelectorAll('table th')) {
+      if (th.textContent.trim() === 'Columns  (Small image)') {
+        const hr = document.createElement('hr');
+        th.closest('table').after(hr);
+      }
+    }
+  }
+}
+
+function detectColumns(main, document, url) {
   const rows = [...main.querySelectorAll('.row :is([class^="col-"], [class*=" col-"])')]
   // note: we ignore large columns like col-sm-12, col-md-10, etc.
     .filter((col) => {
@@ -380,13 +392,18 @@ function detectColumns(main, document) {
     .map((col) => col.closest('.row'));
   const uniqueRows = [...new Set(rows)];
 
+  let variant = '';
+  if (url === 'http://localhost:3001/24-feel-good-worth-the-listen-podcasts-to-energize-your-holiday-shopping-experience/?host=https%3A%2F%2Fwww.24life.com') {
+    variant = ' (Small image)';
+  }
+
   for (const row of uniqueRows) {
     // convert row to columns block
     const columns = Array.from(row.querySelectorAll('[class^="col-"], [class*=" col-"]'));
     if (columns.length) {
       row.textContent = '';
       row.append(WebImporter.DOMUtils.createTable([
-        ['Columns '],
+        [`Columns ${variant}`],
         columns,
       ], document));
     }
