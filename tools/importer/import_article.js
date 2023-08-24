@@ -71,6 +71,7 @@ export default {
     fixDoubleBoldText(main, document);
     fixBoldedWhitespace(main, document);
     fixUnderscoreInLinks(main, document);
+    fixBoldedLinks(main, document);
     useHighresImagesAndRemoveLinks(main, document);
     moveFloatingImagesToSeparateLine(main, document);
     makeCaptionTextItalics(main, document);
@@ -371,6 +372,18 @@ function fixUnderscoreInLinks(main, document) {
   [...main.querySelectorAll('a > u')].forEach((u) => {
     u.before(...u.childNodes);
     u.remove();
+  });
+}
+
+function fixBoldedLinks(main, document) {
+  [...main.querySelectorAll('a > b, a > strong')].forEach((strong) => {
+    strong.before(...strong.childNodes);
+    strong.remove();
+  });
+  [...main.querySelectorAll('b > a, strong > a')].forEach((a) => {
+    const strong = a.closest('b, strong');
+    strong.before(...strong.childNodes);
+    strong.remove();
   });
 }
 
