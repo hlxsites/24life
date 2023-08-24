@@ -3,7 +3,6 @@ import {
   loadHeader,
   loadFooter,
   decorateBlocks,
-  decorateButtons,
   decorateIcons,
   decorateSections,
   decorateTemplateAndTheme,
