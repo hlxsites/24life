@@ -1,5 +1,6 @@
 div.article-hero-video-container {
     overflow: hidden;
+    padding-top: 0;
 }
 
 div.article-hero-video {
@@ -115,6 +116,8 @@ div.article-hero-video-image-container{
         width: 100vw;
         filter: brightness(70%);
         min-width: 100vw;
+        border: 0;
+        transform: scale(1.1);
     }
 
     h1.article-hero-video-title {

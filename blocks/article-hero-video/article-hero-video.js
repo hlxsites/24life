@@ -1,4 +1,4 @@
-import { readBlockConfig } from '../../scripts/lib-franklin.js';
+import { getMetadata, readBlockConfig } from '../../scripts/lib-franklin.js';
 
 export default function decorate(block) {
   const data = readBlockConfig(block);
@@ -23,15 +23,15 @@ export default function decorate(block) {
 
   const section = document.createElement('h4');
   section.classList.add('article-hero-video-section');
-  section.innerText = data?.section;
+  section.innerText = getMetadata('section');
 
   const title = document.createElement('h1');
   title.classList.add('article-hero-video-title');
-  title.innerText = data?.title;
+  title.innerText = data?.title.trim();
 
   const author = document.createElement('h6');
   author.classList.add('article-hero-video-author');
-  author.innerText = `By ${data?.author}`;
+  author.innerText = `By ${data?.author.trim()}`;
 
   titleContainer.append(section);
   titleContainer.append(title);
