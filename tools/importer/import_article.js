@@ -142,7 +142,7 @@ function cleanupForImportCompatibility(main, document) {
     // move whitespace outside strong/b/em etc.
     // e.g. https://www.24life.com/sports-specific-training-tennis/
     // apply to all inline elements
-    for (const el of main.querySelectorAll('a, abbr, acronym, b, bdo, big, button, cite, code, dfn, em, i, kbd, label, map, output, q, samp, script, small, span, strong, sub, sup, tt, var')) {
+    for (const el of main.querySelectorAll('a, b, em, i, small, span, strong')) {
       if (el.outerHTML.includes(` </${el.tagName.toLowerCase()}>`)) {
         el.innerHTML = el.innerHTML.trimEnd();
         el.after(' ');
@@ -151,7 +151,7 @@ function cleanupForImportCompatibility(main, document) {
 
     // remove empty tags
     // e.g. https://www.24life.com/energy-management-hormones/
-    for (const el of main.querySelectorAll('a, abbr, acronym, b, bdo, big, button, cite, code, dfn, em, i, kbd, label, map, output, q, samp, script, small, span, strong, sub, sup, tt, var')) {
+    for (const el of main.querySelectorAll('a, b, em, i, small, span, strong')) {
       if (el.innerHTML.trim() === '') {
         el.remove();
       }
