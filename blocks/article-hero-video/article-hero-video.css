@@ -1,0 +1,117 @@
+div.article-hero-video-container {
+    overflow: hidden;
+}
+
+div.article-hero-video {
+    width: 100vw;
+    height: auto;
+    aspect-ratio: 16/9;
+    border: none;
+    margin: 0;
+    animation-timing-function: linear;
+    display: block;
+    transform: scaleX(1.1) scaleY(1.1)
+}
+
+
+div.article-hero-video-wrapper {
+    margin: 0;
+}
+
+
+div.article-hero-video-title-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    height: auto;
+    min-width: 65%;
+    padding: 0;
+    margin: 0;
+    color: #fff;
+}
+
+h1.article-hero-video-title {
+    font-size: 25px;
+    line-height: 30px;
+    font-weight: 100;
+    margin-top: 0;
+    letter-spacing: 1px;
+}
+
+h4.article-hero-video-section {
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 100;
+    margin-bottom: 0;
+}
+
+h6.article-hero-video-author {
+    font-size: 14px;
+    line-height: 16px;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+iframe.article-hero-video-iframe{
+    display: none;
+}
+
+div.article-hero-video-image-container{
+    display: block;
+    background: #222;
+}
+
+.article-hero-video-image {
+    width: 100vw;
+    height: auto;
+    aspect-ratio: 16/9;
+    border: none;
+    margin: 0;
+    animation-timing-function: linear;
+    display: block;
+    transform: scaleX(1.1) scaleY(1.1);
+    filter: brightness(0.80);
+}
+
+
+@media screen and (min-width: 1200px) {
+    div.article-hero-video-image-container {
+        display: none;
+    }
+
+    iframe.article-hero-video-iframe {
+        display: unset;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        filter: brightness(70%);
+        min-width: 100vw;
+    }
+
+    h1.article-hero-video-title {
+        font-size: 72px;
+        line-height: 80px;
+    }
+}
+
+@media screen and (min-width: 900px) {
+    h1.article-hero-video-title {
+        font-size: 35px;
+        line-height: 40px;
+    }
+
+    h6.article-hero-video-author {
+        font-size: 24px;
+        line-height: 32px;
+    }
+}
+
+@media screen and (min-width: 600px) {
+    h1.article-hero-video-title {
+        font-size: 50px;
+        line-height: 60px;
+    }
+}
