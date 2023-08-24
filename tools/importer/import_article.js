@@ -40,7 +40,9 @@ export default {
       throw new Error('Magazine article not supported');
     }
     if (!document.querySelector('.tfl-page-title-wrap')) {
-      throw new Error('only normal articles are supported');
+      if (url !== 'https://www.24life.com/a-personal-trainer-on-metabolism-and-eating-more-to-lose-weight/') {
+        throw new Error('only normal articles are supported');
+      }
     }
 
     // start with h1, then image
