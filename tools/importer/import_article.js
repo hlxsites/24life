@@ -428,25 +428,32 @@ async function articleEmbeds(main, document) {
   await Promise.all([...main.querySelectorAll('iframe.wp-embedded-content')].map(async (embed) => {
     if (embed.src.startsWith('/') && embed.src.includes('/embed/')) {
       // don't append elements from one doc to another. instead copy the HTML.
-      const embedDoc = await fetchDocument(embed.src);
-      WebImporter.DOMUtils.remove(embedDoc, ['.screen-reader-text']);
+      try {
+        const embedDoc = await fetchDocument(embed.src);
+        WebImporter.DOMUtils.remove(embedDoc, ['.screen-reader-text']);
 
-      const linkUrl = embedDoc.querySelector('a').href;
-      const imageUrl = embedDoc.querySelector('img').src;
-      const title = embedDoc.querySelector('.wp-embed-heading').textContent;
+        const linkUrl = embedDoc.querySelector('a').href;
+        const imageUrl = embedDoc.querySelector('img').src;
+        let title = embedDoc.querySelector('.wp-embed-heading')?.textContent;
+        if (!title) {
+          title = embed.title;
+        }
 
-      const cell = document.createElement('div');
-      cell.innerHTML = `
+        const cell = document.createElement('div');
+        cell.innerHTML = `
         <a href="${linkUrl}">
           <img src="${imageUrl}" alt="${title}"/>
           <h4>${title}</h4>
         </a>
       `;
 
-      embed.replaceWith(WebImporter.DOMUtils.createTable([
-        ['Columns (border)'],
-        [cell],
-      ], document));
+        embed.replaceWith(WebImporter.DOMUtils.createTable([
+          ['Columns (border)'],
+          [cell],
+        ], document));
+      } catch (e) {
+        throw new Error(`can not read iframe content: ${embed.src} ${e}`);
+      }
     }
   }));
 }
