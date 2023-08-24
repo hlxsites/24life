@@ -73,6 +73,8 @@ async function loadFonts() {
 function decorateVideoLinks(main) {
   [...main.querySelectorAll('a')]
     .filter(({ href }) => !!href)
+  // only convert plain links
+    .filter((a) => a.textContent?.trim()?.toLowerCase().startsWith('http'))
     .forEach((link) => {
       let youtubeVideoId = '';
       if (link.href.includes('youtube.com/watch?v=')) {
@@ -133,8 +135,9 @@ function buildAutoBlocks(main) {
  */
 // eslint-disable-next-line import/prefer-default-export
 export function decorateMain(main) {
-  // hopefully forward compatible button decoration
-  decorateButtons(main);
+  // 24life does not use buttons
+  // decorateButtons(main);
+
   decorateIcons(main);
   buildAutoBlocks(main);
   decorateSections(main);

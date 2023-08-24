@@ -2,6 +2,15 @@ body.article main .default-content-wrapper {
     --current-link-color: var(--link-color-default-content);
 }
 
+body.article main .default-content-wrapper a {
+    font-weight: bold;
+}
+
+body.article main .default-content-wrapper .block a {
+    /* keep links in block normal */
+    font-weight: normal;
+}
+
 body.article main .article-social-media-buttons {
     display: flex;
     justify-content: center;

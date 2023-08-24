@@ -3,4 +3,3 @@ mountpoints:
 
 folders:
   /category/: /category/default
-  /tag/: /tag/default

@@ -107,6 +107,7 @@
     display: flex;
     justify-content: center;
     gap: 0.7vw;
+    z-index: 3;
   }
 
   .article-slides .slideshow-buttons button {

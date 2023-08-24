@@ -25,8 +25,8 @@ indices:
       section:
         select: head > meta[name="section"]
         value: attribute(el, "content")
-      author:
-        select: head > meta[name="author"]
+      authors:
+        select: head > meta[name="authors"]
         value: attribute(el, "content")
       image:
         select: head > meta[property="og:image"]
@@ -47,7 +47,7 @@ indices:
         select: head > meta[name="publication-date"]
         value: parseTimestamp(attribute(el, "content"), MM/DD/YYYY)
       content:
-        select: main > section:nth-of-type(2)
+        select: main
         value: textContent(el)
       template:
         select: head > meta[name="template"]
@@ -58,17 +58,17 @@ indices:
       description:
         select: head > meta[property="og:description"]
         value: attribute(el, "content")
-      collections:
-        select: head > meta[name="collections"]
-        value: attribute(el, "content")
       section:
         select: head > meta[name="section"]
         value: attribute(el, "content")
-      author:
-        select: head > meta[name="author"]
+      collections:
+        select: head > meta[name="collections"]
         value: attribute(el, "content")
-      tags:
-        select: head > meta[name="tags"]
+      categories:
+        select: head > meta[name="categories"]
+        value: attribute(el, "content")
+      authors:
+        select: head > meta[name="authors"]
         value: attribute(el, "content")
       image:
         select: head > meta[property="og:image"]
