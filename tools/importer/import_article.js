@@ -143,9 +143,6 @@ function cleanupForImportCompatibility(main, document) {
     // e.g. https://www.24life.com/sports-specific-training-tennis/
     // apply to all inline elements
     for (const el of main.querySelectorAll('a, abbr, acronym, b, bdo, big, button, cite, code, dfn, em, i, img, input, kbd, label, map, output, q, samp, script, small, span, strong, sub, sup, tt, var')) {
-      if (el.tag === 'I') {
-        console.log(el.outerHTML);
-      }
       if (el.outerHTML.includes(` </${el.tagName.toLowerCase()}>`)) {
         el.innerHTML = el.innerHTML.trimEnd();
         el.after(' ');
@@ -193,17 +190,16 @@ function cleanupForImportCompatibility(main, document) {
     }
   }
 
-  // seems fixed:
-  // function fixBoldedOrItalicWhitespace() {
-  //   // e.g. https://www.24life.com/all-eyes-on-sugar-what-you-should-know-about-the-fdas-new-nutrition-labels/
-  //   for (const strong of main.querySelectorAll('strong, b, em')) {
-  //     if (strong.textContent.trim() === '') {
-  //       // keep content, but remove strong tag
-  //       strong.before(...strong.childNodes);
-  //       strong.remove();
-  //     }
-  //   }
-  // }
+  function fixBoldedOrItalicWhitespace() {
+    // e.g. https://www.24life.com/all-eyes-on-sugar-what-you-should-know-about-the-fdas-new-nutrition-labels/
+    for (const strong of main.querySelectorAll('strong, b, em')) {
+      if (strong.textContent.trim() === '') {
+        // keep content, but remove strong tag
+        strong.before(...strong.childNodes);
+        strong.remove();
+      }
+    }
+  }
 
   function fixBoldMissingSpace() {
     // e.g. https://www.24life.com/traveling-transformation/
@@ -239,15 +235,25 @@ function cleanupForImportCompatibility(main, document) {
       strong.remove();
     });
   }
+  function ignoredItalicSpecialChars() {
+    // e.g. https://www.24life.com/the-art-of-focus/
+    for (const em of main.querySelectorAll('em, i')) {
+      if (em.innerHTML.trim().length === 1 && [',', '.', '_', '"'].includes(em.innerHTML.trim())) {
+        em.before(em.textContent);
+        em.remove();
+      }
+    }
+  }
 
   moveWhitespaceOutsideTag(main, document);
   removeUnnecessarySpan(main, document);
   fixDoubleBoldText(main, document);
   fixdoubleItalicText(main, document);
-  // fixBoldedOrItalicWhitespace(main, document);
+  fixBoldedOrItalicWhitespace(main, document);
   fixBoldMissingSpace(main, document);
   fixUnderscoreInLinks(main, document);
   fixBoldedLinks(main, document);
+  ignoredItalicSpecialChars(main, document);
 }
 
 export function toClassName(name) {
