@@ -1,97 +1,45 @@
 .section .card-grid-wrapper {
-  --grid-row-count: 1;
-  --grid-col-count: 2;
-  --grid-col-gap: 30px;
-  --grid-row-gap: 30px;
-  
   margin: 0;
   padding: 0;
   width: 100%;
   max-width: unset;
 }
 
-.section .card-grid-wrapper ~ .card-grid-wrapper { 
-  margin-top: var(--grid-row-gap); 
-}
-
-.block.card-grid {
-  position: relative;
-  display: grid;
-}
-
-.block.card-grid::before {
-  /* gives the grid a min-height relative to the width using padding-bottom hack */
-  content: "";
-  grid-column: 1;
-  grid-row: 1;
-  padding-bottom: calc(100% * var(--grid-col-count) + var(--grid-row-gap) * (var(--grid-col-count) - 1));
-}
-
-.block.card-grid>ul {
-  grid-column: 1;
-  grid-row: 1;
-  position: relative;
-  top: 0;
-  left: 0;
-  height: 100%;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  row-gap: var(--grid-row-gap);
-  column-gap: var(--grid-col-gap);
-}
-
-.block.card-grid>ul>li {
-  --grid-row-span: 1;
-
-  grid-row: span var(--grid-row-span);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-.block.card-grid>ul>li>* {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-}
-
-.block.card-grid>ul>li img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.block.card-grid>ul>li>div {
-  position: relative;
-}
-
-.block.card-grid>ul>li h3 {
-  font-family: var(--ff-volvo-novum-medium);
-  font-size: 2.4rem;
-  margin: 0 0 0.3333em;
-  font-weight: bold;
+.card-grid > a.bi {
+  background-color: unset;
 }
 
 @media screen and (min-width: 992px) {
-  .block.card-grid::before {
-      padding-bottom: 50%;
+  .block.card-grid {
+    display: grid;
+    grid-template-columns: 8fr 4fr; /* Two columns */
+    grid-template-rows: auto auto; /* Two rows with auto height */
+    grid-gap: 20px; /* Gap between grid items */
   }
 
-  .block.card-grid>ul {
-      grid-template-rows: repeat(var(--grid-row-count), 1fr);
-      grid-template-columns: repeat(var(--grid-col-count), 1fr);
-      grid-auto-flow: column;
+  .block.card-grid > a:first-child {
+    grid-column: 1; /* Spans the first column */
+    grid-row: span 2; /* Spans 2 rows */
+  }
+  .block.card-grid > a:not(:first-child) {
+    grid-column: 2; /* Second column */
   }
 
-  .block.card-grid.left>ul {
-      grid-template-columns: 8fr 4fr;
+  .block.card-grid.right {
+    grid-template-columns: 4fr 8fr;
   }
 
-  .block.card-grid.right>ul {
-      grid-template-columns: 4fr 8fr;
+  .block.card-grid.right > a:first-child {
+    grid-column: 2; /* Spans the first column */
+    grid-row: span 2; /* Spans 2 rows */
+  }
+
+  .block.card-grid.right > a:nth-child(2){
+    grid-column: 1; /* Second column */
+    grid-row: 1;
+  }
+  .block.card-grid.right > a:nth-child(3) {
+    grid-column: 1; /* Second column */
+    grid-row: 2;
   }
 }
