@@ -69,6 +69,7 @@ export default {
 
     removeUnencessarySpan(main, document);
     fixDoubleBoldText(main, document);
+    fixdoubleItalicText(main, document);
     fixBoldedWhitespace(main, document);
     fixBoldMissingSpace(main, document);
     fixUnderscoreInLinks(main, document);
@@ -383,6 +384,13 @@ function fixDoubleBoldText(main, document) {
     b.before(...b.childNodes);
     b.remove();
   });
+}
+
+function fixdoubleItalicText(main, document) {
+  for (const em of main.querySelectorAll('em > em')) {
+    em.before(...em.childNodes);
+    em.remove();
+  }
 }
 
 function fixUnderscoreInLinks(main, document) {
