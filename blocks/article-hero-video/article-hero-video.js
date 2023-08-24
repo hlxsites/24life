@@ -9,16 +9,23 @@ export default function decorate(block) {
   const over900px = window.matchMedia('(min-width: 900px)');
   // create boolean to indicate if we have a video
   let hasVideo = false;
-  // create video container named article-hero-video
+  // create video container
   const videoContainer = document.createElement('div');
   videoContainer.classList.add('article-hero-video-iframe-container');
+  // create overlay container
+  const overlayContainer = document.createElement('div');
+  overlayContainer.classList.add('article-hero-video-overlay-container');
+
   if (data?.video) {
     hasVideo = true;
     if (over900px.matches) {
       videoContainer.append(buildIframe(data?.video));
+      // add overlay div to avoid clicks on video
+      overlayContainer.append(addVideoOverlay());
     }
   }
   block.append(videoContainer);
+  block.append(overlayContainer);
 
   // add change event listener
   over900px.addEventListener('change', (e) => {
@@ -28,17 +35,19 @@ export default function decorate(block) {
         return;
       }
       videoContainer.append(buildIframe(data?.video));
+      overlayContainer.append(addVideoOverlay());
     } else {
       videoContainer.innerHTML = '';
-      // remove overlay div
-      block.querySelector('.article-hero-video-overlay').remove();
+      overlayContainer.innerHTML = '';
     }
   });
 
-  // add overlay div to avoid clicks on video
-  const overlay = document.createElement('div');
-  overlay.classList.add('article-hero-video-overlay');
-  block.append(overlay);
+  function addVideoOverlay() {
+    // create overlay div if it doesn't exist
+    const overlay = document.createElement('div');
+    overlay.classList.add('article-hero-video-overlay');
+    return overlay;
+  }
 
   // create image container div
   const imageContainer = document.createElement('div');
