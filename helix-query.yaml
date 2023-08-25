@@ -36,7 +36,6 @@ indices:
       - /fitness/**
       - /focus/**
       - /fuel/**
-      - /magazine/**
       - /recover/**
     target: /articles.json
     properties:
