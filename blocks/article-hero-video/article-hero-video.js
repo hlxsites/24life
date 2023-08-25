@@ -6,17 +6,48 @@ export default function decorate(block) {
   const picture = block.querySelector('picture');
   block.innerText = '';
 
+  const over900px = window.matchMedia('(min-width: 900px)');
   // create boolean to indicate if we have a video
   let hasVideo = false;
+  // create video container
+  const videoContainer = document.createElement('div');
+  videoContainer.classList.add('article-hero-video-iframe-container');
+  // create overlay container
+  const overlayContainer = document.createElement('div');
+  overlayContainer.classList.add('article-hero-video-overlay-container');
+
   if (data?.video) {
     hasVideo = true;
-    block.append(buildIframe(data?.video));
+    if (over900px.matches) {
+      videoContainer.append(buildIframe(data?.video));
+      // add overlay div to avoid clicks on video
+      overlayContainer.append(addVideoOverlay());
+    }
   }
+  block.append(videoContainer);
+  block.append(overlayContainer);
 
-  // add overlay div to avoid clicks on video
-  const overlay = document.createElement('div');
-  overlay.classList.add('article-hero-video-overlay');
-  block.append(overlay);
+  // add change event listener
+  over900px.addEventListener('change', (e) => {
+    if (e.matches) {
+      // check if we have existing iframe in video container
+      if (videoContainer.querySelector('iframe')) {
+        return;
+      }
+      videoContainer.append(buildIframe(data?.video));
+      overlayContainer.append(addVideoOverlay());
+    } else {
+      videoContainer.innerHTML = '';
+      overlayContainer.innerHTML = '';
+    }
+  });
+
+  function addVideoOverlay() {
+    // create overlay div if it doesn't exist
+    const overlay = document.createElement('div');
+    overlay.classList.add('article-hero-video-overlay');
+    return overlay;
+  }
 
   // create image container div
   const imageContainer = document.createElement('div');
@@ -65,7 +96,7 @@ function buildIframe(url) {
   iframe.height = '100%';
   iframe.src = `https://www.youtube-nocookie.com/embed/${youtubeVideoId}?autoplay=1&controls=0&mute=1&loop=1&playlist=${youtubeVideoId}&rel=0&playsinline=1&modestbranding=1&cc_load_policy=1&disablekb=1&enablejsapi=1&loop=1&color=white&iv_load_policy=3`;
   iframe.title = 'YouTube video player';
-  iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+  iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;';
   iframe.allowfullscreen = true;
   iframe.frameborder = '0';
   return iframe;
