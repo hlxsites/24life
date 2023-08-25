@@ -39,7 +39,6 @@ async function fetchArticlesAndAddCards(filters, block) {
     .filter((article) => Object.keys(filters).every(
       (key) => article[key]?.toLowerCase().includes(filters[key].toLowerCase()),
     ))
-    .filter(({ template }) => template === 'article')
     .map(async (article) => {
       const wrapper = document.createElement('div');
       const newBlock = createCardBlock(article, wrapper);
