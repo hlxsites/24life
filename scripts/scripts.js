@@ -20,8 +20,6 @@ export function decorateLinkedPictures(container, processInBlocks = true) {
 
   // picture + br + a in the same paragraph
   [...container.querySelectorAll('picture + br + a, picture + a')]
-  // don't decorate if already in a block. Instead, the block should call this function.
-    .filter((a) => !a.closest('div.block') || processInBlocks)
   // link text is an unformatted URL paste
     .filter((a) => a.textContent.trim().startsWith('http'))
     .forEach((a) => {
@@ -74,6 +72,8 @@ function decorateVideoLinks(main) {
     .filter(({ href }) => !!href)
   // only convert plain links
     .filter((a) => a.textContent?.trim()?.toLowerCase().startsWith('http'))
+  // don't decorate if already in a block.
+    .filter((a) => !a.closest('div.block'))
     .forEach((link) => {
       let youtubeVideoId = '';
       if (link.href.includes('youtube.com/watch?v=')) {
@@ -99,6 +99,8 @@ function decorateVideoLinks(main) {
 function decorateSpotifyLinks(main) {
   [...main.querySelectorAll('a')]
     .filter(({ href }) => href.includes('open.spotify.com/embed'))
+  // don't decorate if already in a block.
+    .filter((a) => !a.closest('div.block'))
     .forEach((link) => {
       const iframe = document.createElement('iframe');
       iframe.classList.add('spotify-embed');
@@ -119,8 +121,6 @@ function decorateSpotifyLinks(main) {
  */
 function buildAutoBlocks(main) {
   try {
-    decorateVideoLinks(main);
-    decorateSpotifyLinks(main);
     decorateLinkedPictures(main, false);
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -141,6 +141,8 @@ export function decorateMain(main) {
   buildAutoBlocks(main);
   decorateSections(main);
   decorateBlocks(main);
+  decorateVideoLinks(main);
+  decorateSpotifyLinks(main);
 }
 
 /**

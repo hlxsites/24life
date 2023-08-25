@@ -73,7 +73,7 @@ export default function decorate(block) {
 
   const author = document.createElement('h6');
   author.classList.add('article-hero-video-author');
-  author.innerText = `By ${data?.author.trim()}`;
+  author.innerText = `By ${getMetadata('authors')?.trim()}`;
 
   titleContainer.append(section);
   titleContainer.append(title);
