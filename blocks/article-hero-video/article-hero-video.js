@@ -19,7 +19,11 @@ export default function decorate(block) {
   if (data?.video) {
     hasVideo = true;
     if (over900px.matches) {
-      videoContainer.append(buildIframe(data?.video));
+      if (isYoutubeVideo(data?.video)) {
+        videoContainer.append(buildIframe(data?.video));
+      } else {
+        videoContainer.append(buildVideoTag(data?.video));
+      }
       // add overlay div to avoid clicks on video
       overlayContainer.append(addVideoOverlay());
     }
@@ -65,6 +69,7 @@ export default function decorate(block) {
 
   const section = document.createElement('h4');
   section.classList.add('article-hero-video-section');
+  // get section from metadata
   section.innerText = getMetadata('section');
 
   const title = document.createElement('h1');
@@ -79,6 +84,33 @@ export default function decorate(block) {
   titleContainer.append(title);
   titleContainer.append(author);
   block.append(titleContainer);
+}
+
+/**
+ * Build a video tag for an MP4 video
+ * @param url {string} URL of the video
+ * @returns {HTMLVideoElement} video element
+ */
+function buildVideoTag(url) {
+  // Create video element
+  const video = document.createElement('video');
+  video.style.width = '100%';
+  video.style.height = '100%';
+  video.classList.add('article-hero-video-iframe');
+  video.setAttribute('preload', 'auto');
+  video.setAttribute('playsinline', '');
+  video.setAttribute('autoplay', '');
+  video.setAttribute('muted', '');
+  video.setAttribute('loop', '');
+
+  // Create source element for MP4
+  const sourceMp4 = document.createElement('source');
+  sourceMp4.setAttribute('src', url);
+  sourceMp4.setAttribute('type', 'video/mp4');
+
+  // Append source to video
+  video.appendChild(sourceMp4);
+  return video;
 }
 
 /**
@@ -110,4 +142,16 @@ function getYoutubeVideoId(url) {
     youtubeVideoId = new URL(url).pathname.split('/').pop();
   }
   return youtubeVideoId;
+}
+
+/**
+ * Check if a URL is a YouTube video
+ * @param url {string}
+ * @returns {boolean} true if the URL is a YouTube video
+ */
+function isYoutubeVideo(url) {
+  return url.includes('youtube.com/watch?v=')
+    || url.includes('youtube.com/embed/')
+    || url.includes('youtu.be/')
+    || url.includes('youtube-nocookie.com/embed/');
 }
