@@ -8,3 +8,4 @@ helix-importer-ui
 .DS_Store
 *.bak
 tmp
+/tools/validation/24life/
