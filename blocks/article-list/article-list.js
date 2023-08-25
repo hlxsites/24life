@@ -10,7 +10,7 @@ export default async function decorate(block) {
   const isEmptyFilter = Object.keys(filters).length === 0;
   if (isEmptyFilter && document.location.pathname.startsWith('/author/')) {
     // auto-detect author, e.g. https://www.24life.com/author/24life
-    filters.authors = getMetadata('title');
+    filters.authors = getMetadata('og:title');
   } else if (isEmptyFilter && document.location.pathname.startsWith('/collections/')) {
     filters.collections = new URL(document.location).pathname.split('/').pop();
     filters.collections = filters.collections?.replace(/-/g, ' ');
