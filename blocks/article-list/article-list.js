@@ -1,4 +1,5 @@
 import {
+  getMetadata,
   loadBlock, readBlockConfig, toClassName,
 } from '../../scripts/lib-franklin.js';
 import ffetch from '../../scripts/ffetch.js';
@@ -9,7 +10,7 @@ export default async function decorate(block) {
   const isEmptyFilter = Object.keys(filters).length === 0;
   if (isEmptyFilter && document.location.pathname.startsWith('/author/')) {
     // auto-detect author, e.g. https://www.24life.com/author/24life
-    filters.author = new URL(document.location).pathname.split('/').pop();
+    filters.authors = getMetadata('title');
   } else if (isEmptyFilter && document.location.pathname.startsWith('/collections/')) {
     filters.collections = new URL(document.location).pathname.split('/').pop();
     filters.collections = filters.collections?.replace(/-/g, ' ');
@@ -31,7 +32,9 @@ function removeEmptyKeyOrValue(obj) {
 }
 
 async function fetchArticlesAndAddCards(filters, block) {
-  const articles = await ffetch('/articles.json').all();
+  let articles = await ffetch('/articles.json').all();
+
+  articles = articles.filter((article) => article.path === '/focus/2017/one-word-is-the-key-to-your-strategy');
 
   await Promise.all(articles
     // make sure all filters match
