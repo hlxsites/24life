@@ -91,19 +91,24 @@ export function createCardBlock(articleInfo, parent) {
   link.textContent = articleInfo.title;
   heading.append(link);
 
-  const author = document.createElement('p');
-  const authorLink = document.createElement('a');
-  authorLink.href = `/author/${articleInfo.authorId}`;
-  authorLink.textContent = articleInfo.author;
-  author.append('By ');
-  author.append(authorLink);
+  const authorLinks = document.createElement('p');
+  authorLinks.append('By ');
+  articleInfo.authors.split(',').forEach((author, index) => {
+    const authorLink = document.createElement('a');
+    authorLink.href = `/author/${toClassName(author)}`;
+    authorLink.textContent = author;
+    if (index > 0) {
+      authorLinks.append(' and ');
+    }
+    authorLinks.append(authorLink);
+  });
 
   const newBlock = buildBlock('card', {
     elems: [
       p(picture),
       p(articleInfo.collections),
       heading,
-      author],
+      authorLinks],
   });
 
   parent.append(newBlock);
