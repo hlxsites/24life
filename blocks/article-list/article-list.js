@@ -32,9 +32,7 @@ function removeEmptyKeyOrValue(obj) {
 }
 
 async function fetchArticlesAndAddCards(filters, block) {
-  let articles = await ffetch('/articles.json').all();
-
-  articles = articles.filter((article) => article.path === '/focus/2017/one-word-is-the-key-to-your-strategy');
+  const articles = await ffetch('/articles.json').all();
 
   await Promise.all(articles
     // make sure all filters match
