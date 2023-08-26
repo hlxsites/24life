@@ -11,21 +11,26 @@ export default function decorate(block) {
   let hasVideo = false;
   // create video container
   const videoContainer = document.createElement('div');
-  videoContainer.classList.add('article-hero-video-iframe-container');
+  videoContainer.classList.add('article-hero-video-element-container');
   // create overlay container
   const overlayContainer = document.createElement('div');
   overlayContainer.classList.add('article-hero-video-overlay-container');
 
+  function buildVideo() {
+    if (isYoutubeVideo(data?.video)) {
+      videoContainer.append(buildIframe(data?.video));
+    } else {
+      // mp4 video
+      videoContainer.append(buildVideoTag(data?.video));
+    }
+    // add overlay div to avoid clicks on video
+    overlayContainer.append(addVideoOverlay());
+  }
+
   if (data?.video) {
     hasVideo = true;
     if (over900px.matches) {
-      if (isYoutubeVideo(data?.video)) {
-        videoContainer.append(buildIframe(data?.video));
-      } else {
-        videoContainer.append(buildVideoTag(data?.video));
-      }
-      // add overlay div to avoid clicks on video
-      overlayContainer.append(addVideoOverlay());
+      buildVideo();
     }
   }
   block.append(videoContainer);
@@ -38,8 +43,7 @@ export default function decorate(block) {
       if (videoContainer.querySelector('iframe')) {
         return;
       }
-      videoContainer.append(buildIframe(data?.video));
-      overlayContainer.append(addVideoOverlay());
+      buildVideo();
     } else {
       videoContainer.innerHTML = '';
       overlayContainer.innerHTML = '';
@@ -96,7 +100,7 @@ function buildVideoTag(url) {
   const video = document.createElement('video');
   video.style.width = '100%';
   video.style.height = '100%';
-  video.classList.add('article-hero-video-iframe');
+  video.classList.add('article-hero-video-element');
   video.setAttribute('preload', 'auto');
   video.setAttribute('playsinline', '');
   video.setAttribute('autoplay', '');
@@ -123,7 +127,7 @@ function buildVideoTag(url) {
 function buildIframe(url) {
   const youtubeVideoId = getYoutubeVideoId(url);
   const iframe = document.createElement('iframe');
-  iframe.classList.add('article-hero-video-iframe');
+  iframe.classList.add('article-hero-video-element');
   iframe.width = '100%';
   iframe.height = '100%';
   iframe.src = `https://www.youtube-nocookie.com/embed/${youtubeVideoId}?autoplay=1&controls=0&mute=1&loop=1&playlist=${youtubeVideoId}&rel=0&playsinline=1&modestbranding=1&cc_load_policy=1&disablekb=1&enablejsapi=1&loop=1&color=white&iv_load_policy=3`;

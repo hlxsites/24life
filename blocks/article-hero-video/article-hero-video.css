@@ -63,7 +63,8 @@ div.article-hero-video-wrapper {
     letter-spacing: 1px;
 }
 
-iframe.article-hero-video-iframe{
+video.article-hero-video-element,
+iframe.article-hero-video-element{
     display: none;
 }
 
@@ -117,7 +118,8 @@ div.article-hero-video-image-container{
         display: none;
     }
 
-    iframe.article-hero-video-iframe {
+    video.article-hero-video-element,
+    iframe.article-hero-video-element {
         display: unset;
         position: absolute;
         top: 0;
