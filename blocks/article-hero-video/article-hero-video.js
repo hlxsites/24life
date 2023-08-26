@@ -102,7 +102,6 @@ function buildVideoTag(url) {
   video.style.height = '100%';
   video.classList.add('article-hero-video-element');
   video.setAttribute('preload', 'auto');
-  video.setAttribute('playsinline', '');
   video.setAttribute('autoplay', '');
   video.setAttribute('muted', '');
   video.setAttribute('loop', '');
