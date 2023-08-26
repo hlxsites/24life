@@ -106,6 +106,7 @@ function buildVideoTag(url) {
   video.muted = true;
   video.autoplay = true;
   video.loop = true;
+  video.setAttribute('muted', 'true');
 
   // Create source element for MP4
   const sourceMp4 = document.createElement('source');
