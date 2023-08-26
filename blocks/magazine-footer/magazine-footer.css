@@ -33,6 +33,7 @@
 .magazine-footer h6.red {
   color: #ee3124;
 }
+
 .magazine-footer picture {
   display: flex;
   justify-content: center;
@@ -42,7 +43,7 @@
 
 .magazine-footer img {
   transform: rotate(-6deg);
-  box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: -5px 5px 10px rgba(0 0 0 / 30%);
   height: auto;
 }
 
