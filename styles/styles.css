@@ -341,6 +341,11 @@ main .section.highlight {
   background-color: var(--highlight-background-color);
 }
 
+main .section.no-gap {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 div.experts-page-heading {
   background: #f8f8f8;
   letter-spacing: 2px;
