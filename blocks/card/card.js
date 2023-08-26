@@ -70,6 +70,11 @@ export default function decorate(block) {
     block.closest('.card-wrapper').classList.add('large');
     block.closest('.card-container').classList.add('has-large-card');
   }
+  if (block.classList.contains('right')) {
+    // create separate column for large image
+    block.closest('.card-wrapper').classList.add('right');
+    block.closest('.card-container').classList.add('right');
+  }
 }
 
 /* convenience function to create a block from a JSON object from articles.json */
