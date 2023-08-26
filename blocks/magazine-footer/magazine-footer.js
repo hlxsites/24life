@@ -1,7 +1,7 @@
 import {
   createOptimizedPicture,
   getMetadata,
-  readBlockConfig
+  readBlockConfig,
 } from '../../scripts/lib-franklin.js';
 
 /**
