@@ -89,7 +89,7 @@ function decorateVideoLinks(main) {
         iframe.src = `https://www.youtube-nocookie.com/embed/${youtubeVideoId}?rel=0`;
         iframe.title = 'YouTube video player';
         iframe.frameborder = 0;
-        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;';
         iframe.allowfullscreen = true;
         link.replaceWith(iframe);
       }

@@ -156,5 +156,5 @@ function createBackgroundSlideshow(block, images) {
     }
     block.addEventListener('touchend', gestureEnd, { once: true });
   }
-  block.addEventListener('touchstart', gestureStart, {passive: true});
+  block.addEventListener('touchstart', gestureStart, { passive: true });
 }

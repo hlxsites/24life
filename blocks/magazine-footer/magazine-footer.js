@@ -1,4 +1,8 @@
-import { createOptimizedPicture, decorateIcons, getMetadata, readBlockConfig } from '../../scripts/lib-franklin.js';
+import {
+  createOptimizedPicture,
+  getMetadata,
+  readBlockConfig
+} from '../../scripts/lib-franklin.js';
 
 /**
  * Magazine block that pulls the 4 pillars links to make a footer.
@@ -9,7 +13,7 @@ export default async function decorate(block) {
   block.innerText = '';
   const columns = ['col1', 'col2', 'col3'];
   // create the 3 columns
-  columns.forEach( (className) => {
+  columns.forEach((className) => {
     const col = document.createElement('div');
     col.classList.add(className);
     block.append(col);
@@ -31,7 +35,7 @@ function createCoverColumn() {
   titleH6.classList.add('red');
   const title = getMetadata('og:title').toUpperCase();
   titleH4.textContent = `In This Issue - ${title}`;
-  titleH6.textContent = new URL(document.location).pathname.split('/').pop().replaceAll(/-/g,' ').toUpperCase();
+  titleH6.textContent = new URL(document.location).pathname.split('/').pop().replaceAll(/-/g, ' ').toUpperCase();
   textCol.append(titleH4);
   textCol.append(titleH6);
 
@@ -41,10 +45,10 @@ function createCoverColumn() {
 }
 
 function createListColumn(config, section) {
-  const obj = Object.keys(config)[section]
+  const obj = Object.keys(config)[section];
   const newColumn = new DocumentFragment();
   const sectionTitle = document.createElement('div');
-  sectionTitle.classList.add('section-title',`${obj}`);
+  sectionTitle.classList.add('section-title', `${obj}`);
   sectionTitle.textContent = config[obj];
   sectionTitle.style.setProperty('color', `var(--color-${obj}-text)`);
   newColumn.append(sectionTitle);
