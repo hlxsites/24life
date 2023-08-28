@@ -1,4 +1,4 @@
-import { createOptimizedPicture, readBlockConfig, toClassName } from '../../scripts/lib-franklin.js';
+import { createOptimizedPicture, readBlockConfig } from '../../scripts/lib-franklin.js';
 import ffetch from '../../scripts/ffetch.js';
 
 /**
@@ -19,20 +19,12 @@ export default async function decorate(block) {
     slide.classList.add('slide');
     slide.href = article.path;
 
-    const authorText = document.createElement('span');
-    JSON.parse(article.authors).forEach((author, index) => {
-      if (index > 0) {
-        authorText.append(' and ');
-      }
-      authorText.append(author);
-    });
-
     slide.innerHTML = `
       <div class="image">${createOptimizedPicture(article.image, article.title, index === 0).outerHTML}</div>
       <div class="text">
           <p class="subtitle">${plainText(article.section)}</p>
           <p class="title">${plainText(article.title)}</p>
-          <p class="author">BY ${authorText.innerHTML}</p>
+          <p class="author">BY ${plainText(article.authors)}</p>
       </div> `;
     block.append(slide);
 

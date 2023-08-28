@@ -1,4 +1,5 @@
 import {
+  getMetadata,
   loadBlock, readBlockConfig, toClassName,
 } from '../../scripts/lib-franklin.js';
 import ffetch from '../../scripts/ffetch.js';
@@ -9,7 +10,7 @@ export default async function decorate(block) {
   const isEmptyFilter = Object.keys(filters).length === 0;
   if (isEmptyFilter && document.location.pathname.startsWith('/author/')) {
     // auto-detect author, e.g. https://www.24life.com/author/24life
-    filters.author = new URL(document.location).pathname.split('/').pop();
+    filters.authors = getMetadata('og:title');
   } else if (isEmptyFilter && document.location.pathname.startsWith('/collections/')) {
     filters.collections = new URL(document.location).pathname.split('/').pop();
     filters.collections = filters.collections?.replace(/-/g, ' ');
@@ -38,7 +39,6 @@ async function fetchArticlesAndAddCards(filters, block) {
     .filter((article) => Object.keys(filters).every(
       (key) => article[key]?.toLowerCase().includes(filters[key].toLowerCase()),
     ))
-    .filter(({ template }) => template === 'article')
     .map(async (article) => {
       const wrapper = document.createElement('div');
       const newBlock = createCardBlock(article, wrapper);

@@ -14,13 +14,11 @@ export default async function decorate(block) {
 
 async function fetchArticlesAndCreateCards(filters) {
   return ffetch('/articles.json')
-    .chunks(20)
-    .filter(({ template }) => template === 'article')
+    .sheet('section-carousel')
     // make sure all filters match
     .filter((article) => Object.keys(filters).every(
       (key) => article[key]?.toLowerCase() === filters[key].toLowerCase(),
     ))
-    .limit(9)
     .map(async (article) => {
       const wrapper = document.createElement('div');
       const card = createCardBlock(article, wrapper);

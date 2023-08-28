@@ -74,7 +74,8 @@ export default {
     useHighresImagesAndRemoveLinks(main, document);
     moveFloatingImagesToSeparateLine(main, document);
     makeCaptionTextItalics(main, document);
-    detectColumns(main, document);
+    detectColumns(main, document, url);
+    detectRulers(main, document, url);
     detectYoutube(main, document);
     await articleEmbeds(main, document);
     detectQuotes(main, document);
@@ -231,6 +232,10 @@ function cleanupForImportCompatibility(main, document) {
     });
     [...main.querySelectorAll('b > a, strong > a')].forEach((a) => {
       const strong = a.closest('b, strong');
+      if (!strong) {
+        // if this happens (which it should not) ignore it
+        return;
+      }
       strong.before(...strong.childNodes);
       strong.remove();
     });
@@ -363,7 +368,18 @@ function makeCaptionTextItalics(main, document) {
   }
 }
 
-function detectColumns(main, document) {
+function detectRulers(main, document, url) {
+  if (url === 'http://localhost:3001/24-feel-good-worth-the-listen-podcasts-to-energize-your-holiday-shopping-experience/?host=https%3A%2F%2Fwww.24life.com') {
+    for (const th of main.querySelectorAll('table th')) {
+      if (th.textContent.trim() === 'Columns  (Small image)') {
+        const hr = document.createElement('hr');
+        th.closest('table').after(hr);
+      }
+    }
+  }
+}
+
+function detectColumns(main, document, url) {
   const rows = [...main.querySelectorAll('.row :is([class^="col-"], [class*=" col-"])')]
   // note: we ignore large columns like col-sm-12, col-md-10, etc.
     .filter((col) => {
@@ -374,13 +390,18 @@ function detectColumns(main, document) {
     .map((col) => col.closest('.row'));
   const uniqueRows = [...new Set(rows)];
 
+  let variant = '';
+  if (url === 'http://localhost:3001/24-feel-good-worth-the-listen-podcasts-to-energize-your-holiday-shopping-experience/?host=https%3A%2F%2Fwww.24life.com') {
+    variant = ' (Small image)';
+  }
+
   for (const row of uniqueRows) {
     // convert row to columns block
     const columns = Array.from(row.querySelectorAll('[class^="col-"], [class*=" col-"]'));
     if (columns.length) {
       row.textContent = '';
       row.append(WebImporter.DOMUtils.createTable([
-        ['Columns '],
+        [`Columns ${variant}`],
         columns,
       ], document));
     }
@@ -426,25 +447,32 @@ async function articleEmbeds(main, document) {
   await Promise.all([...main.querySelectorAll('iframe.wp-embedded-content')].map(async (embed) => {
     if (embed.src.startsWith('/') && embed.src.includes('/embed/')) {
       // don't append elements from one doc to another. instead copy the HTML.
-      const embedDoc = await fetchDocument(embed.src);
-      WebImporter.DOMUtils.remove(embedDoc, ['.screen-reader-text']);
+      try {
+        const embedDoc = await fetchDocument(embed.src);
+        WebImporter.DOMUtils.remove(embedDoc, ['.screen-reader-text']);
 
-      const linkUrl = embedDoc.querySelector('a').href;
-      const imageUrl = embedDoc.querySelector('img').src;
-      const title = embedDoc.querySelector('.wp-embed-heading').textContent;
+        const linkUrl = embedDoc.querySelector('a').href;
+        const imageUrl = embedDoc.querySelector('img').src;
+        let title = embedDoc.querySelector('.wp-embed-heading')?.textContent;
+        if (!title) {
+          title = embed.title;
+        }
 
-      const cell = document.createElement('div');
-      cell.innerHTML = `
+        const cell = document.createElement('div');
+        cell.innerHTML = `
         <a href="${linkUrl}">
           <img src="${imageUrl}" alt="${title}"/>
           <h4>${title}</h4>
         </a>
       `;
 
-      embed.replaceWith(WebImporter.DOMUtils.createTable([
-        ['Columns (border)'],
-        [cell],
-      ], document));
+        embed.replaceWith(WebImporter.DOMUtils.createTable([
+          ['Columns (border)'],
+          [cell],
+        ], document));
+      } catch (e) {
+        throw new Error(`can not read iframe content: ${embed.src} ${e}`);
+      }
     }
   }));
 }
