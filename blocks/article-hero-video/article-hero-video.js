@@ -101,10 +101,12 @@ function buildVideoTag(url) {
   video.style.width = '100%';
   video.style.height = '100%';
   video.classList.add('article-hero-video-element');
-  video.setAttribute('preload', 'auto');
-  video.setAttribute('autoplay', '');
-  video.setAttribute('muted', '');
-  video.setAttribute('loop', '');
+
+  // Set boolean attributes
+  video.muted = true;
+  video.autoplay = true;
+  video.loop = true;
+  video.setAttribute('muted', 'true');
 
   // Create source element for MP4
   const sourceMp4 = document.createElement('source');
