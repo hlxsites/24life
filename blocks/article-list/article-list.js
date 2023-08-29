@@ -84,6 +84,7 @@ function createLoadMoreButton(numInitialLodedArticles, articles, filters, actual
   });
   const counter = document.querySelectorAll('.author .card-wrapper').length / 30;
   // eslint-disable-next-line
-  if ((actualLength - (numInitialLodedArticles * counter)) > 30) { block.append(loadMoreContainer); }
+  if ((actualLength - (numInitialLodedArticles * counter)) > 30) { block.append(loadMoreContainer); } 
+  else block.remove(loadMoreContainer);
   return { loadMoreContainer };
 }
