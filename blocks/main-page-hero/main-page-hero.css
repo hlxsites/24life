@@ -22,9 +22,6 @@ div.main-page-hero-container > div:first-child{
 }
 
 .main-page-hero.block .left-container .image-container{
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   overflow: hidden;
 }
 
@@ -55,7 +52,6 @@ div.main-page-hero-container > div:first-child{
 
 .main-page-hero.block .left-container .article-container{
   margin-left: 20px;
-  margin-top: 30px;
   margin-bottom: 30px;
 }
 
@@ -84,6 +80,18 @@ div.main-page-hero-container > div:first-child{
   color: #fff;
 }
 
+.main-page-hero.block .right-container .social-media-buttons {
+  text-align: center;
+  margin-top: 32px;
+}
+
+.main-page-hero.block .right-container .social-media-buttons .icon{
+  fill: #fff;
+  width: 24px;
+  height: 24px;
+  margin: 0 8px;
+}
+
 @media screen and (min-width:900px) {
   .main-page-hero.block{
     flex-direction: row;
@@ -102,7 +110,6 @@ div.main-page-hero-container > div:first-child{
     grid-template-columns: 65.66% 34.34%;
     justify-content: center;
     align-items: flex-start;
-    min-height: calc(100vh * 0.6);
   }
 
   .main-page-hero.block .right-container h1.section-name {
@@ -111,16 +118,14 @@ div.main-page-hero-container > div:first-child{
     line-height: 64px;
   }
 
-  .main-page-hero.block .left-container .image-container img{
-    /*min-height: 100%;*/
-    /*width: 100%;*/
-    height: 50vh;
-    width: 40vw;
-  }
-
   .main-page-hero.block .left-container {
     display: flex;
     flex-direction: column;
+    height: 65vh;
+  }
+
+  .main-page-hero.block .left-container .image-container {
+    height: 75%;  /* 75% of .left-container's height */
   }
 
   .main-page-hero .right-container{

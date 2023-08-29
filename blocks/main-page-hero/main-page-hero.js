@@ -1,9 +1,22 @@
-import { createOptimizedPicture, readBlockConfig, toClassName } from '../../scripts/lib-franklin.js';
+import {
+  createOptimizedPicture, decorateIcons, readBlockConfig, toClassName,
+} from '../../scripts/lib-franklin.js';
 
 export default function decorate(block) {
   const data = readBlockConfig(block);
   const link = block.querySelector('a');
   block.innerText = '';
+
+  // change the background color of the block based on the url
+  if (window.location.pathname === '/focus') {
+    block.style.backgroundColor = '#3cb6ce';
+  } else if (window.location.pathname === '/fitness') {
+    block.style.backgroundColor = '#ef0d0d';
+  } else if (window.location.pathname === '/fuel') {
+    block.style.backgroundColor = '#008441';
+  } else if (window.location.pathname === '/recover') {
+    block.style.backgroundColor = '#44697d';
+  }
 
   const section = data?.section.trim();
   const title = data?.title.trim();
@@ -64,6 +77,8 @@ export default function decorate(block) {
   p2.append(description);
   wrapper.append(p2);
 
+  // social media buttons
+  wrapper.append(createSocialMediaButtons());
   rightContainer.append(wrapper);
 
   block.append(leftContainer);
@@ -83,4 +98,42 @@ function createAuthorLink(authors) {
     authorLinks.append(authorLink);
   });
   return authorLinks;
+}
+
+function updateSocialLink(e) {
+  e.preventDefault();
+  const newUrl = `${e.currentTarget.href}${window.location.href}`;
+  const pin = newUrl.includes('pinterest.com');
+  let description = '';
+  let imageUrl = '';
+  if (pin) {
+    description = encodeURIComponent((document.querySelector('meta[property="og:description"]')?.getAttribute('content') || ''));
+    imageUrl = (document.querySelector('meta[property="og:image"]')?.getAttribute('content') || '');
+  }
+  const parameters = pin ? `&description=${description}&image=${imageUrl}` : '';
+  window.open(newUrl + parameters, 'sharer', 'toolbar=0,status=0,width=626,height=436');
+}
+
+function createSocialMediaButtons() {
+  const socialMediaButtons = document.createElement('div');
+  socialMediaButtons.innerHTML = `
+  <div class="social-media-buttons">
+          <a aria-label="share this page on twitter" href="https://twitter.com/share?url=">
+              <span class="icon icon-twitter-alt"></span>
+          </a>
+      
+          <a aria-label="share this page on facebook" href="http://www.facebook.com/share.php?u=">
+              <span class="icon icon-facebook"></span>
+          </a>
+      
+          <a aria-label="share this page on pinterest" href="http://pinterest.com/pin/create/button/?url=">
+              <span class="icon icon-pinterest"></span>
+          </a>
+  </div>`;
+  socialMediaButtons.querySelectorAll('a').forEach((a) => {
+    a.onclick = updateSocialLink;
+  });
+  // noinspection JSIgnoredPromiseFromCall
+  decorateIcons(socialMediaButtons);
+  return socialMediaButtons;
 }
