@@ -54,7 +54,7 @@ async function fetchArticlesAndAddCards(filters, block) {
   const counter = document.querySelectorAll('.author .card-wrapper').length / 30;
   if ((actualLength - (numInitialLodedArticles * counter)) > 30) {
   // eslint-disable-next-line
-    const { loadMoreContainer } = createLoadMoreButton(numInitialLodedArticles, articles, filters, actualLength, block);
+    createLoadMoreButton(numInitialLodedArticles, articles, filters, actualLength, block);
   }
 }
 // eslint-disable-next-line
