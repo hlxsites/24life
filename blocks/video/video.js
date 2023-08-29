@@ -1,5 +1,10 @@
 import { decorateIcons } from '../../scripts/lib-franklin.js';
 
+/**
+ * Decorate a MP4 video block
+ * @param block
+ * @returns {Promise<void>}
+ */
 export default async function decorate(block) {
   const poster = block.querySelector('picture img');
   const link = block.querySelector('a');
