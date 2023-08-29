@@ -1,5 +1,5 @@
 import {
-  createOptimizedPicture, decorateIcons, readBlockConfig, toClassName,
+  createOptimizedPicture, decorateIcons, getMetadata, readBlockConfig, toClassName,
 } from '../../scripts/lib-franklin.js';
 
 export default function decorate(block) {
@@ -18,7 +18,8 @@ export default function decorate(block) {
     block.style.backgroundColor = '#44697d';
   }
 
-  const section = data?.section.trim();
+  // Section Hero
+  const section = getMetadata('section');
   const title = data?.title.trim();
   const description = data?.description.trim();
   const authors = data?.authors.trim();
