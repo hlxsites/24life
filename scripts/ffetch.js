@@ -166,14 +166,14 @@ export default function ffetch(url) {
 }
 
 export function ffetcharticles(url) {
-  let chunkSize = 3000;
+  let chunkSize = 5000;
   const fetch = (...rest) => window.fetch.apply(null, rest);
   const parseHtml = (html) => new window.DOMParser().parseFromString(html, 'text/html');
 
   try {
     if ('connection' in window.navigator && window.navigator.connection.saveData === true) {
       // request smaller chunks in save data mode
-      chunkSize = 200;
+      chunkSize = 300;
     }
   } catch (e) { /* ignore */ }
 
