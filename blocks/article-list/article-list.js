@@ -80,11 +80,9 @@ function createLoadMoreButton(numInitialLodedArticles, articles, filters, actual
         block.append(wrapper);
         await loadBlock(newBlock);
       }));
-    block.append(loadMoreContainer);
+    // eslint-disable-next-line
+      if ((actualLength - (numInitialLodedArticles * counter)) > 30) { block.append(loadMoreContainer); }
   });
-  const counter = document.querySelectorAll('.author .card-wrapper').length / 30;
   // eslint-disable-next-line
-  if ((actualLength - (numInitialLodedArticles * counter)) > 30) { block.append(loadMoreContainer); } 
-  else block.remove(loadMoreContainer);
-  return { loadMoreContainer };
+  block.append(loadMoreContainer);
 }
