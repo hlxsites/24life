@@ -2,7 +2,7 @@ import {
   getMetadata,
   loadBlock, readBlockConfig, toClassName,
 } from '../../scripts/lib-franklin.js';
-import ffetch from '../../scripts/ffetch.js';
+import { ffetcharticles } from '../../scripts/ffetch.js';
 import { createCardBlock } from '../card/card.js';
 
 export default async function decorate(block) {
@@ -32,7 +32,7 @@ function removeEmptyKeyOrValue(obj) {
 }
 
 async function fetchArticlesAndAddCards(filters, block) {
-  const articles = await ffetch('/articles.json').all();
+  const articles = await ffetcharticles('/articles.json').all();
   const numInitialLodedArticles = 30;
   const actualLength = articles.filter((article) => Object.keys(filters).every(
     (key) => article[key]?.toLowerCase().includes(filters[key].toLowerCase()),
