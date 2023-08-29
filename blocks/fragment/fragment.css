@@ -1,1 +1,30 @@
-/* nothing here */
+@media (min-width: 992px) {
+  .section.fragment-container {
+    padding: 0;
+    position: relative;
+    top: -6px;
+    z-index: 100;
+  }
+
+  .section > .fragment-wrapper {
+    width: 100%;
+    max-width: 1170px;
+    border-top: 6px solid var(--color-focus);
+  }
+
+  .fragment.menu {
+    display: grid;
+    grid-template-columns: 25% 75%;
+    background-color: var(--background-color);
+  }
+
+  .fragment.menu .leftcolumn {
+    padding-left: 60px;
+  }
+
+  .fragment.menu-focus h5 {
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--color-focus);
+  }
+}

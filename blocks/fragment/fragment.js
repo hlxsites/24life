@@ -35,11 +35,11 @@ export default async function decorate(block) {
   const link = block.querySelector('a');
   const path = link ? link.getAttribute('href') : block.textContent.trim();
   const fragment = await loadFragment(path);
-  if (fragment) {
-    const fragmentSection = fragment.querySelector(':scope .section');
-    if (fragmentSection) {
-      block.closest('.section').classList.add(...fragmentSection.classList);
-      block.closest('.fragment-wrapper').replaceWith(...fragmentSection.childNodes);
-    }
+  if (!fragment) {
+    // eslint-disable-next-line no-console
+    console.warn(`Fragment not found: ${path}`);
+    return;
   }
+  block.classList.add(path.split('/').pop());
+  block.replaceChildren(...fragment.childNodes);
 }
