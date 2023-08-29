@@ -51,40 +51,37 @@ async function fetchArticlesAndAddCards(filters, block) {
       block.append(wrapper);
       await loadBlock(newBlock);
     }));
-  let counter = 0;
-  if (actualLength > numInitialLodedArticles) {
-    const { loadMoreButton, loadMoreContainer } = createLoadMoreButton();
-    block.append(loadMoreContainer);
-    loadMoreButton.addEventListener('click', async () => {
-      counter += 1;
-      await Promise.all(articles
-        .filter((article) => Object.keys(filters).every(
-          (key) => article[key]?.toLowerCase().includes(filters[key].toLowerCase()),
-        )).slice(numInitialLodedArticles * counter, (numInitialLodedArticles * counter) + 30)
-        .map(async (article) => {
-          const wrapper = document.createElement('div');
-          const newBlock = createCardBlock(article, wrapper);
-          if (article.section) {
-            newBlock.classList.add(toClassName(article.section));
-          }
-          block.append(wrapper);
-          await loadBlock(newBlock);
-        }));
-      loadMoreContainer.remove();
-      if ((actualLength - (numInitialLodedArticles * counter)) > 30) {
-        const { loadMoreButton, loadMoreContainer } = createLoadMoreButton();
-        block.append(loadMoreContainer);
-      }
-    });
+  const counter = document.querySelectorAll('.author .card-wrapper').length / 30;
+  if ((actualLength - (numInitialLodedArticles * counter)) > 30) {
+  // eslint-disable-next-line
+    const { loadMoreContainer } = createLoadMoreButton(numInitialLodedArticles, articles, filters, actualLength, block);
   }
 }
-
-function createLoadMoreButton() {
+// eslint-disable-next-line
+function createLoadMoreButton(numInitialLodedArticles, articles, filters, actualLength, block) {
   const loadMoreContainer = document.createElement('div');
   loadMoreContainer.classList.add('article-load-more-container');
   const loadMoreButton = document.createElement('button');
   loadMoreContainer.append(loadMoreButton);
   loadMoreButton.classList.add('article-list-load-more-button');
   loadMoreButton.textContent = 'Load more';
-  return { loadMoreButton, loadMoreContainer };
+  loadMoreButton.addEventListener('click', async () => {
+    const counter = document.querySelectorAll('.author .card-wrapper').length / 30;
+    await Promise.all(articles
+      .filter((article) => Object.keys(filters).every(
+        (key) => article[key]?.toLowerCase().includes(filters[key].toLowerCase()),
+      )).slice(numInitialLodedArticles * counter, (numInitialLodedArticles * counter) + 30)
+      .map(async (article) => {
+        const wrapper = document.createElement('div');
+        const newBlock = createCardBlock(article, wrapper);
+        if (article.section) {
+          newBlock.classList.add(toClassName(article.section));
+        }
+        block.append(wrapper);
+        await loadBlock(newBlock);
+      }));
+    block.append(loadMoreContainer);
+  });
+  block.append(loadMoreContainer);
+  return { loadMoreContainer };
 }
