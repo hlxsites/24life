@@ -25,7 +25,9 @@
 }
 
 .video video {
-    max-width: 100%;
+  max-width: 100%;
+  width: 1170px;
+  height: 658px;
 }
 
 .video.block .icon {

@@ -1,32 +1,37 @@
 import { decorateIcons } from '../../scripts/lib-franklin.js';
 
 export default async function decorate(block) {
-  // create container for play button
-  const playButtonContainer = document.createElement('div');
-  playButtonContainer.classList.add('play-button-container');
-  // create svg element
-  playButtonContainer.innerHTML = '<span class="icon icon-play-btn"></span>';
-  await decorateIcons(playButtonContainer);
-  block.append(playButtonContainer);
-
   const poster = block.querySelector('picture img');
   const link = block.querySelector('a');
+  if (!link) {
+    // no link, so no video
+    return;
+  }
   const video = document.createElement('video');
   video.classList.add('video');
-  video.width = 1170;
-  video.height = 658;
-  video.poster = poster.src;
+  if (poster && poster.src) {
+    video.poster = poster.src;
+  }
   video.preload = 'auto';
   video.controls = true;
   video.src = link.href;
+
+  // create container for play button
+  const playButtonContainer = document.createElement('div');
+  playButtonContainer.classList.add('play-button-container');
+  // add icon-play-btn svg image
+  playButtonContainer.innerHTML = '<span class="icon icon-play-btn"></span>';
+  decorateIcons(playButtonContainer);
+  block.append(playButtonContainer);
 
   // create overlay on video so play, pause and end events can be captured
   const overlay = document.createElement('div');
   overlay.classList.add('overlay');
   block.append(overlay);
 
-  // when overlay is clicked anywhere play or pause video. Hide play button when video is playing
-  // show play button when video is paused
+  // when overlay is clicked anywhere, toggle between play & pause.
+  // Hide play button when video is playing
+  // Show play button when video is paused
   overlay.addEventListener('click', () => {
     if (video.paused) {
       video.play();
@@ -42,10 +47,6 @@ export default async function decorate(block) {
     playButtonContainer.classList.remove('hide');
   });
 
-  // show play button when video is paused
-  video.addEventListener('pause', () => {
-    playButtonContainer.classList.remove('hide');
-  });
-
+  // add video to block
   link.replaceWith(video);
 }
