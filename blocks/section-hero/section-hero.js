@@ -9,13 +9,13 @@ export default function decorate(block) {
 
   // change the background color of the block based on the url
   if (window.location.pathname === '/focus') {
-    block.style.backgroundColor = '#3cb6ce';
+    block.style.setProperty('background-color', 'var(--color-focus)');
   } else if (window.location.pathname === '/fitness') {
-    block.style.backgroundColor = '#ef0d0d';
+    block.style.setProperty('background-color', 'var(--color-fitness)');
   } else if (window.location.pathname === '/fuel') {
-    block.style.backgroundColor = '#008441';
+    block.style.setProperty('background-color', 'var(--color-fuel)');
   } else if (window.location.pathname === '/recover') {
-    block.style.backgroundColor = '#44697d';
+    block.style.setProperty('background-color', 'var(--color-recover)');
   }
 
   // Section Hero
