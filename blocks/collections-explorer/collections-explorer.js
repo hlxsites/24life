@@ -56,20 +56,20 @@ export default function decorate(block) {
   if (mediaQuery.matches) {
     block.innerHTML = '';
     block.append(parentContainer);
-    block.parentElement.prepend(buildExploreCollectionsButton());
   } else {
     block.innerHTML = '';
     block.append(buildMobileView(linkImageList));
     decorateLinkedPictures(block);
   }
+  block.parentElement.prepend(buildExploreCollectionsButton());
 
+  // listen for view port size changes, and show mobile view if window width is less than 600px
   mediaQuery.addEventListener('change', (e) => {
     if (e.matches) {
-      // window width is at least 900px
+      // window width is at least 600px
       block.innerHTML = '';
       block.append(parentContainer);
     } else {
-      // window width is less than 900px
       block.innerHTML = '';
       block.append(buildMobileView(linkImageList));
       decorateLinkedPictures(block);
