@@ -1,0 +1,62 @@
+.collections-explorer h2.img-header {
+    position: absolute;
+    margin-top: 10px;
+    margin-left: 10px;
+    color: var(--text-color-on-black-background);
+    font-size: 1rem;
+    font-weight: 350;
+    line-height: 1;
+}
+
+.collections-explorer-container .parent {
+    max-width: 100%;
+    margin: auto;
+}
+
+.collections-explorer img{
+    width: 100%;
+}
+
+@media screen and (min-width: 900px){
+    div.collections-explorer-wrapper {
+        margin: 0;
+        padding: 0;
+        min-width: 100%;
+    }
+
+    .collections-explorer .container {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        border: 1px solid #dcdcde;
+        transition: background-image 0.6s ease-in-out;
+
+    }
+
+    .collections-explorer .links-container{
+        width: 30%;
+        border: 1px solid #dcde;
+        background-color: rgb(0 0 0 / 50%);
+    }
+
+    .collections-explorer .links-container ul{
+        list-style: none;
+        text-align: center;
+        padding: 2px 10px;
+        font-size: 16px;
+        font-weight: 400;
+        letter-spacing: 4px;
+        line-height: 26px;
+        text-transform: uppercase;
+        color: #444;
+    }
+
+    .collections-explorer .links-container ul a {
+         color: #fff
+    }
+
+    .collections-explorer .links-container ul a:hover{
+        background: rgb(51 51 51 / 50%);
+    }
+
+}
