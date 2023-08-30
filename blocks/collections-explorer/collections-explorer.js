@@ -1,5 +1,29 @@
+function buildExploreCollectionsButton() {
+  // Create a <div> element with class 'explore'
+  const div = document.createElement('div');
+  div.className = 'explore';
+
+  // Create button
+  const button = document.createElement('button');
+  button.className = 'btn';
+  button.onclick = () => window.open('/collections', '_blank');
+  button.textContent = 'Collections';
+
+  // Create a <span> element with class 'msg'
+  const span = document.createElement('span');
+  span.className = 'msg';
+  span.textContent = 'Explore what interests you…';
+
+  // Append <a> and <span> to <p>
+  div.appendChild(button);
+  div.appendChild(span);
+
+  return div;
+}
+
 export default function decorate(block) {
-  // When the links on the nested parentContainer are clicked, background image of the parent parentContainer changes.
+  // When the links on the nested parentContainer are clicked,
+  // background image of the parent parentContainer changes.
   const parentContainer = document.createElement('div');
   parentContainer.classList.add('container');
   const linksContainer = document.createElement('div');
@@ -11,25 +35,21 @@ export default function decorate(block) {
 
   // Loop through each link
   links.forEach((link) => {
-    // if link text is Yoga, then set background image to image found in the parent
-
     // Find closest common parent (for example, a parentContainer)
     const parent = link.closest('div');
 
     // Find the image within that parent
     const img = parent ? parent.querySelector('img') : null;
+
+    // default background image
     if (link.textContent?.toLowerCase().includes('yoga')) {
       parentContainer.style.backgroundImage = `url(${img.src})`;
-      parentContainer.style.transition = 'background-image 0.5s ease-in-out';
-      parentContainer.style.backgroundSize = 'contain';
     }
 
     // Add event listener for mouseover
     link.addEventListener('mouseover', () => {
       if (img) {
         parentContainer.style.backgroundImage = `url(${img.src})`;
-        parentContainer.style.transition = 'background-image 0.5s ease-in-out';
-        parentContainer.style.backgroundSize = 'contain';
       }
     });
   });
@@ -45,4 +65,5 @@ export default function decorate(block) {
   }
   block.innerHTML = '';
   block.append(parentContainer);
+  block.parentElement.prepend(buildExploreCollectionsButton());
 }
