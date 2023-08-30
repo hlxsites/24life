@@ -1,3 +1,5 @@
+import { decorateLinkedPictures } from '../../scripts/scripts.js';
+
 function buildExploreCollectionsButton() {
   // Create a <div> element with class 'explore'
   const div = document.createElement('div');
@@ -30,16 +32,28 @@ export default function decorate(block) {
   linksContainer.classList.add('links-container');
   parentContainer.append(linksContainer);
 
+  const ul = document.createElement('ul');
+  ul.classList.add('links');
+  linksContainer.append(ul);
+
   // Select all links within the block
   const links = block.querySelectorAll('a');
+  const linkImageList = [];
 
-  // Loop through each link
   links.forEach((link) => {
     // Find closest common parent (for example, a parentContainer)
     const parent = link.closest('div');
 
     // Find the image within that parent
     const img = parent ? parent.querySelector('img') : null;
+
+    // Add to the array if an image is found
+    if (img) {
+      linkImageList.push({
+        link: link.cloneNode(true),
+        image: img.cloneNode(true),
+      });
+    }
 
     // default background image
     if (link.textContent?.toLowerCase().includes('yoga')) {
@@ -52,18 +66,61 @@ export default function decorate(block) {
         parentContainer.style.backgroundImage = `url(${img.src})`;
       }
     });
-  });
 
-  const ul = document.createElement('ul');
-  ul.classList.add('links');
-  linksContainer.append(ul);
-  // append links to ul
-  for (const link of links) {
+    // append links to ul
     const li = document.createElement('li');
     li.append(link);
     ul.append(li);
+  });
+
+  // listen for view port size changes
+  const mediaQuery = window.matchMedia('(min-width: 600px)');
+
+  if (mediaQuery.matches) {
+    block.innerHTML = '';
+    block.append(parentContainer);
+    block.parentElement.prepend(buildExploreCollectionsButton());
+  } else {
+    block.innerHTML = '';
+    block.append(buildMobileView(linkImageList));
+    decorateLinkedPictures(block);
   }
-  block.innerHTML = '';
-  block.append(parentContainer);
-  block.parentElement.prepend(buildExploreCollectionsButton());
+
+  mediaQuery.addEventListener('change', (e) => {
+    if (e.matches) {
+      // window width is at least 900px
+      block.innerHTML = '';
+      block.append(parentContainer);
+    } else {
+      // window width is less than 900px
+      block.innerHTML = '';
+      block.append(buildMobileView(linkImageList));
+      decorateLinkedPictures(block);
+    }
+  });
+}
+
+/**
+ * Build mobile view
+ * @param linkImageList {Array} array of link and image objects
+ * @returns {HTMLDivElement} parentDiv
+ */
+function buildMobileView(linkImageList) {
+  const parentDiv = document.createElement('div');
+  if (linkImageList.length === 0) return parentDiv;
+  linkImageList.forEach((linkImage) => {
+    const div = document.createElement('div');
+    const { link } = linkImage;
+    const { image } = linkImage;
+    const h2 = document.createElement('h2');
+    h2.classList.add('img-header');
+    h2.textContent = link.textContent;
+    link.textContent = '';
+    link.className = 'img-link';
+    link.append(h2);
+    link.append(image);
+    div.append(link);
+    parentDiv.append(div);
+  });
+  return parentDiv;
 }
