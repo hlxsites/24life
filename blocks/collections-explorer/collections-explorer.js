@@ -1,28 +1,5 @@
 import { decorateLinkedPictures } from '../../scripts/scripts.js';
 
-function buildExploreCollectionsButton() {
-  // Create a <div> element with class 'explore'
-  const div = document.createElement('div');
-  div.className = 'explore';
-
-  // Create button
-  const button = document.createElement('button');
-  button.className = 'btn';
-  button.onclick = () => window.open('/collections', '_blank');
-  button.textContent = 'Collections';
-
-  // Create a <span> element with class 'msg'
-  const span = document.createElement('span');
-  span.className = 'msg';
-  span.textContent = 'Explore what interests you…';
-
-  // Append <a> and <span> to <p>
-  div.appendChild(button);
-  div.appendChild(span);
-
-  return div;
-}
-
 export default function decorate(block) {
   // When the links on the nested parentContainer are clicked,
   // background image of the parent parentContainer changes.
@@ -123,4 +100,27 @@ function buildMobileView(linkImageList) {
     parentDiv.append(div);
   });
   return parentDiv;
+}
+
+function buildExploreCollectionsButton() {
+  // Create a <div> element with class 'explore'
+  const div = document.createElement('div');
+  div.className = 'explore';
+
+  // Create button
+  const button = document.createElement('button');
+  button.className = 'btn';
+  button.onclick = () => window.open('/collections', '_blank');
+  button.textContent = 'Collections';
+
+  // Create a <span> element with class 'msg'
+  const span = document.createElement('span');
+  span.className = 'msg';
+  span.textContent = 'Explore what interests you…';
+
+  // Append <a> and <span> to <p>
+  div.appendChild(button);
+  div.appendChild(span);
+
+  return div;
 }
