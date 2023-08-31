@@ -10,6 +10,30 @@
  * governing permissions and limitations under the License.
  */
 
+
+/* fallback font for din-2014 (normal - 400) */
+@font-face {
+  font-family: "din-2014-normal-400-fallback";
+  size-adjust: 93.8%;
+  src: local("Arial");
+}
+
+/* fallback font for Open Sans (normal - 400) */
+@font-face {
+  font-family: "open-sans-normal-400-fallback";
+  size-adjust: 104.78%;
+  src: local("Arial");
+}
+
+/* fallback font for Open Sans (italic - 400) */
+@font-face {
+  font-family: "open-sans-italic-400-fallback";
+  size-adjust: 98.879%;
+  src: local("Arial");
+}
+
+
+
 :root {
   /* colors */
   --link-color: #292929;
