@@ -164,3 +164,21 @@ export default function ffetch(url) {
 
   return assignOperations(generator, context);
 }
+
+export function ffetcharticles(url) {
+  let chunkSize = 5000;
+  const fetch = (...rest) => window.fetch.apply(null, rest);
+  const parseHtml = (html) => new window.DOMParser().parseFromString(html, 'text/html');
+
+  try {
+    if ('connection' in window.navigator && window.navigator.connection.saveData === true) {
+      // request smaller chunks in save data mode
+      chunkSize = 300;
+    }
+  } catch (e) { /* ignore */ }
+
+  const context = { chunkSize, fetch, parseHtml };
+  const generator = request(url, context);
+
+  return assignOperations(generator, context);
+}

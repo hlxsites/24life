@@ -1,1 +1,7 @@
 /* there are no styles here yet */
+
+.article-list .article-load-more-container {
+    grid-column: 1/-1;
+    display: flex;
+    justify-content: center;
+  }
