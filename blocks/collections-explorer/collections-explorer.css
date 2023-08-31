@@ -15,9 +15,9 @@
 
 .collections-explorer-container .explore .btn{
     margin:0;
-    background-color: #333;
+    background-color: var(--footer-background-color);
     font-weight: lighter;
-    color: #fff;
+    color:  var(--text-color-on-black-background);
     min-width: 100px;
     font-size: 14px;
     padding: 0 32px;
@@ -30,7 +30,7 @@
     font-weight: 300;
     line-height: 1.4;
     letter-spacing: 0.02em;
-    color: #444;
+    color: var(--text-color);
 }
 
 .collections-explorer img{
@@ -72,16 +72,15 @@
         list-style: none;
         text-align: center;
         padding: 2px 10px;
-        font-size: 16px;
+        font-size: var(--body-font-size-text);
         font-weight: 400;
         letter-spacing: 4px;
         line-height: 26px;
         text-transform: uppercase;
-        color: #444;
     }
 
     .collections-explorer .links-container ul a {
-        color: #fff
+        color: var(--text-color-on-black-background);
     }
 
     .collections-explorer .links-container ul a:hover{

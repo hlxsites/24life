@@ -110,7 +110,7 @@ function buildExploreCollectionsButton() {
   // Create button
   const button = document.createElement('button');
   button.className = 'btn';
-  button.onclick = () => window.open('/collections', '_blank');
+  button.onclick = () => window.location.replace('/collections');
   button.textContent = 'Collections';
 
   // Create a <span> element with class 'msg'
@@ -118,9 +118,8 @@ function buildExploreCollectionsButton() {
   span.className = 'msg';
   span.textContent = 'Explore what interests you…';
 
-  // Append <a> and <span> to <p>
-  div.appendChild(button);
-  div.appendChild(span);
+  div.append(button);
+  div.append(span);
 
   return div;
 }
