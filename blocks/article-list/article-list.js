@@ -7,8 +7,14 @@ import { createCardBlock } from '../card/card.js';
 
 export default async function decorate(block) {
   const filters = removeEmptyKeyOrValue(readBlockConfig(block));
+  console.log(filters);
   const isEmptyFilter = Object.keys(filters).length === 0;
-  if (isEmptyFilter && document.location.pathname.startsWith('/author/')) {
+  console.log(isEmptyFilter);
+  if (isEmptyFilter && document.location.pathname.startsWith('/category/')){
+    // auto-detect category, e.g. https://www.24life.com/category/lifestyle
+    filters.categories = getMetadata('og:title');
+    console.log(filters.categories);
+  } else if (isEmptyFilter && document.location.pathname.startsWith('/author/')) {
     // auto-detect author, e.g. https://www.24life.com/author/24life
     filters.authors = getMetadata('og:title');
   } else if (isEmptyFilter && document.location.pathname.startsWith('/collections/')) {
@@ -33,6 +39,8 @@ function removeEmptyKeyOrValue(obj) {
 
 async function fetchArticlesAndAddCards(filters, block) {
   const articles = await ffetcharticles('/articles.json').all();
+  console.log(articles);
+  console.log(articles.filter((x)=> x.title == "A Design Expert’s Tips for Work (And Working Out) From Home"));
   const numInitialLodedArticles = 30;
   const actualLength = articles.filter((article) => Object.keys(filters).every(
     (key) => article[key]?.toLowerCase().includes(filters[key].toLowerCase()),
