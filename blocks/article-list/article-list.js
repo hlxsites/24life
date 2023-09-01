@@ -12,11 +12,10 @@ export default async function decorate(block) {
     // auto-detect category, e.g. https://www.24life.com/category/lifestyle
     const parts = document.location.pathname.split('/');
     const askedCategory = parts[parts.length - 1];
-    filters.categories = askedCategory;
-    console.log(askedCategory);
+    filters.categories = askedCategory.replace(/-/g, ' ');
     const firstContainer = document.createElement('div');
     // firstContainer.innerHTML = `<h1>${askedCategory.toUpperCase()}</h1>`;
-    firstContainer.innerHTML = `<h1>IN: ${askedCategory.toUpperCase()}</h1>`;
+    firstContainer.innerHTML = `<h1>IN: ${filters.categories.toUpperCase()}</h1>`;
     block.before(firstContainer);
   } else if (isEmptyFilter && document.location.pathname.startsWith('/author/')) {
     // auto-detect author, e.g. https://www.24life.com/author/24life
