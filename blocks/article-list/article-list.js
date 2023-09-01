@@ -13,6 +13,12 @@ export default async function decorate(block) {
     const parts = document.location.pathname.split('/');
     const askedCategory = parts[parts.length - 1];
     filters.categories = askedCategory;
+    console.log(askedCategory);
+    const firstContainer = document.createElement('div');
+    // firstContainer.innerHTML = `<h1>${askedCategory.toUpperCase()}</h1>`;
+    firstContainer.innerHTML = askedCategory.toUpperCase();
+    console.log(firstContainer.innerHTML);
+    block.append(firstContainer);
   } else if (isEmptyFilter && document.location.pathname.startsWith('/author/')) {
     // auto-detect author, e.g. https://www.24life.com/author/24life
     filters.authors = getMetadata('og:title');
