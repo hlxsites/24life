@@ -8,7 +8,7 @@ import { createCardBlock } from '../card/card.js';
 export default async function decorate(block) {
   const filters = removeEmptyKeyOrValue(readBlockConfig(block));
   const isEmptyFilter = Object.keys(filters).length === 0;
-  if (isEmptyFilter && document.location.pathname.startsWith('/category/')){
+  if (isEmptyFilter && document.location.pathname.startsWith('/category/')) {
     // auto-detect category, e.g. https://www.24life.com/category/lifestyle
     filters.categories = getMetadata('og:title');
   } else if (isEmptyFilter && document.location.pathname.startsWith('/author/')) {
