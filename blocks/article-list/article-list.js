@@ -10,7 +10,7 @@ export default async function decorate(block) {
   const isEmptyFilter = Object.keys(filters).length === 0;
   if (isEmptyFilter && document.location.pathname.startsWith('/category/')) {
     // auto-detect category, e.g. https://www.24life.com/category/lifestyle
-    const parts = document.location.pathname.split("/");
+    const parts = document.location.pathname.split('/');
     const askedCategory = parts[parts.length - 1];
     filters.categories = askedCategory;
   } else if (isEmptyFilter && document.location.pathname.startsWith('/author/')) {
