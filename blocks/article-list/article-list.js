@@ -16,9 +16,8 @@ export default async function decorate(block) {
     console.log(askedCategory);
     const firstContainer = document.createElement('div');
     // firstContainer.innerHTML = `<h1>${askedCategory.toUpperCase()}</h1>`;
-    firstContainer.innerHTML = askedCategory.toUpperCase();
-    console.log(firstContainer.innerHTML);
-    block.append(firstContainer);
+    firstContainer.innerHTML = `<h1>IN: ${askedCategory.toUpperCase()}</h1>`;
+    block.before(firstContainer);
   } else if (isEmptyFilter && document.location.pathname.startsWith('/author/')) {
     // auto-detect author, e.g. https://www.24life.com/author/24life
     filters.authors = getMetadata('og:title');
