@@ -11,6 +11,7 @@ header.header-wrapper {
   align-items: center;
   height: 55px;
   border-bottom: 6px solid var(--accent-color);
+  font-family: var(--heading-font-family);
 }
 
 header .header.block {
@@ -118,17 +119,15 @@ header nav .search-label {
 
 header nav .search .search-container {
   display: none;
-  margin-top: 5px;
-  width: 100%;
   position: relative;
   background-color: var(--background-color);
+  padding: 4px;
 }
 
 header nav .search-wrapper {
   padding: 8px;
-  width: 100%;
   box-sizing: border-box;
-  background-color: var(--footer-background-color);
+  background-color: #606163;
 }
 
 header nav .search-input {
@@ -264,7 +263,6 @@ header nav .tools .hamburger-close img {
     font-size: 1.2rem;
   }
 
-  header nav .search,
   header nav .tools,
   header nav .sections {
     position: static;
@@ -272,6 +270,14 @@ header nav .tools .hamburger-close img {
     background-color: transparent;
     align-items: center;
     margin: 0 12px 0 24px;
+  }
+
+  header nav .search {
+    display: block;
+    position: relative;
+    width: 50px;
+    top: 0;
+    right: 10px;
   }
 
   header nav .sections {
@@ -295,6 +301,14 @@ header nav .tools .hamburger-close img {
     position:initial;
     padding-left: 4px;
   }
+
+  header nav .search .search-container {
+    position:fixed;
+    top: 55px;
+    right: 0;
+    width: 200px;
+  }
+
   header nav .search .search-button {
     height: 40px;
     position: absolute;

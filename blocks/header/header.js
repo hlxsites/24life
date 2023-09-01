@@ -1,5 +1,4 @@
 import { readBlockConfig, decorateIcons, loadScript } from '../../scripts/lib-franklin.js';
-// import { decorateLinks } from '../../scripts/scripts.js';
 
 // media query match that indicates mobile/desktop switch
 const MQ = window.matchMedia('(min-width: 992px)');
@@ -116,7 +115,6 @@ function buildSectionMenuContent(sectionMenu, navCta, menuBlock) {
   }
 
   content.append(overviewLi, ...subSectionMenus);
-  //decorateLinks(content);
   sectionMenu.append(content);
 }
 
@@ -184,16 +182,7 @@ export default async function decorate(block) {
     // logo
     const logo = nav.querySelector('.logo');
     logo.append(navContent.children[0].querySelector('p:first-of-type > span'));
-    /* const authoredLogoLink = navContent.children[0].querySelector('p:first-of-type > a');
-    if (authoredLogoLink) {
-      logo.title = authoredLogoLink.innerText;
-      logo.href = authoredLogoLink.href;
-    } */
 
-    // vg_section
-    //nav.querySelector('.vgsection').append(navContent.children[0].querySelector('p:nth-of-type(2)').textContent);
-    // location
-    //nav.querySelector('.location').append(navContent.children[0].querySelector('p:nth-of-type(3)').textContent);
     // tools
     nav.querySelector('.tools').prepend(navContent.children[1].querySelector('ul'));
 
