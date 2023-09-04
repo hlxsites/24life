@@ -20,7 +20,7 @@ async function fetchAuthors(filter, block) {
   // sort author list by name
   authors.sort((a, b) => a.name.localeCompare(b.name));
   // create the first 6 authors
-  const numInitialLodedAuthors = 30;
+  const numInitialLodedAuthors = 6;
   const firstAuthors = authors.slice(0, numInitialLodedAuthors);
   await firstAuthors.forEach((author) => {
     const newBlock = createAuthorCardBlock(author);
