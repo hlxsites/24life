@@ -22,7 +22,7 @@ async function fetchAuthors(filter, block) {
   // create the first 6 authors
   const numInitialLodedAuthors = 30;
   const firstAuthors = authors.slice(0, numInitialLodedAuthors);
-  firstAuthors.forEach((author) => {
+  await firstAuthors.forEach((author) => {
     const newBlock = createAuthorCardBlock(author);
     block.append(newBlock);
   });
@@ -44,7 +44,7 @@ function createLoadMoreButton(numInitialLodedAuthors, authors, block) {
     const counter = document.querySelectorAll('.author-list-container > .author-list-wrapper')[1].querySelectorAll('.author-list-item').length / numInitialLodedAuthors;
     // eslint-disable-next-line
     const nextAuthors = authors.slice(numInitialLodedAuthors * counter, (numInitialLodedAuthors * counter) + numInitialLodedAuthors);
-    nextAuthors.forEach((author) => {
+    await nextAuthors.forEach((author) => {
       const newBlock = createAuthorCardBlock(author);
       block.append(newBlock);
     });
