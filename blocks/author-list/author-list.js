@@ -28,26 +28,20 @@ async function fetchAuthors(filter, block, tempArray) {
   // create the first 6 authors
   const numInitialLodedAuthors = 30;
   const firstAuthors = authors.slice(0, numInitialLodedAuthors);
-  if (authors.length < numInitialLodedAuthors){
-    tempArray.push(authors.length);
+  const loadExperts = document.createElement('div');
   await firstAuthors.forEach((author) => {
     const newBlock = createAuthorCardBlock(author);
-    block.append(newBlock);
-  });}
-  else { 
-   const loadExperts = document.createElement('div'); 
-   block.append(loadExperts); 
-   await firstAuthors.forEach((author) => {
-   const newBlock = createAuthorCardBlock(author);
-   loadExperts.append(newBlock);
+    loadExperts.append(newBlock);
   });
+  block.append(loadExperts);
   // create load more button if there are more authors than shown
   console.log(tempArray);
   const counter = (document.querySelectorAll('.author-list-container .author-list.block .author-list-item').length - total) / numInitialLodedAuthors;
   if ((authors.length - (numInitialLodedAuthors * counter)) > numInitialLodedAuthors) {
+    const loadExperts = document.createElement('div');
+    block.append(loadExperts);
     createLoadMoreButton(numInitialLodedAuthors, authors, block, total, loadExperts);
-  }
-}
+  } else { tempArray.push(authors.length); }
 }
 
 function createLoadMoreButton(numInitialLodedAuthors, authors, block, total, loadExperts) {

@@ -57,9 +57,9 @@ div.author-list-container {
 }
 
 .author-list {
-  display: grid;
+  display: flex;
   gap: 2em;
-  grid-template-columns: repeat(3, 1fr);
+  /* grid-template-columns: repeat(3, 1fr); */
 }
 
 .author-list .author-load-more-container {
@@ -69,7 +69,7 @@ div.author-list-container {
 }
 
 /* on smaller screens, show everything in a single column. */
-@media (max-width: 991px) {
+@media (max-width: 600px) {
   .author-list {
     display: flex;
     flex-direction: column;
