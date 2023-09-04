@@ -14,7 +14,6 @@ export default async function decorate(block) {
     const askedCategory = parts[parts.length - 1];
     filters.categories = askedCategory.replace(/-/g, ' ');
     const firstContainer = document.createElement('div');
-    // firstContainer.innerHTML = `<h1>${askedCategory.toUpperCase()}</h1>`;
     firstContainer.innerHTML = `<h1>IN: ${filters.categories.toUpperCase()}</h1>`;
     block.before(firstContainer);
   } else if (isEmptyFilter && document.location.pathname.startsWith('/author/')) {
