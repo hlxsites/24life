@@ -15,8 +15,6 @@ export default async function decorate(block) {
   const arrayFilters = ['Staff', 'Expert', 'Writer'];
   // eslint-disable-next-line
   for (let i = 0; i < arrayFilters.length; i++) {let filter = arrayFilters[i]; console.log(filter); await fetchAuthors(filter, block, tempArray).catch((e) => console.log(e));};
-  // arrayFilters.forEach(async (filter) => {console.log(filter); fetchAuthors(filter, block, tempArray).catch((e) => console.log(e)); })
-  // fetchAuthors(filter, block).catch((e) => console.log(e));
 }
 
 async function fetchAuthors(filter, block, tempArray) {
@@ -30,19 +28,21 @@ async function fetchAuthors(filter, block, tempArray) {
   // create the first 6 authors
   const numInitialLodedAuthors = 30;
   const firstAuthors = authors.slice(0, numInitialLodedAuthors);
+  const loadExperts = document.createElement('div');
   await firstAuthors.forEach((author) => {
     const newBlock = createAuthorCardBlock(author);
-    block.append(newBlock);
+    loadExperts.append(newBlock);
   });
+  block.append(loadExperts);
   // create load more button if there are more authors than shown
   console.log(tempArray);
-  const counter = (document.querySelectorAll('.author-list-container .author-list.block > .author-list-item').length - total) / numInitialLodedAuthors;
+  const counter = (document.querySelectorAll('.author-list-container .author-list.block .author-list-item').length - total) / numInitialLodedAuthors;
   if ((authors.length - (numInitialLodedAuthors * counter)) > numInitialLodedAuthors) {
-    createLoadMoreButton(numInitialLodedAuthors, authors, block, total);
+    createLoadMoreButton(numInitialLodedAuthors, authors, block, total, loadExperts);
   } else { tempArray.push(authors.length); }
 }
 
-function createLoadMoreButton(numInitialLodedAuthors, authors, block, total) {
+function createLoadMoreButton(numInitialLodedAuthors, authors, block, total, loadExperts) {
   const loadMoreContainer = document.createElement('div');
   loadMoreContainer.classList.add('author-load-more-container');
   const loadMoreButton = document.createElement('button');
@@ -50,28 +50,18 @@ function createLoadMoreButton(numInitialLodedAuthors, authors, block, total) {
   loadMoreButton.classList.add('author-list-load-more-button');
   loadMoreButton.textContent = 'Load more';
   loadMoreButton.addEventListener('click', async () => {
-    const counter = (document.querySelectorAll('.author-list-container .author-list.block > .author-list-item').length - total) / numInitialLodedAuthors;
+    const counter = (document.querySelectorAll('.author-list-container .author-list.block .author-list-item').length - total) / numInitialLodedAuthors;
     // eslint-disable-next-line
     const nextAuthors = authors.slice(numInitialLodedAuthors * counter, (numInitialLodedAuthors * counter) + numInitialLodedAuthors);
     await nextAuthors.forEach((author) => {
       const newBlock = createAuthorCardBlock(author);
-      block.append(newBlock);
+      loadExperts.append(newBlock);
     });
     // eslint-disable-next-line
-    if ((authors.length - (numInitialLodedAuthors * counter)) > numInitialLodedAuthors) { block.append(loadMoreContainer); }
+    if ((authors.length - (numInitialLodedAuthors * counter)) > numInitialLodedAuthors) { loadExperts.append(loadMoreContainer); }
   });
-  block.append(loadMoreContainer);
+  loadExperts.append(loadMoreContainer);
 }
-
-// function createLoadMoreButton() {
-//   const loadMoreContainer = document.createElement('div');
-//   loadMoreContainer.classList.add('author-load-more-container');
-//   const loadMoreButton = document.createElement('button');
-//   loadMoreContainer.append(loadMoreButton);
-//   loadMoreButton.classList.add('author-list-load-more-button');
-//   loadMoreButton.textContent = 'Load more';
-//   return { loadMoreButton, loadMoreContainer };
-// }
 
 function buildAuthorListItem(className, content) {
   const container = document.createElement('div');
