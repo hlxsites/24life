@@ -14,7 +14,8 @@ export default async function decorate(block) {
   // eslint-disable-next-line no-console
   const arrayFilters = ['Staff', 'Expert', 'Writer'];
   // eslint-disable-next-line
-  arrayFilters.forEach(async (filter) => {console.log(filter); fetchAuthors(filter, block, tempArray).catch((e) => console.log(e)); })
+  for (let i = 0; i < arrayFilters.length; i++) {let filter = arrayFilters[i]; console.log(filter); await fetchAuthors(filter, block, tempArray).catch((e) => console.log(e));};
+  // arrayFilters.forEach(async (filter) => {console.log(filter); fetchAuthors(filter, block, tempArray).catch((e) => console.log(e)); })
   // fetchAuthors(filter, block).catch((e) => console.log(e));
 }
 
