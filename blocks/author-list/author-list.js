@@ -1,6 +1,6 @@
-import ffetch from '../../scripts/ffetch.js';
+import { ffetcharticles } from '../../scripts/ffetch.js';
 import {
-  createOptimizedPicture, decorateIcons, loadBlocks, readBlockConfig,
+  createOptimizedPicture, decorateIcons, readBlockConfig,
 } from '../../scripts/lib-franklin.js';
 
 /**
@@ -16,42 +16,53 @@ export default async function decorate(block) {
 
 async function fetchAuthors(filter, block) {
   // get all authors from authors.json and filter them by role
-  const authors = await ffetch('/authors.json').filter((author) => author.role === filter).all();
+  const authors = await ffetcharticles('/authors.json').filter((author) => author.role === filter).all();
   // sort author list by name
   authors.sort((a, b) => a.name.localeCompare(b.name));
   // create the first 6 authors
-  const numInitialLodedAuthors = 6;
+  const numInitialLodedAuthors = 30;
   const firstAuthors = authors.slice(0, numInitialLodedAuthors);
   firstAuthors.forEach((author) => {
     const newBlock = createAuthorCardBlock(author);
     block.append(newBlock);
   });
   // create load more button if there are more authors than shown
-  if (authors.length > numInitialLodedAuthors) {
-    const { loadMoreButton, loadMoreContainer } = createLoadMoreButton();
-    loadMoreButton.addEventListener('click', () => {
-      // fetch rest of the authors
-      const nextAuthors = authors.slice(numInitialLodedAuthors);
-      nextAuthors.forEach((author) => {
-        const newBlock = createAuthorCardBlock(author);
-        block.append(newBlock);
-      });
-      loadMoreContainer.remove();
-    });
-    block.append(loadMoreContainer);
+  const counter = document.querySelectorAll('.author-list-container > .author-list-wrapper')[1].querySelectorAll('.author-list-item').length / numInitialLodedAuthors;
+  if ((authors.length - (numInitialLodedAuthors * counter)) > numInitialLodedAuthors) {
+    createLoadMoreButton(numInitialLodedAuthors, authors, block);
   }
-  loadBlocks(block);
 }
 
-function createLoadMoreButton() {
+function createLoadMoreButton(numInitialLodedAuthors, authors, block) {
   const loadMoreContainer = document.createElement('div');
   loadMoreContainer.classList.add('author-load-more-container');
   const loadMoreButton = document.createElement('button');
   loadMoreContainer.append(loadMoreButton);
   loadMoreButton.classList.add('author-list-load-more-button');
   loadMoreButton.textContent = 'Load more';
-  return { loadMoreButton, loadMoreContainer };
+  loadMoreButton.addEventListener('click', async () => {
+    const counter = document.querySelectorAll('.author-list-container > .author-list-wrapper')[1].querySelectorAll('.author-list-item').length / numInitialLodedAuthors;
+    // eslint-disable-next-line
+    const nextAuthors = authors.slice(numInitialLodedAuthors * counter, (numInitialLodedAuthors * counter) + numInitialLodedAuthors);
+    nextAuthors.forEach((author) => {
+      const newBlock = createAuthorCardBlock(author);
+      block.append(newBlock);
+    });
+    // eslint-disable-next-line
+    if ((authors.length - (numInitialLodedAuthors * counter)) > numInitialLodedAuthors) { block.append(loadMoreContainer); }
+  });
+  block.append(loadMoreContainer);
 }
+
+// function createLoadMoreButton() {
+//   const loadMoreContainer = document.createElement('div');
+//   loadMoreContainer.classList.add('author-load-more-container');
+//   const loadMoreButton = document.createElement('button');
+//   loadMoreContainer.append(loadMoreButton);
+//   loadMoreButton.classList.add('author-list-load-more-button');
+//   loadMoreButton.textContent = 'Load more';
+//   return { loadMoreButton, loadMoreContainer };
+// }
 
 function buildAuthorListItem(className, content) {
   const container = document.createElement('div');
