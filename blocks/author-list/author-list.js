@@ -8,15 +8,22 @@ import {
  * @param {Element} block The footer block element
  */
 export default async function decorate(block) {
-  const { filter } = readBlockConfig(block);
+  const tempArray = [];
+  // const { filter } = readBlockConfig(block);
   block.textContent = '';
   // eslint-disable-next-line no-console
-  fetchAuthors(filter, block).catch((e) => console.log(e));
+  const arrayFilters = ['Staff', 'Expert', 'Writer'];
+  // eslint-disable-next-line
+  arrayFilters.forEach(async (filter) => {console.log(filter); fetchAuthors(filter, block, tempArray).catch((e) => console.log(e)); })
+  // fetchAuthors(filter, block).catch((e) => console.log(e));
 }
 
-async function fetchAuthors(filter, block) {
+async function fetchAuthors(filter, block, tempArray) {
   // get all authors from authors.json and filter them by role
   const authors = await ffetcharticles('/authors.json').filter((author) => author.role === filter).all();
+  console.log(authors.length);
+  const total = tempArray.reduce((sum, x) => { let sum1 = sum; sum1 += x; return sum1; }, 0);
+  console.log(total);
   // sort author list by name
   authors.sort((a, b) => a.name.localeCompare(b.name));
   // create the first 6 authors
@@ -27,13 +34,14 @@ async function fetchAuthors(filter, block) {
     block.append(newBlock);
   });
   // create load more button if there are more authors than shown
-  const counter = document.querySelectorAll('.author-list-container > .author-list-wrapper')[1].querySelectorAll('.author-list-item').length / numInitialLodedAuthors;
+  console.log(tempArray);
+  const counter = (document.querySelectorAll('.author-list-container .author-list.block > .author-list-item').length - total) / numInitialLodedAuthors;
   if ((authors.length - (numInitialLodedAuthors * counter)) > numInitialLodedAuthors) {
-    createLoadMoreButton(numInitialLodedAuthors, authors, block);
-  }
+    createLoadMoreButton(numInitialLodedAuthors, authors, block, total);
+  } else { tempArray.push(authors.length); }
 }
 
-function createLoadMoreButton(numInitialLodedAuthors, authors, block) {
+function createLoadMoreButton(numInitialLodedAuthors, authors, block, total) {
   const loadMoreContainer = document.createElement('div');
   loadMoreContainer.classList.add('author-load-more-container');
   const loadMoreButton = document.createElement('button');
@@ -41,7 +49,7 @@ function createLoadMoreButton(numInitialLodedAuthors, authors, block) {
   loadMoreButton.classList.add('author-list-load-more-button');
   loadMoreButton.textContent = 'Load more';
   loadMoreButton.addEventListener('click', async () => {
-    const counter = document.querySelectorAll('.author-list-container > .author-list-wrapper')[1].querySelectorAll('.author-list-item').length / numInitialLodedAuthors;
+    const counter = (document.querySelectorAll('.author-list-container .author-list.block > .author-list-item').length - total) / numInitialLodedAuthors;
     // eslint-disable-next-line
     const nextAuthors = authors.slice(numInitialLodedAuthors * counter, (numInitialLodedAuthors * counter) + numInitialLodedAuthors);
     await nextAuthors.forEach((author) => {
@@ -139,3 +147,4 @@ function addAuthorLinks(author, authorLinkContainer) {
   });
   authorLinkContainer.prepend(socialLinksContainer);
 }
+  
