@@ -38,8 +38,6 @@ async function fetchAuthors(filter, block, tempArray) {
   console.log(tempArray);
   const counter = (document.querySelectorAll('.author-list-container .author-list.block .author-list-item').length - total) / numInitialLodedAuthors;
   if ((authors.length - (numInitialLodedAuthors * counter)) > numInitialLodedAuthors) {
-    const loadExperts = document.createElement('div');
-    block.append(loadExperts);
     createLoadMoreButton(numInitialLodedAuthors, authors, block, total, loadExperts);
   } else { tempArray.push(authors.length); }
 }
