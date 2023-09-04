@@ -9,18 +9,18 @@ import {
  */
 export default async function decorate(block) {
   const tempArray = [];
+  const allauthors = await ffetcharticles('/authors.json').all();
   // const { filter } = readBlockConfig(block);
   block.textContent = '';
   // eslint-disable-next-line no-console
   const arrayFilters = ['Staff', 'Expert', 'Writer'];
   // eslint-disable-next-line
-  for (let i = 0; i < arrayFilters.length; i++) {let filter = arrayFilters[i]; console.log(filter); await fetchAuthors(filter, block, tempArray).catch((e) => console.log(e));};
+  for (let i = 0; i < arrayFilters.length; i++) {let filter = arrayFilters[i]; console.log(filter); await fetchAuthors(filter, block, tempArray, allauthors).catch((e) => console.log(e));};
 }
 
-async function fetchAuthors(filter, block, tempArray) {
+async function fetchAuthors(filter, block, tempArray, allauthors) {
   // get all authors from authors.json and filter them by role
-  const authors = await ffetcharticles('/authors.json').filter((author) => author.role === filter).all();
-  console.log(authors.length);
+  const authors = allauthors.filter((author) => author.role === filter);
   const total = tempArray.reduce((sum, x) => { let sum1 = sum; sum1 += x; return sum1; }, 0);
   console.log(total);
   // sort author list by name
@@ -138,4 +138,3 @@ function addAuthorLinks(author, authorLinkContainer) {
   });
   authorLinkContainer.prepend(socialLinksContainer);
 }
-  
