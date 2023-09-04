@@ -51,8 +51,8 @@ async function fetchArticlesAndAddCards(filters, block) {
       block.append(wrapper);
       await loadBlock(newBlock);
     }));
-  const counter = document.querySelectorAll('.author .card-wrapper').length / 30;
-  if ((actualLength - (numInitialLodedArticles * counter)) > 30) {
+  const counter = document.querySelectorAll('.author .card-wrapper').length / numInitialLodedArticles;
+  if ((actualLength - (numInitialLodedArticles * counter)) > numInitialLodedArticles) {
   // eslint-disable-next-line
     createLoadMoreButton(numInitialLodedArticles, articles, filters, actualLength, block);
   }
@@ -66,11 +66,12 @@ function createLoadMoreButton(numInitialLodedArticles, articles, filters, actual
   loadMoreButton.classList.add('article-list-load-more-button');
   loadMoreButton.textContent = 'Load more';
   loadMoreButton.addEventListener('click', async () => {
-    const counter = document.querySelectorAll('.author .card-wrapper').length / 30;
+    const counter = document.querySelectorAll('.author .card-wrapper').length / numInitialLodedArticles;
     await Promise.all(articles
       .filter((article) => Object.keys(filters).every(
         (key) => article[key]?.toLowerCase().includes(filters[key].toLowerCase()),
-      )).slice(numInitialLodedArticles * counter, (numInitialLodedArticles * counter) + 30)
+        // eslint-disable-next-line
+      )).slice(numInitialLodedArticles * counter, (numInitialLodedArticles * counter) + numInitialLodedArticles)
       .map(async (article) => {
         const wrapper = document.createElement('div');
         const newBlock = createCardBlock(article, wrapper);
@@ -81,7 +82,7 @@ function createLoadMoreButton(numInitialLodedArticles, articles, filters, actual
         await loadBlock(newBlock);
       }));
     // eslint-disable-next-line
-      if ((actualLength - (numInitialLodedArticles * counter)) > 30) { block.append(loadMoreContainer); }
+      if ((actualLength - (numInitialLodedArticles * counter)) > numInitialLodedArticles) { block.append(loadMoreContainer); }
   });
   // eslint-disable-next-line
   block.append(loadMoreContainer);
