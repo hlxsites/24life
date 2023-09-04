@@ -56,10 +56,10 @@ div.author-list-container {
   gap: 1rem;
 }
 
-.author-list {
-  display: flex;
+.author-list > div {
+  display: grid;
   gap: 2em;
-  /* grid-template-columns: repeat(3, 1fr); */
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .author-list .author-load-more-container {
