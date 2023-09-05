@@ -9,16 +9,28 @@ import {
  */
 export default async function decorate(block) {
   const tempArray = [];
+  const arrayFilters = [];
+  const arrayHeading = [];
+  const arrayDes = [];
+  const arrayStyle = [];
   const allauthors = await ffetcharticles('/authors.json').all();
   // const { filter } = readBlockConfig(block);
-  block.textContent = '';
-  // eslint-disable-next-line no-console
-  const arrayFilters = ['Staff', 'Expert', 'Writer'];
+  // block.textContent = '';
+  [...block.children].forEach((row, r) => {;
+    arrayFilters.push([...row.children][0].textContent);
+    arrayHeading.push([...row.children][1].textContent);
+    arrayDes.push([...row.children][2].textContent);
+    arrayStyle.push([...row.children][3].textContent);
+    row.textContent = '';
+  });
+  console.log(arrayFilters);
+  console.log(arrayDes);
+  // const arrayFilters = ['Staff', 'Expert', 'Writer'];
   // eslint-disable-next-line
-  for (let i = 0; i < arrayFilters.length; i++) {let filter = arrayFilters[i]; console.log(filter); await fetchAuthors(filter, block, tempArray, allauthors).catch((e) => console.log(e));};
+  for (let i = 0; i < arrayFilters.length; i++) {let filter = arrayFilters[i]; console.log(filter); await fetchAuthors(arrayFilters[i], block, tempArray, allauthors, arrayHeading[i], arrayDes[i], arrayStyle[i]).catch((e) => console.log(e));};
 }
 
-async function fetchAuthors(filter, block, tempArray, allauthors) {
+async function fetchAuthors(filter, block, tempArray, allauthors, head, desc, sty) {
   // get all authors from authors.json and filter them by role
   const authors = allauthors.filter((author) => author.role === filter);
   const total = tempArray.reduce((sum, x) => { let sum1 = sum; sum1 += x; return sum1; }, 0);
