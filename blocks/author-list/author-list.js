@@ -1,6 +1,6 @@
 import { ffetcharticles } from '../../scripts/ffetch.js';
 import {
-  createOptimizedPicture, decorateIcons, readBlockConfig,
+  createOptimizedPicture, decorateIcons,
 } from '../../scripts/lib-franklin.js';
 
 /**
@@ -14,18 +14,13 @@ export default async function decorate(block) {
   const arrayDes = [];
   const arrayStyle = [];
   const allauthors = await ffetcharticles('/authors.json').all();
-  // const { filter } = readBlockConfig(block);
-  // block.textContent = '';
-  [...block.children].forEach((row, r) => {;
+  [...block.children].forEach((row) => {
     arrayFilters.push([...row.children][0].textContent);
     arrayHeading.push([...row.children][1].textContent);
     arrayDes.push([...row.children][2].textContent);
     arrayStyle.push([...row.children][3].textContent);
     row.textContent = '';
   });
-  console.log(arrayFilters);
-  console.log(arrayDes);
-  // const arrayFilters = ['Staff', 'Expert', 'Writer'];
   // eslint-disable-next-line
   for (let i = 0; i < arrayFilters.length; i++) {let filter = arrayFilters[i]; console.log(filter); await fetchAuthors(arrayFilters[i], block, tempArray, allauthors, arrayHeading[i], arrayDes[i], arrayStyle[i]).catch((e) => console.log(e));};
 }
@@ -37,15 +32,27 @@ async function fetchAuthors(filter, block, tempArray, allauthors, head, desc, st
   console.log(total);
   // sort author list by name
   authors.sort((a, b) => a.name.localeCompare(b.name));
-  // create the first 6 authors
+  // create the first 30 authors
   const numInitialLodedAuthors = 30;
   const firstAuthors = authors.slice(0, numInitialLodedAuthors);
+  const mainDiv = document.createElement('div');
   const loadExperts = document.createElement('div');
+  const headingParentDiv = document.createElement('div');
+  const headingChildDiv = document.createElement('div');
+  const descDiv = document.createElement('div');
+  headingParentDiv.append(headingChildDiv);
+  headingParentDiv.append(descDiv);
+  mainDiv.append(headingParentDiv);
+  mainDiv.append(loadExperts);
+  loadExperts.classList.add('load-experts');
+  headingChildDiv.innerHTML = `<h2>${head}</h2>`;
+  if (desc) descDiv.innerHTML = `<p>${desc}</p>`;
+  if (sty) headingParentDiv.classList.add(sty);
   await firstAuthors.forEach((author) => {
     const newBlock = createAuthorCardBlock(author);
     loadExperts.append(newBlock);
   });
-  block.append(loadExperts);
+  block.append(mainDiv);
   // create load more button if there are more authors than shown
   console.log(tempArray);
   const counter = (document.querySelectorAll('.author-list-container .author-list.block .author-list-item').length - total) / numInitialLodedAuthors;
