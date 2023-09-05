@@ -22,14 +22,13 @@ export default async function decorate(block) {
     row.textContent = '';
   });
   // eslint-disable-next-line
-  for (let i = 0; i < arrayFilters.length; i++) {let filter = arrayFilters[i]; console.log(filter); await fetchAuthors(arrayFilters[i], block, tempArray, allauthors, arrayHeading[i], arrayDes[i], arrayStyle[i]).catch((e) => console.log(e));};
+  for (let i = 0; i < arrayFilters.length; i++) { await fetchAuthors(arrayFilters[i], block, tempArray, allauthors, arrayHeading[i], arrayDes[i], arrayStyle[i]).catch((e) => console.log(e));};
 }
 
 async function fetchAuthors(filter, block, tempArray, allauthors, head, desc, sty) {
   // get all authors from authors.json and filter them by role
   const authors = allauthors.filter((author) => author.role === filter);
   const total = tempArray.reduce((sum, x) => { let sum1 = sum; sum1 += x; return sum1; }, 0);
-  console.log(total);
   // sort author list by name
   authors.sort((a, b) => a.name.localeCompare(b.name));
   // create the first 30 authors
@@ -54,7 +53,6 @@ async function fetchAuthors(filter, block, tempArray, allauthors, head, desc, st
   });
   block.append(mainDiv);
   // create load more button if there are more authors than shown
-  console.log(tempArray);
   const counter = (document.querySelectorAll('.author-list-container .author-list.block .author-list-item').length - total) / numInitialLodedAuthors;
   if ((authors.length - (numInitialLodedAuthors * counter)) > numInitialLodedAuthors) {
     createLoadMoreButton(numInitialLodedAuthors, authors, block, total, loadExperts);
