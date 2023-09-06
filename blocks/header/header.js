@@ -2,17 +2,19 @@ import {
   readBlockConfig,
   decorateIcons,
   loadBlocks,
- } from '../../scripts/lib-franklin.js';
+} from '../../scripts/lib-franklin.js';
 import {
   decorateMain,
 } from '../../scripts/scripts.js';
 
 // media query match that indicates mobile/desktop switch
 const MQ = window.matchMedia('(min-width: 992px)');
-const CREATED = { focus: false, fitness: false, fuel: false, recover: false, magazine: false };
+const CREATED = {
+  focus: false, fitness: false, fuel: false, recover: false, magazine: false
+};
 
 function toggleMenu(header, sectionToOpen) {
-  const openSection = header.querySelector(`[aria-expanded='true']`);
+  const openSection = header.querySelector('header [aria-expanded="true"]');
   if (openSection === sectionToOpen) {
     return; // it's already open
   }
@@ -26,10 +28,10 @@ function toggleMenu(header, sectionToOpen) {
   }
 }
 
-function closeMenuSection() {
+function closeMenuSection(event) {
   const navArea = document.querySelector('header');
   if (!navArea.contains(event.target)) {
-    const openMenu = document.querySelector(`header [aria-expanded='true']`);
+    const openMenu = document.querySelector('header [aria-expanded="true"]');
     if (openMenu) {
       openMenu.classList.remove('expand');
       openMenu.setAttribute('aria-expanded', 'false');
@@ -73,7 +75,6 @@ export default async function decorate(block) {
   block.textContent = '';
 
   // fetch nav content
-  const navPath = config.nav;
   const resp = await fetch('/nav2.plain.html');
 
   if (resp.ok) {
@@ -120,7 +121,7 @@ export default async function decorate(block) {
     logo.append(navContent.children[0].querySelector('p:first-of-type > span'));
     const linksList = navContent.children[1].querySelector('ul');
     // add target=_blank to links
-    [...linksList.querySelectorAll('a')].map((item) => {
+    [...linksList.querySelectorAll('a')].forEach((item) => {
       // skip newletter link
       if (item.href.includes('newsletter')) return;
       item.setAttribute('target', '_blank');
@@ -143,10 +144,8 @@ export default async function decorate(block) {
       a.textContent = sectionTitle;
       const icon = document.createElement('span');
       icon.classList.add('icon', 'icon-arrow-down');
-      if(MQ.matches) {
-        navSection.addEventListener('mouseover', function(e) {
-          mouseOverMenu.call(a, block.parentNode);
-        });
+      if (MQ.matches) {
+        navSection.addEventListener('mouseover', mouseOverMenu.bind(a, block.parentNode));
       }
       navSection.append(a);
       navSection.append(icon);
