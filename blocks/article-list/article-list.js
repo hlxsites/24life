@@ -51,8 +51,8 @@ async function fetchArticlesAndAddCards(filters, block) {
       block.append(wrapper);
       await loadBlock(newBlock);
     }));
-  const counter = document.querySelectorAll('.author .card-wrapper').length / numInitialLoadedArticles;
-  if ((actualLength - (numInitialLoadedArticles * counter)) > numInitialLoadedArticles) {
+  const counter = document.querySelectorAll('.author .card-wrapper').length / 30;
+  if ((actualLength - (numInitialLoadedArticles * counter)) > 30) {
   // eslint-disable-next-line
     createLoadMoreButton(numInitialLoadedArticles, articles, filters, actualLength, block);
   }
@@ -71,7 +71,7 @@ function createLoadMoreButton(numInitialLoadedArticles, articles, filters, actua
       .filter((article) => Object.keys(filters).every(
         (key) => article[key]?.toLowerCase().includes(filters[key].toLowerCase()),
         // eslint-disable-next-line
-      )).slice(numInitialLoadedArticles * counter, (numInitialLoadedArticles * counter) + numInitialLoadedArticles)
+      )).slice(numInitialLoadedArticles * counter, (numInitialLoadedArticles * counter) + 30)
       .map(async (article) => {
         const wrapper = document.createElement('div');
         const newBlock = createCardBlock(article, wrapper);
@@ -82,7 +82,7 @@ function createLoadMoreButton(numInitialLoadedArticles, articles, filters, actua
         await loadBlock(newBlock);
       }));
     // eslint-disable-next-line
-      if ((actualLength - (numInitialLoadedArticles * counter)) > numInitialLoadedArticles) { block.append(loadMoreContainer); }
+      if ((actualLength - (numInitialLoadedArticles * counter)) > 30) { block.append(loadMoreContainer); }
   });
   // eslint-disable-next-line
   block.append(loadMoreContainer);
