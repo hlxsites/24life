@@ -8,6 +8,7 @@ header nav a:any-link {
 header.header-wrapper {
   position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
   height: 55px;
   border-bottom: 6px solid var(--accent-color);
@@ -208,6 +209,15 @@ header nav[aria-expanded='true'] > .search {
   display: block;
 }
 
+header .nav-fragment[aria-expanded='false'] {
+  display: none;
+}
+
+header .nav-fragment[aria-expanded='true'],
+header .nav-fragment.expand {
+  display: grid;
+}
+
 header nav .search-container[aria-expanded='true'] {
   display: block;
 }
@@ -321,5 +331,48 @@ header nav .tools .hamburger-close img {
 
   header nav .search-label > .title {
     display: none;
+  }
+
+  .nav-fragment {
+    padding: 20px;
+    z-index: 10;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 25% 75%;
+    background-color: var(--background-color);
+  }
+
+  .nav-fragment.fitness {
+    --category-text-color: var(--color-fitness);
+    border-top: 6px solid var(--category-text-color);
+  }
+
+  .nav-fragment.focus {
+    --category-text-color: var(--color-focus);
+    border-top: 6px solid var(--category-text-color);
+  }
+
+  .nav-fragment.fuel {
+    --category-text-color: var(--color-fuel);
+    border-top: 6px solid var(--category-text-color);
+  }
+
+  .nav-fragment.recover {
+    --category-text-color: var(--color-recover);
+    border-top: 6px solid var(--category-text-color);
+  }
+
+  .nav-fragment .section {
+    max-width: 1070px;
+  }
+
+  .nav-fragment .leftcolumn {
+    padding-left: 60px;
+  }
+
+  .nav-fragment h5 {
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--category-text-color);
   }
 }

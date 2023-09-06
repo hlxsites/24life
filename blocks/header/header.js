@@ -1,128 +1,67 @@
-import { readBlockConfig, decorateIcons, loadScript } from '../../scripts/lib-franklin.js';
+import {
+  readBlockConfig,
+  decorateIcons,
+  loadBlocks,
+ } from '../../scripts/lib-franklin.js';
+import {
+  decorateMain,
+} from '../../scripts/scripts.js';
 
 // media query match that indicates mobile/desktop switch
 const MQ = window.matchMedia('(min-width: 992px)');
-const ONCE = { once: true };
+const CREATED = { focus: false, fitness: false, fuel: false, recover: false, magazine: false };
 
-function toggleMenu(li, preventDefault, event) {
-  const ul = li.querySelector(':scope > ul');
-  if (preventDefault || (!MQ.matches && ul)) event.preventDefault();
-  if (li.classList.contains('expand')) {
-    // collapse
-    if (!MQ.matches && ul) {
-      requestAnimationFrame(() => {
-        ul.style.height = `${ul.scrollHeight}px`;
-        ul.addEventListener('transitionend', () => {
-          ul.style.height = '0px';
-          ul.addEventListener('transitionend', () => {
-            ul.style.height = null;
-            li.classList.remove('expand');
-          }, ONCE);
-        }, ONCE);
-      });
-    } else {
-      li.classList.remove('expand');
-    }
+function toggleMenu(header, sectionToOpen) {
+  const openSection = header.querySelector(`[aria-expanded='true']`);
+  if (openSection === sectionToOpen) {
+    return; // it's already open
   } else {
-    if (!MQ.matches && ul) {
-      ul.style.height = `${ul.scrollHeight}px`;
-      ul.addEventListener('transitionend', () => {
-        ul.style.height = '100%';
-      }, ONCE);
-    } else {
-      li.parentElement.querySelectorAll('.expand').forEach((expanded) => {
-        expanded.classList.remove('expand');
-      });
+    if (openSection) {
+      openSection.classList.remove('expand');
+      openSection.setAttribute('aria-expanded', 'false');
     }
-    li.classList.add('expand');
+    sectionToOpen.classList.add('expand');
+    sectionToOpen.setAttribute('aria-expanded', 'true');
   }
 }
 
-function buildSectionMenuContent(sectionMenu, navCta, menuBlock) {
-  // per default the section menus are link-list
-  // if there is at least one picture they will become image-list
-  sectionMenu.classList.add('link-list');
-  const content = document.createElement('ul');
-  const [firstRow, ...flyoutSections] = menuBlock.children;
-  const overviewLink = firstRow.querySelector('a');
-  overviewLink.className = 'primary-link';
-  overviewLink.textContent = 'Overview';
-  const overviewLi = document.createElement('li');
-  overviewLi.className = 'overview';
-  overviewLi.append(overviewLink);
-
-  const subSectionMenus = flyoutSections.map((section) => {
-    const li = document.createElement('li');
-    const ul = section.querySelector(':scope ul');
-    li.append(ul);
-
-    if (ul.querySelector('picture')) {
-      sectionMenu.classList.remove('link-list');
-      sectionMenu.classList.add('image-list');
+function closeMenuSection() {
+  const navArea = document.querySelector('header');
+  if (!navArea.contains(event.target)) {
+    const openMenu = document.querySelector(`header [aria-expanded='true']`);
+    if (openMenu) {
+      openMenu.classList.remove('expand');
+      openMenu.setAttribute('aria-expanded', 'false');
     }
-
-    const [title, subtitle] = section.querySelectorAll('p');
-    if (subtitle) {
-      subtitle.className = 'subtitle';
-      li.prepend(subtitle);
-    }
-    if (title) {
-      title.className = 'title';
-      li.prepend(title);
-      const titleLink = title.querySelector('a');
-      if (titleLink) title.addEventListener('click', toggleMenu.bind(titleLink, li, false));
-    }
-
-    // find all links, first-of-type becomes .primary-link and wraps the picture if there is one
-    li.querySelectorAll('a').forEach((link) => {
-      if (link.matches(':first-of-type')) {
-        const picture = link.parentElement.querySelector('picture');
-        if (picture) {
-          const clone = link.cloneNode(false);
-          picture.replaceWith(clone);
-          clone.append(picture);
-          clone.tabIndex = -1;
-        }
-        link.className = 'primary-link button secondary cta';
-      } else {
-        link.className = 'button secondary cta';
-      }
-    });
-
-    // normalize the li content: wrap orphan texts in <p>, remove <br>
-    ul.querySelectorAll('li').forEach((child) => [...child.childNodes].forEach((node) => {
-      if (node.nodeType === 3) {
-        const textContent = node.textContent.trim();
-        if (textContent) {
-          const p = document.createElement('p');
-          p.textContent = textContent;
-          node.replaceWith(p);
-        } else {
-          node.remove();
-        }
-      }
-      if (node.nodeName === 'BR') node.remove();
-    }));
-
-    return li;
-  });
-
-  if (navCta) {
-    const li = document.createElement('li');
-    li.className = 'navigation-cta';
-    li.innerHTML = navCta.innerHTML;
-    subSectionMenus.push(li);
   }
-
-  content.append(overviewLi, ...subSectionMenus);
-  sectionMenu.append(content);
 }
 
-function toggleSectionMenu(sectionMenu, navCta, menuBlock, event) {
-  if (!sectionMenu.querySelector(':scope > ul')) {
-    buildSectionMenuContent(sectionMenu, navCta, menuBlock);
+async function buildSectionMenuContent(header, section) {
+  const menu = await fetch(`/fragments/menu-${section}.plain.html`);
+  if (menu.ok && !CREATED[section]) {
+    CREATED[section] = true;
+    const fragment = document.createElement('div');
+    fragment.classList.add('nav-fragment', section);
+    fragment.innerHTML = await menu.text();
+/*     fragment.addEventListener('mouseout', function(e) {
+      mouseOutSection.call(fragment, section);
+    }); */
+    decorateMain(fragment);
+    await loadBlocks(fragment);
+    header.append(fragment);
+    toggleMenu(header, fragment);
   }
-  toggleMenu(sectionMenu, true, event);
+}
+
+// toggle from event
+function mouseOverMenu(header) {
+  const section = this.textContent.toLowerCase();
+  const sectionToOpen = header.querySelector(`:scope > .nav-fragment.${section}`);
+  if (sectionToOpen == null && !CREATED[section]) {
+    buildSectionMenuContent(header, section);
+  } else {
+    toggleMenu(header, sectionToOpen);
+  }
 }
 
 /**
@@ -137,7 +76,7 @@ export default async function decorate(block) {
 
   // fetch nav content
   const navPath = config.nav;
-  const resp = await fetch('nav2.plain.html');
+  const resp = await fetch('/nav2.plain.html');
 
   if (resp.ok) {
     // get the navigation text, turn it into html elements
@@ -179,14 +118,9 @@ export default async function decorate(block) {
     `;
 
     // fill in the content from nav doc
-    // logo
     const logo = nav.querySelector('.logo');
     logo.append(navContent.children[0].querySelector('p:first-of-type > span'));
-
-    // tools
     nav.querySelector('.tools').prepend(navContent.children[1].querySelector('ul'));
-
-    //const navCta = navContent.children[2];
     const sectionList = nav.querySelector('.sections .sections-list');
 
     // get through all section menus
@@ -200,11 +134,18 @@ export default async function decorate(block) {
       else if (index === 4) navSection.classList.add('color-magazine');
       const sectionTitle = menuBlock.firstElementChild.textContent;
       const a = document.createElement('a');
-      a.href = sectionTitle.toLowerCase();
+      a.href = `/${sectionTitle.toLowerCase()}`;
       a.textContent = sectionTitle;
       const icon = document.createElement('span');
       icon.classList.add('icon', 'icon-arrow-down');
-      navSection.addEventListener('click', toggleSectionMenu.bind(a, navSection, menuBlock));
+      if(MQ.matches) {
+        navSection.addEventListener('mouseover', function(e) {
+          mouseOverMenu.call(a, block.parentNode);
+        });
+ /*        navSection.addEventListener('mouseout', function(e) {
+          mouseOutMenu.call(a, block.parentNode);
+        });
+ */      }
       navSection.append(a);
       navSection.append(icon);
       return navSection;
@@ -216,14 +157,8 @@ export default async function decorate(block) {
 
     // add event listeners
     // for desktop when clicking anywhere on the document
-    document.addEventListener('click', (event) => {
-      if (!sectionList.contains(event.target)) {
-        const openItem = sectionList.querySelector('.section .expand');
-        if (openItem) {
-          toggleMenu(openItem, false, event);
-        }
-      }
-    });
+    document.addEventListener('click', closeMenuSection);
+    document.addEventListener('mouseover', closeMenuSection);
 
     // for the hamburger toggle icon
     nav.querySelector('.hamburger-toggle').addEventListener('click', (e) => {
@@ -261,7 +196,6 @@ export default async function decorate(block) {
       });
     });
 
-    /* set volvo icon */
     decorateIcons(nav);
     /* append result */
     block.append(nav);
