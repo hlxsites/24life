@@ -70,7 +70,6 @@ function createLoadMoreButton(numInitialLoadedArticles, articles, filters, actua
     await Promise.all(articles
       .filter((article) => Object.keys(filters).every(
         (key) => article[key]?.toLowerCase().includes(filters[key].toLowerCase()),
-        // eslint-disable-next-line
       )).slice(numInitialLoadedArticles * counter, (numInitialLoadedArticles * counter) + 30)
       .map(async (article) => {
         const wrapper = document.createElement('div');
