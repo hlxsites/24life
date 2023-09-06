@@ -15,11 +15,12 @@ function toggleMenu(header, sectionToOpen) {
   const openSection = header.querySelector(`[aria-expanded='true']`);
   if (openSection === sectionToOpen) {
     return; // it's already open
-  } else {
-    if (openSection) {
-      openSection.classList.remove('expand');
-      openSection.setAttribute('aria-expanded', 'false');
-    }
+  }
+  if (openSection) {
+    openSection.classList.remove('expand');
+    openSection.setAttribute('aria-expanded', 'false');
+  }
+  if (sectionToOpen) {
     sectionToOpen.classList.add('expand');
     sectionToOpen.setAttribute('aria-expanded', 'true');
   }
@@ -43,9 +44,6 @@ async function buildSectionMenuContent(header, section) {
     const fragment = document.createElement('div');
     fragment.classList.add('nav-fragment', section);
     fragment.innerHTML = await menu.text();
-/*     fragment.addEventListener('mouseout', function(e) {
-      mouseOutSection.call(fragment, section);
-    }); */
     decorateMain(fragment);
     await loadBlocks(fragment);
     header.append(fragment);
@@ -120,7 +118,14 @@ export default async function decorate(block) {
     // fill in the content from nav doc
     const logo = nav.querySelector('.logo');
     logo.append(navContent.children[0].querySelector('p:first-of-type > span'));
-    nav.querySelector('.tools').prepend(navContent.children[1].querySelector('ul'));
+    const linksList = navContent.children[1].querySelector('ul');
+    // add target=_blank to links
+    [...linksList.querySelectorAll('a')].map((item) => {
+      // skip newletter link
+      if (item.href.includes('newsletter')) return;
+      item.setAttribute('target', '_blank');
+    });
+    nav.querySelector('.tools').prepend(linksList);
     const sectionList = nav.querySelector('.sections .sections-list');
 
     // get through all section menus
@@ -142,10 +147,7 @@ export default async function decorate(block) {
         navSection.addEventListener('mouseover', function(e) {
           mouseOverMenu.call(a, block.parentNode);
         });
- /*        navSection.addEventListener('mouseout', function(e) {
-          mouseOutMenu.call(a, block.parentNode);
-        });
- */      }
+      }
       navSection.append(a);
       navSection.append(icon);
       return navSection;
