@@ -10,7 +10,7 @@ import {
 // media query match that indicates mobile/desktop switch
 const MQ = window.matchMedia('(min-width: 992px)');
 const CREATED = {
-  focus: false, fitness: false, fuel: false, recover: false, magazine: false
+  focus: false, fitness: false, fuel: false, recover: false, magazine: false,
 };
 
 function toggleMenu(header, sectionToOpen) {
@@ -69,13 +69,11 @@ function mouseOverMenu(header) {
  * @param {Element} block The header block element
  */
 export default async function decorate(block) {
-  // not really needed
-  const config = readBlockConfig(block);
   // clear the block
   block.textContent = '';
 
   // fetch nav content
-  const resp = await fetch('/nav2.plain.html');
+  const resp = await fetch('/nav.plain.html');
 
   if (resp.ok) {
     // get the navigation text, turn it into html elements
