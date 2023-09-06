@@ -273,9 +273,7 @@ header nav .nav-tools .search-bar {
   width: 200px;
   background: #292929;
   position: absolute;
-  z-index: 999999;
-  /* opacity: 0;
-  visibility: hidden; */
+  opacity: 0;
   transition: all 0.3s ease;
   transform: translateY(10px);
   margin-top: -2px;
@@ -290,6 +288,10 @@ header nav .nav-tools .search-bar .search-form {
 header nav .nav-tools .search-bar .search-form input {
   padding: 8px;
   width: 90%;
+}
+
+header nav .nav-tools > p:hover .search-bar {
+  opacity: 1;
 }
 
 
