@@ -72,16 +72,16 @@ header nav .icon.icon-hamburger {
   color: #666;
 }
 
+header nav .icon svg {
+  fill: currentcolor; /* This inherits the color from the parent */
+}
+
 #main-nav-sections .section svg {
   stroke: var(--accent-color);
 }
 
 #main-nav-sections .section > a:hover {
   color: var(--accent-color);
-}
-
-header nav .icon svg {
-  fill: currentcolor; /* This inherits the color from the parent */
 }
 
 header nav .sections {
