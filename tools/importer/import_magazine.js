@@ -1,48 +1,6 @@
 /* global WebImporter */
 /* eslint-disable no-console, class-methods-use-this, no-restricted-syntax, no-unused-vars */
 
-function createQuoteBlock(main, document) {
-  const quote = document.querySelector('.wpb_text_column.wpb_content_element .wpb_wrapper p.text-style-title-2').textContent;
-  let author = document.querySelector('.wpb_text_column.wpb_content_element .wpb_wrapper p.text-style-body-2').textContent;
-  // remove leading non word characters so – Rhonda Byrne becomes Rhonda Byrne
-  author = author.replace(/^\W+/, '');
-
-  main.append(generateBlock(document, { Text: quote, Author: author }, 'Quote'));
-  main.innerHTML += '<p> --- </p>';
-}
-
-function createYoutubeLink(document, main) {
-  const youtubeLink = document.querySelector('.embed-video-container iframe.embed-responsive-item').src;
-  main.append(youtubeLink);
-  main.innerHTML += `${youtubeLink} <p> --- </p>`;
-}
-
-function createSingleCardBlock(main, document) {
-
-
-  const content = [];
-  const card = document.createElement('div'); 
-  card.append(document.querySelector('.vc_col-sm-12.vc_gitem-col.vc_gitem-col-align-.mindset img'));
-  
-  // Get Started
-  const getStarted = document.querySelector('.vc_col-sm-12.tfl-post-grid-col.vc_gitem-col.vc_gitem-col-align-.mindset .tfl-tags a:first-child').textContent.toUpperCase();
-  const successStories = document.querySelector('.vc_col-sm-12.tfl-post-grid-col.vc_gitem-col.vc_gitem-col-align-.mindset .tfl-tags a:last-child').textContent.toUpperCase();
-  card.append(document.createTextNode(`${getStarted}, ${successStories}`));
-
-  card.innerHTML += '<br/>';
-  
-  // article link
-  card.append(document.querySelector('.vc_custom_heading.tfl-post-grid-title.vc_gitem-post-data.vc_gitem-post-data-source-post_title a'));
-
-  card.innerHTML += '<br/>';
-
-  // author 
-  const author = document.querySelector('.vc_grid-container.vc_clearfix.wpb_content_element.vc_basic_grid .mindset .tfl-post-grid-author a').textContent;
-  card.append(document.createTextNode(`By: ${author}`));
-  content.push(card);
-  main.append(WebImporter.DOMUtils.createTable([['Card (Focus, Large)'], content], document));
-}
-
 export default {
   preprocess: ({
     document, url, html, params,
@@ -81,16 +39,28 @@ export default {
     createQuoteBlock(main, document);
     console.log('Quote created');
 
-    createSingleCardBlock(main, document);
+    createCardBlocks(main, document);
     console.log('SingleCard created');
 
+    createSubscribeForm(main, document);
+    console.log('Subscribe form created');
 
+    createMagazineFooter(main, document);
+    console.log('Magazine footer created');
+
+    WebImporter.DOMUtils.remove(main, [
+      '.mpad.light-wrapper.normal-padding.vc_row.wpb_row.vc_row-fluid.mpad.light-wrapper.normal-padding',
+      '.vc_grid-item-mini.vc_clearfix',
+      '.image-bg.not-parallax.tfl-constant-contact-wrapper.bg-dark.normal-padding.vc_row.wpb_row.vc_row-fluid.tfl-constant-contact-wrapper.bg-dark.normal-padding',
+      '.wpb_text_column.wpb_content_element .wpb_wrapper',
+      '.embed-video-container iframe.embed-responsive-item',
+    ]);
     const filename = new URL(url).pathname
       .replace(/\/$/, '')
       // eslint-disable-next-line prefer-regex-literals
-      .replace(new RegExp('^/'), '');
+      .replace(/^\//, '');
 
-    const newPath = `/magazine/${filename}`;
+    const newPath = `/${filename}`;
     return {
       element: main,
       path: newPath,
@@ -101,10 +71,121 @@ export default {
   },
 };
 
-export function toClassName(name) {
-  return typeof name === 'string'
-    ? name.toLowerCase().replace(/[^0-9a-z]/gi, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
-    : '';
+function createQuoteBlock(main, document) {
+  let quote = document.querySelector('.wpb_text_column.wpb_content_element .wpb_wrapper p.text-style-title-2').textContent;
+  let author = document.querySelector('.wpb_text_column.wpb_content_element .wpb_wrapper p.text-style-body-2').textContent;
+  // remove leading non word characters so – Rhonda Byrne becomes Rhonda Byrne
+  author = author.replace(/^\W+/, '');
+  quote = quote.replace(/“/g, '').replace(/”/g, '');
+  const row1 = ['Text', quote];
+  const row2 = ['Author', author];
+  const rows = [['Quote'], row1, row2];
+  main.append(WebImporter.DOMUtils.createTable(rows, document));
+  main.innerHTML += '<p> --- </p>';
+}
+
+function createYoutubeLink(document, main) {
+  const youtubeLink = document.querySelector('.embed-video-container iframe.embed-responsive-item').src;
+  main.append(youtubeLink);
+  main.innerHTML += `${youtubeLink} <p> --- </p>`;
+}
+
+function createCardBlocks(main, document) {
+  const articleCards = document.querySelectorAll('.vc_grid-item-mini.vc_clearfix');
+  let pillar = '';
+  let toggle = false;
+  articleCards.forEach((card, index) => {
+    if (index === 0 || index % 3 === 0) {
+      toggle = !toggle;
+
+      const hasMindsetClass = !!card.querySelector('.mindset');
+      if (hasMindsetClass) {
+        pillar = 'Focus';
+      }
+      // check if card has movement class
+      const hasMovementClass = !!card.querySelector('.movement');
+      if (hasMovementClass) {
+        pillar = 'Fitness';
+      }
+      // check if card has nourishment class
+      const hasNourishmentClass = !!card.querySelector('.nourishment');
+      if (hasNourishmentClass) {
+        pillar = 'Fuel';
+      }
+      // check if card has regeneration class
+      const hasRegenerationClass = !!card.querySelector('.regeneration');
+      if (hasRegenerationClass) {
+        pillar = 'Recover';
+      }
+    }
+    const temp = [];
+    const div = document.createElement('div');
+
+    // get image
+    div.append(card.querySelector('.vc_gitem-animated-block img'));
+
+    div.innerHTML += '<br/>';
+
+    // get message above the article link
+    const linksAboveArticle = card.querySelector('.vc_gitem-zone.vc_gitem-zone-c.tfl-post-grid-title-wrap .tfl-tags');
+    // iterate linksAboveArticle to extract anchor link's textContent
+    // create a variable to store the textContent
+    let msg = '';
+    linksAboveArticle.querySelectorAll('a').forEach((l) => {
+      const linkText = l.textContent.toUpperCase();
+      msg += `${linkText}, `;
+    });
+    // remove the last comma
+    msg = msg.replace(/,\s*$/, '');
+    const h = document.createElement('h4');
+    h.textContent = msg;
+    div.append(h);
+
+    div.innerHTML += '<br/>';
+
+    // new line and article link
+    div.append(card.querySelector('.vc_custom_heading.tfl-post-grid-title.vc_gitem-post-data.vc_gitem-post-data-source-post_title a'));
+    div.innerHTML += '<br/>';
+
+    // new line and author
+    const author = card.querySelector('.vc_gitem-zone.vc_gitem-zone-c.tfl-post-grid-title-wrap .tfl-post-grid-author a').textContent;
+    const authorLink = document.createElement('a');
+    authorLink.href = `https://main--24life--hlxsites.hlx.page/author/${author.toLowerCase().replace(/\s/g, '-')}`;
+    authorLink.textContent = author;
+    div.append(document.createTextNode('By '));
+    div.innerHTML += authorLink.outerHTML;
+    temp.push(div);
+
+    let cardName = `Card (${pillar})`;
+    if (toggle && (index) % 3 === 0) {
+      cardName = `Card (${pillar}, Large)`;
+    }
+    if (!toggle && (index + 1) % 6 === 0) {
+      cardName = `Card (${pillar}, Large, Right)`;
+    }
+    main.append(WebImporter.DOMUtils.createTable([[`${cardName}`], temp], document));
+    // add a section metadata block at every 3rd card
+    if ((index + 1) % 3 === 0) {
+      // add section block
+      main.append(WebImporter.DOMUtils.createTable([['Section Metadata'], ['Style', 'two-columns']], document));
+      main.innerHTML += '<p> --- </p>';
+    }
+  });
+}
+
+function createSubscribeForm(main, document) {
+  main.append(WebImporter.DOMUtils.createTable([['Subscribe Form']], document));
+  main.innerHTML += '<p> --- </p>';
+}
+
+function createMagazineFooter(main, document) {
+  const focus = ['Focus', 'Focus – Lead Your Life'];
+  const fitness = ['Fitness', 'Fitness – Move Your Life'];
+  const fuel = ['Fuel', 'Fuel – Feed Your Life'];
+  const recover = ['Recover', 'Recover – Love Your Life'];
+  const rows = [['Magazine Footer '], focus, fitness, fuel, recover];
+  main.append(WebImporter.DOMUtils.createTable(rows, document));
+  main.innerHTML += '<p> --- </p>';
 }
 
 const createMetadata = (main, document, params) => {
@@ -112,7 +193,7 @@ const createMetadata = (main, document, params) => {
   const meta = {};
   meta.Title = document.querySelector('title').textContent.replace(/-\s*24Life/gm, '');
   meta['Publication Date'] = ldJSON['@graph'].find((item) => item['@type'] === 'WebPage')?.datePublished.replace(/T.*$/, '');
-  meta.Image = document.querySelector('body > div.main-container > section > div > div > div > div > div > div > section > div > div > div:nth-child(1) > div > div > div.wpb_single_image.wpb_content_element.vc_align_center > figure > a > img');
+  meta.Image = createImg(document.querySelector('meta[property="og:image"]').content);
   const block = generateBlock(document, meta, 'Metadata');
   main.append(block);
   return meta;
@@ -122,33 +203,41 @@ const createMagazineHero = async (main, document, params) => {
   const magazineHero = {};
 
   const layers = document.querySelectorAll('.rs-layer-static.rs-layer');
-  magazineHero.Issue = layers[layers.length - 3];
   magazineHero.Title = layers[layers.length - 2].textContent;
+  magazineHero.Issue = layers[layers.length - 3];
   magazineHero.Description = layers[layers.length - 1].textContent;
-  await waitForElement('.tp-selecttoggle.rs-layer-static.rs-layer.rs-waction', document);
   const pillars = document.querySelectorAll('.tp-selecttoggle.rs-layer-static.rs-layer.rs-waction');
-  magazineHero.Focus = pillars[0].textContent
-    + link(pillars[0].innerHTML, extractURL(pillars[0].outerHTML));
-  magazineHero.Fitness = pillars[1].textContent
-    + link(pillars[1].innerHTML, extractURL(pillars[1].outerHTML));
-  magazineHero.Fuel = pillars[2].textContent
-    + link(pillars[2].innerHTML, extractURL(pillars[2].outerHTML));
-  magazineHero.Recover = pillars[3].textContent
-    + link(pillars[3].innerHTML, extractURL(pillars[3].outerHTML));
 
-  magazineHero.Image = [];
+  const focusDiv = document.createElement('div');
+  focusDiv.innerHTML = link(pillars[0].innerHTML, extractURL(pillars[0].outerHTML)).outerHTML;
+  magazineHero.Focus = focusDiv;
+
+  const fitnessDiv = document.createElement('div');
+  fitnessDiv.innerHTML = link(pillars[1].innerHTML, extractURL(pillars[1].outerHTML)).outerHTML;
+  magazineHero.Fitness = fitnessDiv;
+
+  const fuelDiv = document.createElement('div');
+  fuelDiv.innerHTML = link(pillars[2].innerHTML, extractURL(pillars[2].outerHTML)).outerHTML;
+  magazineHero.Fuel = fuelDiv;
+
+  const recoverDiv = document.createElement('div');
+  recoverDiv.innerHTML = link(pillars[3].innerHTML, extractURL(pillars[3].outerHTML)).outerHTML;
+  magazineHero.Recover = recoverDiv;
+
+  magazineHero.Images = [];
   const elements = document.querySelectorAll('rs-slide rs-sbg-px rs-sbg-wrap rs-sbg');
   elements.forEach((element) => {
-    magazineHero.Image.push(createImg(element.outerHTML));
-    magazineHero.Image.push();
+    const src = new DOMParser().parseFromString(element.outerHTML, 'text/html').body.firstChild.getAttribute('src');
+    magazineHero.Images.push(createImg(src));
   });
-
   main.append(generateBlock(document, magazineHero, 'magazine-hero'));
 };
 
 function link(text, url) {
   const article = document.createElement('a');
-  article.setAttribute('href', url);
+  const newUrl = new URL(url);
+  newUrl.hostname = 'main--24life--hlxsites.hlx.page';
+  article.href = newUrl.href;
   article.textContent = text;
   return article;
 }
@@ -163,8 +252,7 @@ function extractURL(html) {
   return null;
 }
 
-function createImg(outerHTML) {
-  const src = new DOMParser().parseFromString(outerHTML, 'text/html').body.firstChild.getAttribute('src');
+function createImg(src) {
   const img = document.createElement('img');
   img.title = 'magazine-hero-image';
   if (src) {
@@ -198,28 +286,13 @@ function generateBlock(document, metadata, blockName) {
     const value = metadata[key];
     if (value) {
       if (Array.isArray(value)) {
-        valueCell.innerHTML = value.map((v) => v.outerHTML).join('<br>');
+        valueCell.innerHTML = value.map((v) => v.outerHTML).join('');
       } else if (typeof value === 'string') {
         valueCell.textContent = value;
       } else {
-        valueCell.append(value);
+        valueCell.innerHTML = value.outerHTML;
       }
     }
   }
   return table;
-}
-
-async function waitForElement(selector, document, timeout = 5000, interval = 250) {
-  return new Promise((resolve, reject) => {
-    const timeWas = new Date();
-    const wait = setInterval(() => {
-      if (document.querySelectorAll(selector)) {
-        clearInterval(wait);
-        resolve();
-      } else if (new Date() - timeWas > timeout) { // Timeout
-        clearInterval(wait);
-        reject();
-      }
-    }, interval);
-  });
 }
