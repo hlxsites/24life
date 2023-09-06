@@ -1,5 +1,4 @@
 import {
-  readBlockConfig,
   decorateIcons,
   loadBlocks,
 } from '../../scripts/lib-franklin.js';
