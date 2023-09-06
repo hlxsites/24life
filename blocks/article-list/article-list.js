@@ -8,7 +8,15 @@ import { createCardBlock } from '../card/card.js';
 export default async function decorate(block) {
   const filters = removeEmptyKeyOrValue(readBlockConfig(block));
   const isEmptyFilter = Object.keys(filters).length === 0;
-  if (isEmptyFilter && document.location.pathname.startsWith('/author/')) {
+  if (isEmptyFilter && document.location.pathname.startsWith('/category/')) {
+    // auto-detect category, e.g. https://www.24life.com/category/lifestyle
+    const parts = document.location.pathname.split('/');
+    const askedCategory = parts[parts.length - 1];
+    filters.categories = askedCategory.replace(/-/g, ' ');
+    const firstContainer = document.createElement('div');
+    firstContainer.innerHTML = `<h1>IN: ${filters.categories.toUpperCase()}</h1>`;
+    block.before(firstContainer);
+  } else if (isEmptyFilter && document.location.pathname.startsWith('/author/')) {
     // auto-detect author, e.g. https://www.24life.com/author/24life
     filters.authors = getMetadata('og:title');
   } else if (isEmptyFilter && document.location.pathname.startsWith('/collections/')) {
@@ -33,7 +41,7 @@ function removeEmptyKeyOrValue(obj) {
 
 async function fetchArticlesAndAddCards(filters, block) {
   const articles = await ffetcharticles('/articles.json').all();
-  const numInitialLodedArticles = 30;
+  const numInitialLoadedArticles = 30;
   const actualLength = articles.filter((article) => Object.keys(filters).every(
     (key) => article[key]?.toLowerCase().includes(filters[key].toLowerCase()),
   )).length;
@@ -41,7 +49,7 @@ async function fetchArticlesAndAddCards(filters, block) {
     // make sure all filters match
     .filter((article) => Object.keys(filters).every(
       (key) => article[key]?.toLowerCase().includes(filters[key].toLowerCase()),
-    )).slice(0, numInitialLodedArticles)
+    )).slice(0, numInitialLoadedArticles)
     .map(async (article) => {
       const wrapper = document.createElement('div');
       const newBlock = createCardBlock(article, wrapper);
@@ -52,13 +60,13 @@ async function fetchArticlesAndAddCards(filters, block) {
       await loadBlock(newBlock);
     }));
   const counter = document.querySelectorAll('.author .card-wrapper').length / 30;
-  if ((actualLength - (numInitialLodedArticles * counter)) > 30) {
+  if ((actualLength - (numInitialLoadedArticles * counter)) > 30) {
   // eslint-disable-next-line
-    createLoadMoreButton(numInitialLodedArticles, articles, filters, actualLength, block);
+    createLoadMoreButton(numInitialLoadedArticles, articles, filters, actualLength, block);
   }
 }
 // eslint-disable-next-line
-function createLoadMoreButton(numInitialLodedArticles, articles, filters, actualLength, block) {
+function createLoadMoreButton(numInitialLoadedArticles, articles, filters, actualLength, block) {
   const loadMoreContainer = document.createElement('div');
   loadMoreContainer.classList.add('article-load-more-container');
   const loadMoreButton = document.createElement('button');
@@ -70,7 +78,7 @@ function createLoadMoreButton(numInitialLodedArticles, articles, filters, actual
     await Promise.all(articles
       .filter((article) => Object.keys(filters).every(
         (key) => article[key]?.toLowerCase().includes(filters[key].toLowerCase()),
-      )).slice(numInitialLodedArticles * counter, (numInitialLodedArticles * counter) + 30)
+      )).slice(numInitialLoadedArticles * counter, (numInitialLoadedArticles * counter) + 30)
       .map(async (article) => {
         const wrapper = document.createElement('div');
         const newBlock = createCardBlock(article, wrapper);
@@ -81,7 +89,7 @@ function createLoadMoreButton(numInitialLodedArticles, articles, filters, actual
         await loadBlock(newBlock);
       }));
     // eslint-disable-next-line
-      if ((actualLength - (numInitialLodedArticles * counter)) > 30) { block.append(loadMoreContainer); }
+      if ((actualLength - (numInitialLoadedArticles * counter)) > 30) { block.append(loadMoreContainer); }
   });
   // eslint-disable-next-line
   block.append(loadMoreContainer);
