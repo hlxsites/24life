@@ -268,12 +268,12 @@ header nav .nav-tools {
 }
 
 header nav .nav-tools .search-bar {
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 10px 0 rgba(0 0 0 / 20%);
   cursor: default;
   width: 200px;
   background: #292929;
   position: absolute;
-  z-index: 99;
+  z-index: 999999;
   /* opacity: 0;
   visibility: hidden; */
   transition: all 0.3s ease;
