@@ -56,7 +56,7 @@ div.author-list-container {
   gap: 1rem;
 }
 
-.author-list {
+.author-list .load-experts {
   display: grid;
   gap: 2em;
   grid-template-columns: repeat(3, 1fr);

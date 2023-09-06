@@ -74,7 +74,7 @@ function createLoadMoreButton(numInitialLoadedArticles, articles, filters, actua
   loadMoreButton.classList.add('article-list-load-more-button');
   loadMoreButton.textContent = 'Load more';
   loadMoreButton.addEventListener('click', async () => {
-    const counter = document.querySelectorAll('.author .card-wrapper').length / 30;
+    const counter = document.querySelectorAll('.author .card-wrapper').length / numInitialLoadedArticles;
     await Promise.all(articles
       .filter((article) => Object.keys(filters).every(
         (key) => article[key]?.toLowerCase().includes(filters[key].toLowerCase()),
