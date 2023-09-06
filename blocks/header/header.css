@@ -266,3 +266,30 @@ header nav .nav-sections ul > li > ul > li {
 header nav .nav-tools {
   grid-area: tools;
 }
+
+header nav .nav-tools .search-bar {
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+  cursor: default;
+  width: 200px;
+  background: #292929;
+  position: absolute;
+  z-index: 99;
+  /* opacity: 0;
+  visibility: hidden; */
+  transition: all 0.3s ease;
+  transform: translateY(10px);
+  margin-top: -2px;
+  right: 5px;
+}
+
+header nav .nav-tools .search-bar .search-form {
+  padding: 8px;
+  width: 92%;
+}
+
+header nav .nav-tools .search-bar .search-form input {
+  padding: 8px;
+  width: 90%;
+}
+
+

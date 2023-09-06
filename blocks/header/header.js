@@ -167,4 +167,14 @@ function linkBrand(nav) {
 function decorateNavTools(navTools) {
   // make sure links with icons have an aria-label
   navTools.querySelector('a > .icon-search').closest('a').ariaLabel = 'Search';
+  const searchIcon = navTools.querySelector('a > .icon-search');
+  const searchBar = document.createElement('div');
+  searchIcon.after(searchBar);
+  searchBar.innerHTML = `
+  <div class='search-form'>
+        <form action='/search' method='get'>
+          <input type='text' name='q' class='search-input' placeholder="TYPE HERE"/>
+        </form>
+      </div>`;
+  searchBar.classList.add('search-bar');
 }
