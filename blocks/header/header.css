@@ -277,7 +277,7 @@ header nav .nav-tools .search-bar {
   transition: all 0.3s ease;
   transform: translateY(10px);
   margin-top: -2px;
-  right: 5px;
+  right: 11vw;
 }
 
 header nav .nav-tools .search-bar .search-form {
