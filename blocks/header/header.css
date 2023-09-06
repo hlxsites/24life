@@ -1,6 +1,6 @@
 /* Below 992px */
 header nav a:any-link {
-  color: currentColor;
+  color: currentcolor;
   text-decoration: none;
   cursor: pointer;
 }
@@ -71,6 +71,7 @@ header nav .icon.icon-hamburger {
   display: inline-block;
   color: #666;
 }
+
 #main-nav-sections .section svg {
   stroke: var(--accent-color);
 }
@@ -80,7 +81,7 @@ header nav .icon.icon-hamburger {
 }
 
 header nav .icon svg {
-  fill: currentColor; /* This inherits the color from the parent */
+  fill: currentcolor; /* This inherits the color from the parent */
 }
 
 header nav .sections {
@@ -344,21 +345,25 @@ header nav .tools .hamburger-close img {
 
   .nav-fragment.fitness {
     --category-text-color: var(--color-fitness);
+
     border-top: 6px solid var(--category-text-color);
   }
 
   .nav-fragment.focus {
     --category-text-color: var(--color-focus);
+
     border-top: 6px solid var(--category-text-color);
   }
 
   .nav-fragment.fuel {
     --category-text-color: var(--color-fuel);
+
     border-top: 6px solid var(--category-text-color);
   }
 
   .nav-fragment.recover {
     --category-text-color: var(--color-recover);
+
     border-top: 6px solid var(--category-text-color);
   }
 
