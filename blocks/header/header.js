@@ -185,24 +185,11 @@ export default async function decorate(block) {
     });
 
     // for search functionality 
-    if (nav.querySelector('.hamburger-toggle').getAttribute('aria-expanded') === 'true') {
-      if (nav.querySelector('.search-label').getAttribute('aria-expanded') === 'true'){
-        nav.querySelector('.search-label').addEventListener('click', (e) => {
-          const searchItem = document.querySelector('header nav .search .search-container .search-wrapper').innerText;
-          console.log(searchItem);
-        });
-      }
-    }
-    
-
-
-    // nav.querySelector('.search-label').addEventListener('click', (e) => {
-    //   e.preventDefault();
-    //   const searchItem = document.querySelector('header nav .search .search-container .search-wrapper').innerText;
-    //   console.log(searchItem);
-    // });
-
-
+    const searchInput = nav.querySelector('.search .search-container .search-wrapper input');
+    searchInput.addEventListener('input', (e)=> {
+      const value = e.target.value;
+      console.log(value);
+    })
 
     // force hamburger close when in destop size
     MQ.addEventListener('change', () => {
