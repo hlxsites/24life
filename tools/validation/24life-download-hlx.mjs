@@ -31,7 +31,7 @@ function getFolderPathAndFilename(url) {
     const folderName = withoutTrailingSlash.substring(0, withoutTrailingSlash.lastIndexOf('/'));
     const folderPath = `${prefix}${folderName}`;
 
-    const filename = path.basename(withoutTrailingSlash.substring(0, 80)) + '.html';
+    const filename = path.basename(withoutTrailingSlash) + '.html';
 
     return [folderPath, filename];
 }

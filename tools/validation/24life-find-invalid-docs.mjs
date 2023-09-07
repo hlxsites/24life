@@ -6,8 +6,8 @@ import path from "path";
 
 async function main() {
     // astrisk close together, see https://github.com/adobe/helix-importer/issues/217
-    await checkForString(new RegExp("\\*.{0,10}\\*"));
-
+    // might false-positive match for "F***" and "sh**"
+    await checkForString(new RegExp("\\*[^*]{0,10}\\*"));
     // comments
     await checkForString("<!--");
     await checkForString("-->");
@@ -15,7 +15,7 @@ async function main() {
     // image links to the old site. videos need to be upload with slack bot, pdfs added to sharepoint.
     await checkForString("twentyfourlife.wpenginepowered");
 
-    // vimeo links need to be removed if invalid. 
+    // vimeo links need to be removed if invalid.
     await checkForString("player.vimeo.com");
 }
 
