@@ -9,3 +9,4 @@ helix-importer-ui
 *.bak
 tmp
 /tools/validation/24life/
+/tools/importer/.cache/
