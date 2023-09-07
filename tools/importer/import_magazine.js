@@ -85,7 +85,10 @@ function createQuoteBlock(main, document) {
 }
 
 function createYoutubeLink(document, main) {
-  const youtubeLink = document.querySelector('.embed-video-container iframe.embed-responsive-item').src;
+  const youtubeLink = document.querySelector('.embed-video-container iframe.embed-responsive-item')?.src;
+  if (!youtubeLink) {
+    return;
+  }
   main.append(youtubeLink);
   main.innerHTML += `${youtubeLink} <p> --- </p>`;
 }
@@ -235,8 +238,16 @@ const createMagazineHero = async (main, document, params) => {
 
 function link(text, url) {
   const article = document.createElement('a');
-  const newUrl = new URL(url);
-  newUrl.hostname = 'main--24life--hlxsites.hlx.page';
+  console.log(`url: ${url}`);
+  // if url doesnt have domain, add it
+  let newUrl = '';
+  try {
+    newUrl = new URL(url);
+  } catch (e) {
+    console.info(`url: ${url} is not a valid url cause new URL(url) failed`);
+    newUrl = new URL('https://main--24life--hlxsites.hlx.page');
+    newUrl.pathname = url;
+  }
   article.href = newUrl.href;
   article.textContent = text;
   return article;
