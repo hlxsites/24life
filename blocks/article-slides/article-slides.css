@@ -75,7 +75,7 @@
 @media (min-width: 600px) {
   .article-slides .slide .text {
     height: 100%;
-    padding: 40px;
+    padding: 0 40px;
   }
 }
 
