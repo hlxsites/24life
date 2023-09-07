@@ -107,7 +107,7 @@ export default async function decorate(block) {
         </div>
         <div class="search-container">
           <div class="search-wrapper">
-            <input type="text" class="search-input" placeholder="TYPE HERE">
+            <input type="search" class="search-input" placeholder="TYPE HERE">
           </div>
         </div>
       </div>
@@ -185,11 +185,12 @@ export default async function decorate(block) {
     });
 
     // for search functionality 
-    const searchInput = nav.querySelector('.search .search-container .search-wrapper input');
-    searchInput.addEventListener('input', (e)=> {
-      const value = e.target.value;
-      console.log(value);
-    })
+    const searchInput = nav.querySelector('.search .search-container .search-wrapper input[type="search"]');
+    searchInput.addEventListener("search", () => {
+      console.log(searchInput.value);
+    });
+
+ 
 
     // force hamburger close when in destop size
     MQ.addEventListener('change', () => {
