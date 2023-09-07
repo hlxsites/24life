@@ -65,12 +65,9 @@ function mouseOverMenu(header) {
 
 // Search functionality 
 
-async function searchResults(params,allDataArticles) {
-  const jsonArticles = await allDataArticles.json();
-  console.log(jsonArticles.data);
+async function searchResults(params,jsonData) {
   console.log(params.toLowerCase());
-  // jsonArticles.data.filter((entry) => console.log(entry.title.toLowerCase()));
-  return jsonArticles.data.filter((entry) => (entry.title + entry.description + entry.path + entry.authors + entry.collections + entry.section + entry.categories + entry.template).toLowerCase().includes(params.toLowerCase()));
+  return jsonData.data.filter((entry) => (entry.title + entry.description + entry.path + entry.authors + entry.collections + entry.section + entry.categories + entry.template).toLowerCase().includes(params.toLowerCase()));
 }
 
 /**
@@ -80,13 +77,15 @@ async function searchResults(params,allDataArticles) {
 export default async function decorate(block) {
   // clear the block
   block.textContent = '';
+  const inputArray=[];
 
   // fetch nav content
   const resp = await fetch('/nav.plain.html');
 
   // fetch results from json files
   // const allDataAuthors = await fetch(`${window.location.origin}/authors.json`);
-  const allDataArticles = await fetch(`${window.location.origin}/articles.json`);
+  const allData = await fetch(`${window.location.origin}/query-index.json`);
+  const jsonData = await allData.json();
 
   if (resp.ok) {
     // get the navigation text, turn it into html elements
@@ -121,7 +120,11 @@ export default async function decorate(block) {
         </div>
         <div class="search-container">
           <div class="search-wrapper">
-            <input type="search" class="search-input" placeholder="TYPE HERE">
+            <div class='search-form'>
+              <form action='/search' method='get'>
+                <input type='search' name='q' class='search-input' placeholder="TYPE HERE"/>
+              </form>
+            </div>
           </div>
         </div>
       </div>
@@ -199,21 +202,18 @@ export default async function decorate(block) {
     });
 
     // for search functionality 
-    const searchInput = nav.querySelector('.search .search-container .search-wrapper input[type="search"]');
-    searchInput.addEventListener("search", () => {
-      console.log(searchInput.value);
-      const inputArray = searchInput.value.split(" ");
-      if (inputArray.length > 1) inputArray.unshift(searchInput.value);
+    const searchTerm = new URLSearchParams(window.location.search).get('q');
+    console.log(searchTerm);
+    if (searchTerm) { 
+      const inputArray = searchTerm.split(" "); 
+      if (inputArray.length > 1) inputArray.unshift(searchTerm);
       console.log(inputArray);
-      // searchResults(inputArray,allDataAuthors,allDataAuthors);
       inputArray.forEach(async (filter) => {
-      let results =  await searchResults(filter,allDataArticles);
-      console.log(results);
+        let results =  await searchResults(filter,jsonData);
+        console.log(results);
       });
-    });
-
- 
-
+  }
+  
     // force hamburger close when in destop size
     MQ.addEventListener('change', () => {
       document.querySelector('header nav .hamburger-toggle').setAttribute('aria-expanded', 'false');
