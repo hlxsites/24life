@@ -254,7 +254,7 @@ header nav .tools .hamburger-close img {
     height: 100%;
     transition: color 0.3s;
   }
-  
+
   header nav a.hamburger-toggle,
   header nav a.hamburger-close {
     display: none;
@@ -269,9 +269,13 @@ header nav .tools .hamburger-close img {
     margin: 0 8px;
   }
 
-  header nav .tools ul li a {
+  header nav .tools ul li a:any-link {
     color: #888b8d;
     font-size: 1.2rem;
+  }
+
+  header nav .tools ul li a:hover {
+    color: var(--link-hover-color);
   }
 
   header nav .tools,
