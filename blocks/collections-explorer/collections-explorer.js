@@ -108,9 +108,9 @@ function buildExploreCollectionsButton() {
   div.className = 'explore';
 
   // Create button
-  const button = document.createElement('button');
+  const button = document.createElement('a');
   button.className = 'btn';
-  button.onclick = () => window.location.replace('/collections');
+  button.href = '/collections';
   button.textContent = 'Collections';
 
   // Create a <span> element with class 'msg'
