@@ -1,5 +1,5 @@
 import { createCardBlock } from '../card/card.js';
-import { loadBlock } from '../../scripts/lib-franklin.js';
+import { loadBlock, getMetadata } from '../../scripts/lib-franklin.js';
 
 export async function searchResults(params, jsonData) {
   // eslint-disable-next-line
