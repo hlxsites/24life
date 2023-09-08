@@ -2,9 +2,6 @@ import { getMetadata, loadBlock, readBlockConfig, toClassName,} from '../../scri
   import { ffetcharticles } from '../../scripts/ffetch.js';
   import { createCardBlock } from '../card/card.js';
   import { createOptimizedPicture } from '../../scripts/lib-franklin.js';
-  import {
-    a, h1, div, h2, h3, h4, h5, img, p, span,
-  } from '../../scripts/dom-helpers.js';
 
 export async function searchResults(params, jsonData) {
   // eslint-disable-next-line
@@ -27,15 +24,15 @@ export default async function decorate(block) {
     inputArray.forEach(async (filter) => {
       const results = await searchResults(filter, jsonData);
       console.log(results);
-      const numInitialLoadedArticles = 30;
+      // const numInitialLoadedArticles = 30;
       console.log(results.length);
       if (results.length > 0) {
-        await results.slice(0, numInitialLoadedArticles)
-          .map(async (results1) => {
+        await results
+          .map(async (x) => {
             const wrapper = document.createElement('div');
-            const newBlock = createCardBlock(results1, wrapper);
-            if (results1.section) {
-              newBlock.classList.add(toClassName(results1.section));
+            const newBlock = createCardBlock(x, wrapper);
+            if (x.section) {
+              newBlock.classList.add(toClassName(x.section));
             }
             block.append(wrapper);
             await loadBlock(newBlock);
@@ -44,7 +41,7 @@ export default async function decorate(block) {
     });
   }
   const params = getSearchParams();
-  block.innerHTML = '';
+  // block.innerHTML = '';
   if (params.searchTerm) {
     document.querySelector('.section.search-page-heading').innerHTML = `<h1>${params.searchTerm}</h1>`;
   }
