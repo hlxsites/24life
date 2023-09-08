@@ -1,7 +1,6 @@
 import { getMetadata, loadBlock, readBlockConfig, toClassName,} from '../../scripts/lib-franklin.js';
-  import { ffetcharticles } from '../../scripts/ffetch.js';
-  import { createCardBlock } from '../card/card.js';
-  import { createOptimizedPicture } from '../../scripts/lib-franklin.js';
+import { createCardBlock } from '../card/card.js';
+
 
 export async function searchResults(params, jsonData) {
   // eslint-disable-next-line
