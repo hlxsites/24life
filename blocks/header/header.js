@@ -63,13 +63,6 @@ function mouseOverMenu(header) {
   }
 }
 
-// Search functionality 
-
-async function searchResults(params,jsonData) {
-  console.log(params.toLowerCase());
-  return jsonData.data.filter((entry) => (entry.title + entry.description + entry.path + entry.authors + entry.collections + entry.section + entry.categories + entry.template).toLowerCase().includes(params.toLowerCase()));
-}
-
 /**
  * decorates the header, mainly the nav
  * @param {Element} block The header block element
@@ -77,15 +70,9 @@ async function searchResults(params,jsonData) {
 export default async function decorate(block) {
   // clear the block
   block.textContent = '';
-  const inputArray=[];
 
   // fetch nav content
   const resp = await fetch('/nav.plain.html');
-
-  // fetch results from json files
-  // const allDataAuthors = await fetch(`${window.location.origin}/authors.json`);
-  const allData = await fetch(`${window.location.origin}/query-index.json`);
-  const jsonData = await allData.json();
 
   if (resp.ok) {
     // get the navigation text, turn it into html elements
@@ -201,19 +188,6 @@ export default async function decorate(block) {
       }
     });
 
-    // for search functionality 
-    const searchTerm = new URLSearchParams(window.location.search).get('q');
-    console.log(searchTerm);
-    if (searchTerm) { 
-      const inputArray = searchTerm.split(" "); 
-      if (inputArray.length > 1) inputArray.unshift(searchTerm);
-      console.log(inputArray);
-      inputArray.forEach(async (filter) => {
-        let results =  await searchResults(filter,jsonData);
-        console.log(results);
-      });
-  }
-  
     // force hamburger close when in destop size
     MQ.addEventListener('change', () => {
       document.querySelector('header nav .hamburger-toggle').setAttribute('aria-expanded', 'false');
