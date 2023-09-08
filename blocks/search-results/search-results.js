@@ -27,6 +27,7 @@ export default async function decorate(block) {
       // const numInitialLoadedArticles = 30;
       console.log(results.length);
       if (results.length > 0) {
+        document.querySelector('.section.search-results-container').style.display = 'block';
         await results
           .map(async (x) => {
             const wrapper = document.createElement('div');
