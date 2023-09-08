@@ -103,23 +103,11 @@ function buildMobileView(linkImageList) {
 }
 
 function buildExploreCollectionsButton() {
-  // Create a <div> element with class 'explore'
   const div = document.createElement('div');
   div.className = 'explore';
-
-  // Create button
-  const button = document.createElement('a');
-  button.className = 'btn';
-  button.href = '/collections';
-  button.textContent = 'Collections';
-
-  // Create a <span> element with class 'msg'
-  const span = document.createElement('span');
-  span.className = 'msg';
-  span.textContent = 'Explore what interests you…';
-
-  div.append(button);
-  div.append(span);
-
+  div.innerHTML = `
+    <a class="btn" href="/collections">Collections</a>
+    <span class="msg">Explore what interests you…</span>
+`;
   return div;
 }
