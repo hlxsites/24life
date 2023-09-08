@@ -1,6 +1,5 @@
-import { getMetadata, loadBlock, readBlockConfig, toClassName,} from '../../scripts/lib-franklin.js';
 import { createCardBlock } from '../card/card.js';
-
+import { loadBlock } from '../../scripts/lib-franklin.js';
 
 export async function searchResults(params, jsonData) {
   // eslint-disable-next-line
@@ -31,9 +30,9 @@ export default async function decorate(block) {
           .map(async (x) => {
             const wrapper = document.createElement('div');
             const newBlock = createCardBlock(x, wrapper);
-            if (x.section) {
-              newBlock.classList.add(toClassName(x.section));
-            }
+            // if (x.section) {
+            //   newBlock.classList.add(toClassName(x.section));
+            // }
             block.append(wrapper);
             await loadBlock(newBlock);
           });
