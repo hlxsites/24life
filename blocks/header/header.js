@@ -1,10 +1,5 @@
-import {
-  decorateIcons,
-  loadBlocks,
-} from '../../scripts/lib-franklin.js';
-import {
-  decorateMain,
-} from '../../scripts/scripts.js';
+import { decorateIcons, loadBlocks, toClassName } from '../../scripts/lib-franklin.js';
+import { decorateMain } from '../../scripts/scripts.js';
 
 // media query match that indicates mobile/desktop switch
 const MQ = window.matchMedia('(min-width: 992px)');
@@ -18,11 +13,9 @@ function toggleMenu(header, sectionToOpen) {
     return; // it's already open
   }
   if (openSection) {
-    openSection.classList.remove('expand');
     openSection.setAttribute('aria-expanded', 'false');
   }
   if (sectionToOpen) {
-    sectionToOpen.classList.add('expand');
     sectionToOpen.setAttribute('aria-expanded', 'true');
   }
 }
@@ -53,8 +46,8 @@ async function buildSectionMenuContent(header, section) {
 }
 
 // toggle from event
-function mouseOverMenu(header) {
-  const section = this.textContent.toLowerCase();
+function mouseOverMenu(a, header) {
+  const section = a.textContent.toLowerCase();
   const sectionToOpen = header.querySelector(`:scope > .nav-fragment.${section}`);
   if (sectionToOpen == null && !CREATED[section]) {
     buildSectionMenuContent(header, section);
@@ -127,27 +120,23 @@ export default async function decorate(block) {
     const sectionList = nav.querySelector('.sections .sections-list');
 
     // get through all section menus
-    const sectionMenus = [...navContent.children[2].querySelectorAll('ul > li')].map((menuBlock, index) => {
-      const navSection = document.createElement('li');
-      navSection.className = 'section';
-      if (index === 0) navSection.classList.add('color-focus');
-      else if (index === 1) navSection.classList.add('color-fitness');
-      else if (index === 2) navSection.classList.add('color-fuel');
-      else if (index === 3) navSection.classList.add('color-recover');
-      else if (index === 4) navSection.classList.add('color-magazine');
-      const sectionTitle = menuBlock.firstElementChild.textContent;
-      const a = document.createElement('a');
-      a.href = `/${sectionTitle.toLowerCase()}`;
-      a.textContent = sectionTitle;
-      const icon = document.createElement('span');
-      icon.classList.add('icon', 'icon-arrow-down');
-      if (MQ.matches) {
-        navSection.addEventListener('mouseover', mouseOverMenu.bind(a, block.parentNode));
-      }
-      navSection.append(a);
-      navSection.append(icon);
-      return navSection;
-    });
+    const sectionMenus = [...navContent.children[2].querySelectorAll('ul > li')]
+      .map((menuBlock) => {
+        const sectionTitle = menuBlock.firstElementChild.textContent;
+        const navSection = document.createElement('li');
+        navSection.classList.add('section', `color-${toClassName(sectionTitle)}`);
+        const a = document.createElement('a');
+        a.href = `/${sectionTitle.toLowerCase()}`;
+        a.textContent = sectionTitle;
+        const icon = document.createElement('span');
+        icon.classList.add('icon', 'icon-arrow-down');
+        if (MQ.matches) {
+          navSection.addEventListener('mouseover', () => mouseOverMenu(a, block.parentNode));
+        }
+        navSection.append(a);
+        navSection.append(icon);
+        return navSection;
+      });
     // write the section menu
     if (sectionMenus.length) {
       sectionList.append(...sectionMenus);
