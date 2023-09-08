@@ -12,7 +12,7 @@ header.header-wrapper {
   align-items: center;
   height: 49px;
   border-bottom: 6px solid var(--accent-color);
-  font-family: var(--heading-font-family);
+  font-family: var(--body-font-family);
 }
 
 header .header.block {
