@@ -14,10 +14,12 @@ export async function searchResults(params, jsonData) {
 export default async function decorate(block) {
   // fetch results from json files
   const allData = await fetch(`${window.location.origin}/query-index.json`);
+  console.log(allData);
   const jsonData = await allData.json();
   // for search functionality
   const searchTerm = new URLSearchParams(window.location.search).get('q');
   console.log(searchTerm);
+  block.classList.add('card-container', 'three-columns');
   if (searchTerm) {
     const inputArray = searchTerm.split(' ');
     if (inputArray.length > 1) inputArray.unshift(searchTerm);
@@ -25,6 +27,20 @@ export default async function decorate(block) {
     inputArray.forEach(async (filter) => {
       const results = await searchResults(filter, jsonData);
       console.log(results);
+      const numInitialLoadedArticles = 30;
+      console.log(results.length);
+      if (results.length > 0) {
+        await results.slice(0, numInitialLoadedArticles)
+          .map(async (results1) => {
+            const wrapper = document.createElement('div');
+            const newBlock = createCardBlock(results1, wrapper);
+            if (results1.section) {
+              newBlock.classList.add(toClassName(results1.section));
+            }
+            block.append(wrapper);
+            await loadBlock(newBlock);
+          });
+      }
     });
   }
   const params = getSearchParams();
