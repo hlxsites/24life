@@ -23,7 +23,6 @@ function closeMenuSection(event) {
   if (!navArea.contains(event.target)) {
     const openMenu = document.querySelector('header [aria-expanded="true"]');
     if (openMenu) {
-      openMenu.classList.remove('expand');
       openMenu.setAttribute('aria-expanded', 'false');
     }
   }
@@ -52,6 +51,9 @@ async function buildSectionMenuContent(header, section) {
 
 // toggle from event
 function mouseOverMenu(a, header) {
+  if (!MQ.matches) {
+    return; // only on desktop
+  }
   const section = a.textContent.toLowerCase();
   const sectionToOpen = header.querySelector(`:scope > .nav-fragment.${section}`);
   if (sectionToOpen == null && !CREATED[section]) {
@@ -135,9 +137,7 @@ export default async function decorate(block) {
         a.textContent = sectionTitle;
         const icon = document.createElement('span');
         icon.classList.add('icon', 'icon-arrow-down');
-        if (MQ.matches) {
-          navSection.addEventListener('mouseover', () => mouseOverMenu(a, block.parentNode));
-        }
+        navSection.addEventListener('mouseover', () => mouseOverMenu(a, block.parentNode));
         navSection.append(a);
         navSection.append(icon);
         return navSection;
@@ -181,7 +181,7 @@ export default async function decorate(block) {
     // force hamburger close when in destop size
     MQ.addEventListener('change', () => {
       document.querySelector('header nav .hamburger-toggle').setAttribute('aria-expanded', 'false');
-      document.querySelectorAll('header nav .sections .expand').forEach((el) => el.classList.remove('expand'));
+
       // remove hard styled heights (from animations)
       document.querySelectorAll('header nav .sections ul').forEach((ul) => {
         ul.style.height = null;
@@ -189,7 +189,6 @@ export default async function decorate(block) {
     });
 
     decorateIcons(nav);
-    /* append result */
     block.append(nav);
   }
 }
