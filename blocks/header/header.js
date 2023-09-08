@@ -3,6 +3,8 @@ import { decorateMain } from '../../scripts/scripts.js';
 
 // media query match that indicates mobile/desktop switch
 const MQ = window.matchMedia('(min-width: 992px)');
+
+// prevent concurrent creation of the div while the nav content is being loaded
 const CREATED = {
   focus: false, fitness: false, fuel: false, recover: false, magazine: false,
 };
@@ -12,12 +14,8 @@ function toggleMenu(header, sectionToOpen) {
   if (openSection === sectionToOpen) {
     return; // it's already open
   }
-  if (openSection) {
-    openSection.setAttribute('aria-expanded', 'false');
-  }
-  if (sectionToOpen) {
-    sectionToOpen.setAttribute('aria-expanded', 'true');
-  }
+  openSection?.setAttribute('aria-expanded', 'false');
+  sectionToOpen?.setAttribute('aria-expanded', 'true');
 }
 
 function closeMenuSection(event) {
@@ -32,16 +30,23 @@ function closeMenuSection(event) {
 }
 
 async function buildSectionMenuContent(header, section) {
-  const menu = await fetch(`/fragments/menu-${section}.plain.html`);
-  if (menu.ok && !CREATED[section]) {
-    CREATED[section] = true;
-    const fragment = document.createElement('div');
-    fragment.classList.add('nav-fragment', section);
-    fragment.innerHTML = await menu.text();
-    decorateMain(fragment);
-    await loadBlocks(fragment);
-    header.append(fragment);
-    toggleMenu(header, fragment);
+  if (CREATED[section]) return;
+
+  CREATED[section] = true;
+  try {
+    const menu = await fetch(`/fragments/menu-${section}.plain.html`);
+    if (menu.ok) {
+      const fragment = document.createElement('div');
+      fragment.classList.add('nav-fragment', section);
+      fragment.innerHTML = await menu.text();
+      decorateMain(fragment);
+      await loadBlocks(fragment);
+      header.append(fragment);
+      toggleMenu(header, fragment);
+    }
+  } catch (e) {
+    CREATED[section] = false;
+    throw e;
   }
 }
 
