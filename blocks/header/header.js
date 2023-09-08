@@ -38,10 +38,10 @@ async function buildSectionMenuContent(header, section) {
       const fragment = document.createElement('div');
       fragment.classList.add('nav-fragment', section);
       fragment.innerHTML = await menu.text();
+      fragment.setAttribute('aria-expanded', 'false');
       decorateMain(fragment);
       await loadBlocks(fragment);
       header.append(fragment);
-      toggleMenu(header, fragment);
     }
   } catch (e) {
     CREATED[section] = false;
@@ -50,17 +50,16 @@ async function buildSectionMenuContent(header, section) {
 }
 
 // toggle from event
-function mouseOverMenu(a, header) {
+async function mouseOverMenu(a, header) {
   if (!MQ.matches) {
     return; // only on desktop
   }
   const section = a.textContent.toLowerCase();
-  const sectionToOpen = header.querySelector(`:scope > .nav-fragment.${section}`);
-  if (sectionToOpen == null && !CREATED[section]) {
-    buildSectionMenuContent(header, section);
-  } else {
-    toggleMenu(header, sectionToOpen);
+  if (!CREATED[section]) {
+    await buildSectionMenuContent(header, section);
   }
+  const sectionToOpen = header.querySelector(`:scope > .nav-fragment.${section}`);
+  toggleMenu(header, sectionToOpen);
 }
 
 /**
@@ -190,5 +189,14 @@ export default async function decorate(block) {
 
     decorateIcons(nav);
     block.append(nav);
+  }
+
+  // load the content nav in the background with a small delay (only on desktop)
+  if (MQ.matches) {
+    setTimeout(() => {
+      for (const section of ['focus', 'fitness', 'fuel', 'recover', 'magazine']) {
+        buildSectionMenuContent(block.parentNode, section);
+      }
+    }, 500);
   }
 }
