@@ -152,6 +152,9 @@ export function decorateMain(main) {
 async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
+  if (!document.title.match(/- 24Life(\.com)?$/i)) {
+    document.title += ' - 24Life';
+  }
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
