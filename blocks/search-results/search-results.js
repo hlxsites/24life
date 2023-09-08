@@ -30,7 +30,7 @@ export default async function decorate(block) {
   const params = getSearchParams();
   block.innerHTML = '';
   if (params.searchTerm) {
-    document.querySelector('.section.search-page-heading').innerHTML = `<h1>${params.searchTerm}</h1>`
+    document.querySelector('.section.search-page-heading').innerHTML = `<h1>${params.searchTerm}</h1>`;
   }
 }
 
