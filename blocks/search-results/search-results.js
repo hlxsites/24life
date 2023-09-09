@@ -33,9 +33,6 @@ export default async function decorate(block) {
           .map(async (x) => {
             const wrapper = document.createElement('div');
             const newBlock = createCardBlock(x, wrapper);
-            // if (x.section) {
-            //   newBlock.classList.add(toClassName(x.section));
-            // }
             block.append(wrapper);
             await loadBlock(newBlock);
           });
