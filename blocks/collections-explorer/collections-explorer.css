@@ -119,5 +119,6 @@
 @media screen and (min-width: 900px) {
     .collections-explorer .desktop-only .links {
         margin-left: 70%;
+        width: 30%;
     }
 }
