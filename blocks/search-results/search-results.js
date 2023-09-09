@@ -8,6 +8,7 @@ export async function searchResults(params, jsonData) {
 
 export default async function decorate(block) {
   // fetch results from json files
+  block.innerHTML = '';
   console.log(window.location.origin);
   const allData = await fetch(`${window.location.origin}/articles.json?sheet=full`);
   console.log(allData);
@@ -17,6 +18,7 @@ export default async function decorate(block) {
   console.log(searchTerm);
   block.classList.add('card-container', 'three-columns');
   if (searchTerm) {
+    document.querySelector('.section.search-page-heading').innerHTML = `<h1>${searchTerm}</h1>`;
     const inputArray = searchTerm.split(' ');
     if (inputArray.length > 1) inputArray.unshift(searchTerm);
     console.log(inputArray);
@@ -40,14 +42,4 @@ export default async function decorate(block) {
       }
     });
   }
-  // const params = getSearchParams();
-  // // block.innerHTML = '';
-  // if (params.searchTerm) {
-  //   document.querySelector('.section.search-page-heading').innerHTML = `<h1>${params.searchTerm}</h1>`;
-  // }
 }
-
-// function getSearchParams() {
-//   const searchTerm = new URLSearchParams(window.location.search).get('q');
-//   return { searchTerm };
-// }
