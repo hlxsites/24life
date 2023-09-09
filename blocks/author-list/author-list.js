@@ -45,7 +45,7 @@ function createMarkupForRole(role, block, allAuthors) {
     .filter((author) => author.role.toLowerCase() === filter.toLowerCase())
     .toSorted((a, b) => a.name.localeCompare(b.name));
 
-  const iterator = makeArrayIterator(authors);
+  const iterator = authors.values();
 
   const result = document.createElement('div');
   const headingElement = document.createElement('h2');
@@ -70,17 +70,6 @@ function createMarkupForRole(role, block, allAuthors) {
   // initial load the first 30 entries
   loadNext30Entries(iterator, authorCards, loadMoreContainer);
   return result;
-}
-
-function makeArrayIterator(array) {
-  let nextIndex = 0;
-  return {
-    next() {
-      const result = { value: array[nextIndex], done: nextIndex + 1 >= array.length };
-      nextIndex += 1;
-      return result;
-    },
-  };
 }
 
 function p(content) {
