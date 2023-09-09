@@ -49,10 +49,10 @@ function createCoverColumn(config) {
     titleH6.textContent = new URL(document.location).pathname.split('/').pop().replaceAll(/-/g, ' ').toUpperCase();
     textCol.append(titleH4);
     textCol.append(titleH6);
-    const coverImage = createOptimizedPicture(getMetadata('og:image'), title, false, [{ width: '300' }]);
+    const coverImage = createOptimizedPicture(getMetadata('og:image'), title, false, [{ width: '200' }]);
     textCol.append(coverImage);
   } else {
-    const coverImage = createOptimizedPicture(config.image, config.title, false, [{ width: '300' }]);
+    const coverImage = createOptimizedPicture(config.image, config.title, false, [{ width: '200' }]);
     titleH4.textContent = config.title;
     titleH6.textContent = config.link.split('/').pop().replaceAll(/-/g, ' ').toUpperCase();
     const thisIssueLink = document.createElement('a');
