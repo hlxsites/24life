@@ -1,4 +1,3 @@
-import { decorateLinkedPictures } from '../../scripts/scripts.js';
 import { toClassName } from '../../scripts/lib-franklin.js';
 
 export default function decorate(block) {
@@ -19,11 +18,10 @@ export default function decorate(block) {
   }
 
   block.innerHTML = '';
+  block.append(buildExploreCollectionsButton());
   block.append(buildDesktopView(linkImageList));
   block.append(buildMobileView(linkImageList));
   // decorateLinkedPictures(block);
-
-  block.before(buildExploreCollectionsButton());
 }
 
 /**
@@ -62,6 +60,12 @@ function buildDesktopView(linkImageList) {
       picture.classList.add('active');
     }
     pictures.append(picture);
+
+    link.addEventListener('mouseover', (event) => {
+      event.preventDefault();
+      pictures.querySelector('picture.active').classList.remove('active');
+      picture.classList.add('active');
+    });
   }
 
   return desktopView;
