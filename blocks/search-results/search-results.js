@@ -40,14 +40,14 @@ export default async function decorate(block) {
       }
     });
   }
-  const params = getSearchParams();
-  // block.innerHTML = '';
-  if (params.searchTerm) {
-    document.querySelector('.section.search-page-heading').innerHTML = `<h1>${params.searchTerm}</h1>`;
-  }
+  // const params = getSearchParams();
+  // // block.innerHTML = '';
+  // if (params.searchTerm) {
+  //   document.querySelector('.section.search-page-heading').innerHTML = `<h1>${params.searchTerm}</h1>`;
+  // }
 }
 
-function getSearchParams() {
-  const searchTerm = new URLSearchParams(window.location.search).get('q');
-  return { searchTerm };
-}
+// function getSearchParams() {
+//   const searchTerm = new URLSearchParams(window.location.search).get('q');
+//   return { searchTerm };
+// }
