@@ -16,7 +16,7 @@ header.header-wrapper {
   align-items: center;
   border-bottom: 6px solid var(--accent-color);
   font-family: var(--heading-font-family);
-  background-color: white;
+  background-color: var(--background-color);
 }
 
 header .header.block {
