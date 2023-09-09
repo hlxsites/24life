@@ -70,7 +70,6 @@ function createMarkupForRole(role, block, allAuthors) {
 
   const authorCards = document.createElement('div');
   authorCards.classList.add('author-grid');
-
   result.append(authorCards);
 
   // always add the button to load more authors. It will be removed once the iterator is done
@@ -82,7 +81,7 @@ function createMarkupForRole(role, block, allAuthors) {
   });
   result.append(loadMoreContainer);
 
-  // initial load the first 30 entries
+  // initial load the first entries
   displayNextEntries(iterator, authorCards, loadMoreContainer);
   return result;
 }
