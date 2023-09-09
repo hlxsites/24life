@@ -333,6 +333,7 @@ header nav .tools .hamburger-close img {
     grid-template-columns: 25% 75%;
     background-color: var(--background-color);
     max-width: 1174px;
+    box-shadow: 0 15px 30px rgba(0 0 0 / 30%);
   }
 
   header .nav-fragment.fitness {
