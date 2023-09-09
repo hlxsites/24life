@@ -210,15 +210,6 @@ header nav[aria-expanded='true'] > .search {
   display: block;
 }
 
-header .nav-fragment[aria-expanded='false'] {
-  display: none;
-}
-
-header .nav-fragment[aria-expanded='true'],
-header .nav-fragment.expand {
-  display: grid;
-}
-
 header nav .search-container[aria-expanded='true'] {
   display: block;
 }
@@ -334,48 +325,66 @@ header nav .tools .hamburger-close img {
     display: none;
   }
 
-  .nav-fragment {
+  header .nav-fragment {
     padding: 20px;
     z-index: 10;
     width: 100%;
     display: grid;
     grid-template-columns: 25% 75%;
     background-color: var(--background-color);
+    max-width: 1174px;
   }
 
-  .nav-fragment.fitness {
+  header .nav-fragment.fitness {
     --category-text-color: var(--color-fitness);
 
     border-top: 6px solid var(--category-text-color);
   }
 
-  .nav-fragment.focus {
+  header .nav-fragment.focus {
     --category-text-color: var(--color-focus);
 
     border-top: 6px solid var(--category-text-color);
   }
 
-  .nav-fragment.fuel {
+  header .nav-fragment.fuel {
     --category-text-color: var(--color-fuel);
 
     border-top: 6px solid var(--category-text-color);
   }
 
-  .nav-fragment.recover {
+  header .nav-fragment.recover {
     --category-text-color: var(--color-recover);
 
     border-top: 6px solid var(--category-text-color);
   }
 
-  .nav-fragment .section {
-    max-width: 1070px;
+  header .nav-fragment.magazine {
+    --category-text-color: var(--color-magazine);
+
+    border-top: 6px solid var(--category-text-color);
+    background-color: var(--background-color);
   }
 
-  .nav-fragment .leftcolumn {
+  header .nav-fragment[aria-expanded='false'] {
+    display: none;
+  }
+  
+  header .nav-fragment[aria-expanded='true'],
+  header .nav-fragment.expand {
+    display: grid;
+  }
+
+  header .nav-fragment.magazine[aria-expanded='true'],
+  header .nav-fragment.magazine.expand {
+    display: unset;
+  }
+
+  header .nav-fragment .leftcolumn {
     padding-left: 60px;
   }
 
-  .nav-fragment h5 {
+  header .nav-fragment h5 {
     letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--category-text-color);
