@@ -30,12 +30,12 @@ function loadNext30Entries(iterator, authorCards, loadMoreContainer) {
   // eslint-disable-next-line no-plusplus
   for (let i = 0; i < 30; i++) {
     const next = iterator.next();
-    const author = next.value;
-    if (!author) break;
-    authorCards.append(createAuthorCardBlock(author));
     if (next.done) {
       loadMoreContainer.remove();
     }
+    const author = next.value;
+    if (!author) break;
+    authorCards.append(createAuthorCardBlock(author));
   }
 }
 
