@@ -81,7 +81,7 @@
 
 .article-slides .slide .text .subtitle {
   text-transform: uppercase;
-  opacity: 0.5;
+  color: var(--text-color-secondary-on-black-background);
 }
 
 .article-slides .slide .text .title {
@@ -94,7 +94,7 @@
 
 .article-slides .slide .text .author {
   text-transform: uppercase;
-  opacity: 0.5;
+  color: var(--text-color-secondary-on-black-background);
 }
 
 
