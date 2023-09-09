@@ -26,9 +26,24 @@ export default async function decorate(block) {
   }
 }
 
-function loadNext30Entries(iterator, authorCards, loadMoreContainer) {
+const mediaQuery = window.matchMedia('(min-width: 992px)');
+
+/**
+ * Returns the number of authors to display in one chunk
+ * @return {number}
+ */
+function getDisplayChunkSize() {
+  if (mediaQuery.matches) {
+    // desktop
+    return 30;
+  }
+  // mobile
+  return 10;
+}
+
+function displayNextEntries(iterator, authorCards, loadMoreContainer) {
   // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < getDisplayChunkSize(); i++) {
     const next = iterator.next();
     if (next.done) {
       loadMoreContainer.remove();
@@ -63,12 +78,12 @@ function createMarkupForRole(role, block, allAuthors) {
   loadMoreContainer.classList.add('author-load-more-container');
   loadMoreContainer.innerHTML = '<button class="author-list-load-more-button">Load more</button>';
   loadMoreContainer.addEventListener('click', () => {
-    loadNext30Entries(iterator, authorCards, loadMoreContainer);
+    displayNextEntries(iterator, authorCards, loadMoreContainer);
   });
   result.append(loadMoreContainer);
 
   // initial load the first 30 entries
-  loadNext30Entries(iterator, authorCards, loadMoreContainer);
+  displayNextEntries(iterator, authorCards, loadMoreContainer);
   return result;
 }
 
