@@ -20,7 +20,7 @@ div.author-list-container {
   width: 100%;
 }
 
-.author-list-item img:hover {
+.author-list .author-list-item img:hover {
   transform: scale(1.075);
 }
 
@@ -56,7 +56,7 @@ div.author-list-container {
   gap: 1rem;
 }
 
-.author-list .load-experts {
+.author-list .author-grid {
   display: grid;
   gap: 2em;
   grid-template-columns: repeat(3, 1fr);
