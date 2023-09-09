@@ -1,6 +1,6 @@
 /* shared mobile and desktop */
 
-.collections-explorer-container .explore .btn {
+.collections-explorer .explore .btn {
     display: inline-block;
     margin: 0;
     background-color: var(--footer-background-color);
@@ -12,7 +12,7 @@
     text-transform: uppercase;
 }
 
-.collections-explorer-container .explore span.msg {
+.collections-explorer .explore span.msg {
     margin-left: 10px;
     font-size: 14px;
     font-style: italic;
@@ -46,11 +46,11 @@
     .collections-explorer .mobile-only {
         display: none;
     }
-    .collections-explorer-container .explore span.msg {
+    .collections-explorer .explore span.msg {
         font-size: 21px;
     }
 
-    .collections-explorer-container .explore .btn {
+    .collections-explorer .explore .btn {
         height: 60px;
         line-height: 60px;
         min-width: 200px;
