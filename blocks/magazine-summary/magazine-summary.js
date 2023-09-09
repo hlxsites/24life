@@ -11,10 +11,8 @@ import {
 export default async function decorate(block) {
   const config = readBlockConfig(block);
   config.isSubNav = block.classList.contains('navigation');
-  //if (config.isSubNav) {
-    config.labels = block.querySelectorAll('div > div:nth-child(2) > p:first-child');
-    config.links = [...block.querySelectorAll('div > div:nth-child(2) > p:not(:first-child) > a')];
-  //}
+  config.labels = block.querySelectorAll('div > div:nth-child(2) > p:first-child');
+  config.links = [...block.querySelectorAll('div > div:nth-child(2) > p:not(:first-child) > a')];
   block.innerText = '';
   const columns = ['col1', 'col2', 'col3'];
   // create the 3 columns
