@@ -5,9 +5,9 @@ import { createOptimizedPicture, decorateIcons } from '../../scripts/lib-frankli
  * Shows list of authors, separated by role.
  *
  * Example block content:
- * | Staff  | Editorial Staff  |                  | Experts-Page-editorial-staff |
- * | Expert | Experts          | Some description |  |
- * | Writer | Contributing     | Writers          |  |
+ * | Staff  | Editorial Staff  |                  |
+ * | Expert | Experts          | Some description |
+ * | Writer | Contributing     | Writers          |
  */
 export default async function decorate(block) {
   const allAuthors = await ffetch('/authors.json').chunks(5000).all();
@@ -22,8 +22,7 @@ export default async function decorate(block) {
   });
   block.textContent = '';
   for (const role of roles) {
-    // eslint-disable-next-line no-await-in-loop
-    block.append(await createMarkupForRole(role, block, allAuthors));
+    block.append(createMarkupForRole(role, block, allAuthors));
   }
 }
 
@@ -40,7 +39,7 @@ function loadNext30Entries(iterator, authorCards, loadMoreContainer) {
   }
 }
 
-async function createMarkupForRole(role, block, allAuthors) {
+function createMarkupForRole(role, block, allAuthors) {
   const { filter, heading, description } = role;
   const authors = allAuthors
     .filter((author) => author.role.toLowerCase() === filter.toLowerCase())
@@ -58,6 +57,8 @@ async function createMarkupForRole(role, block, allAuthors) {
   authorCards.classList.add('author-grid');
 
   result.append(authorCards);
+
+  // always add the button to load more authors. It will be removed once the iterator is done
   const loadMoreContainer = document.createElement('div');
   loadMoreContainer.classList.add('author-load-more-container');
   loadMoreContainer.innerHTML = '<button class="author-list-load-more-button">Load more</button>';
@@ -66,6 +67,7 @@ async function createMarkupForRole(role, block, allAuthors) {
   });
   result.append(loadMoreContainer);
 
+  // initial load the first 30 entries
   loadNext30Entries(iterator, authorCards, loadMoreContainer);
   return result;
 }
