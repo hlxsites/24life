@@ -20,6 +20,10 @@ div.author-list-container {
   width: 100%;
 }
 
+.author-list .author-list-item {
+  overflow-wrap: break-word;
+}
+
 .author-list .author-list-item img:hover {
   transform: scale(1.075);
 }
@@ -59,7 +63,7 @@ div.author-list-container {
 .author-list .author-grid {
   display: grid;
   gap: 2em;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 33%);
 }
 
 .author-list .author-load-more-container {
