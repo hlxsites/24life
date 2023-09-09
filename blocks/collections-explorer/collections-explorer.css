@@ -46,6 +46,7 @@
     .collections-explorer .mobile-only {
         display: none;
     }
+
     .collections-explorer .explore span.msg {
         font-size: 21px;
     }

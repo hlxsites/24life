@@ -46,8 +46,7 @@ function buildDesktopView(linkImageList) {
   links.classList.add('links');
   desktopView.append(links);
 
-  for (let i = 0; i < linkImageList.length; i++) {
-    const pair = linkImageList[i];
+  linkImageList.forEach((pair, index) => {
     const link = pair.link.cloneNode(true);
     const picture = pair.picture.cloneNode(true);
 
@@ -56,7 +55,7 @@ function buildDesktopView(linkImageList) {
     links.append(li);
 
     picture.dataset.name = toClassName(link.textContent);
-    if (i === 0) {
+    if (index === 0) {
       picture.classList.add('active');
     }
     pictures.append(picture);
@@ -66,7 +65,7 @@ function buildDesktopView(linkImageList) {
       pictures.querySelector('picture.active').classList.remove('active');
       picture.classList.add('active');
     });
-  }
+  });
 
   return desktopView;
 }
