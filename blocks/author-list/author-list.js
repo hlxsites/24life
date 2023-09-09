@@ -28,7 +28,6 @@ export default async function decorate(block) {
 }
 
 function loadNext30Entries(iterator, authorCards, loadMoreContainer) {
-  // create the first 30 authors
   // eslint-disable-next-line no-plusplus
   for (let i = 0; i < 30; i++) {
     const next = iterator.next();
