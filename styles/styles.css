@@ -207,6 +207,7 @@ pre {
 main {
   padding-top: var(--nav-height);
 }
+
 main pre {
   background-color: var(--overlay-background-color);
   padding: 1em;
