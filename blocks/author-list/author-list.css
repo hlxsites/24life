@@ -74,16 +74,10 @@ div.author-list-container {
 
 /* on smaller screens, show everything in a single column. */
 @media (max-width: 991px) {
-  .author-list {
+  .author-list .author-grid {
     display: flex;
     flex-direction: column;
   }
 }
 
-@media (min-width: 1200px) {
-  .section.experts-page-heading > div,
-  .section.experts-page-editorial-staff > div,
-  .section.author-list-container > div {
-    max-width: 1150px;
-  }
-}
+
