@@ -38,13 +38,13 @@ function buildDesktopView(linkImageList) {
   const desktopView = document.createElement('div');
   desktopView.classList.add('container', 'desktop-only');
 
-  const links = document.createElement('ul');
-  links.classList.add('links');
-  desktopView.append(links);
-
   const pictures = document.createElement('div');
   pictures.classList.add('pictures');
   desktopView.append(pictures);
+
+  const links = document.createElement('ul');
+  links.classList.add('links');
+  desktopView.append(links);
 
   for (let i = 0; i < linkImageList.length; i++) {
     const pair = linkImageList[i];
