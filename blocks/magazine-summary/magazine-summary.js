@@ -32,7 +32,7 @@ export default async function decorate(block) {
   if (config.isSubNav) {
     const pastIssuesLink = document.createElement('a');
     pastIssuesLink.href = '/magazine';
-    pastIssuesLink.textContent = "View Past Issues";
+    pastIssuesLink.textContent = 'View Past Issues';
     pastIssuesLink.className = 'button';
     col3.append(pastIssuesLink);
   }
@@ -57,10 +57,10 @@ function createCoverColumn(config) {
     titleH6.textContent = config.link.split('/').pop().replaceAll(/-/g, ' ').toUpperCase();
     const thisIssueLink = document.createElement('a');
     thisIssueLink.href = config.link;
-    thisIssueLink.textContent = "Explore This Issue";
+    thisIssueLink.textContent = 'Explore This Issue';
     thisIssueLink.className = 'button';
-    textCol.append(coverImage); 
-    textCol.append(titleH6); 
+    textCol.append(coverImage);
+    textCol.append(titleH6);
     textCol.append(titleH4);
     textCol.append(thisIssueLink);
   }
@@ -68,7 +68,7 @@ function createCoverColumn(config) {
 }
 
 function createListColumn(config, index) {
-  let section = Object.keys(config)[index];
+  const section = Object.keys(config)[index];
   let links;
   const newColumn = new DocumentFragment();
   const sectionTitle = document.createElement('div');
