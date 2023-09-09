@@ -100,6 +100,24 @@ footer li a:hover {
   font-size: var(--footer-font-size-posts);
 }
 
+/* using the bright accent colors as this is on dark background. Usually we would use --color-focus-text instead of
+   --color-focus */
+.footer-container .footer-menu-list-1 li a[href="/focus"]:hover {
+  color: var(--color-focus);
+}
+
+.footer-container .footer-menu-list-1 li a[href="/fitness"]:hover {
+  color: var(--color-fitness);
+}
+
+.footer-container .footer-menu-list-1 li a[href="/fuel"]:hover {
+  color: var(--color-fuel);
+}
+
+.footer-container .footer-menu-list-1 li a[href="/recover"]:hover {
+  color: var(--color-recover);
+}
+
 .footer-container .footer-menu-list-2 li a {
   font-size: var(--footer-font-size-pages);
   opacity: 0.5;
