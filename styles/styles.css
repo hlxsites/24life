@@ -129,11 +129,6 @@ body {
   color: var(--text-color);
   background-color: var(--background-color);
   display: none;
-  height: 60000px;
-}
-
-main {
-  min-height: 10000vh;
 }
 
 body.appear {
