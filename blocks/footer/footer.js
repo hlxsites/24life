@@ -101,6 +101,10 @@ export default async function decorate(block) {
     topBtn.href = '#top';
     topBtn.className = 'button primary jump-to-top';
     topBtn.textContent = 'Top';
+    topBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
     topBtnContainer.append(topBtn);
 
     decorateIcons(footerContainer);
