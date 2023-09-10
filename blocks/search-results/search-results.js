@@ -2,9 +2,19 @@ import { createCardBlock } from '../card/card.js';
 import { loadBlock } from '../../scripts/lib-franklin.js';
 
 export async function searchResults(params, jsonData) {
-  // eslint-disable-next-line
-    return jsonData.data.filter((entry) => (entry.title + entry.content + entry.path + entry.authors + entry.collections + entry.section + entry.categories + entry.template).toLowerCase().includes(params.toLowerCase()));
+  return jsonData.data.filter((entry) => (
+    entry.title
+    + entry.content
+    + entry.path
+    + entry.authors
+    + entry.collections
+    + entry.section
+    + entry.categories
+  )
+    .toLowerCase()
+    .includes(params.toLowerCase()));
 }
+
 
 export default async function decorate(block) {
   // fetch results from json files
