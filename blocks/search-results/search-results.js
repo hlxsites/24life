@@ -38,7 +38,6 @@ export default async function decorate(block) {
         console.log(result);
         console.log(result.length);
         console.log(block);
-        // document.querySelector('.section.search-results-container').style.display = 'block';
         result.map(async (x) => {
           const wrapper = document.createElement('div');
           const newBlock = createCardBlock(x, wrapper);
