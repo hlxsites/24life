@@ -20,7 +20,7 @@ export default async function decorate(block) {
   // fetch results from json files
   block.innerHTML = '';
   console.log(window.location.origin);
-  const allData = await fetch(`${window.location.origin}/articles.json?sheet=full`);
+  const allData = fetch(`${window.location.origin}/articles.json?sheet=full`);
   console.log(allData);
   const jsonData = await allData.json();
   // for search functionality
