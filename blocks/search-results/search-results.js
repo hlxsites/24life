@@ -27,13 +27,52 @@ function totalArray(arrayChunk) {
   return newArray;
 }
 
-function createCards(finalArray, block) {
-  finalArray.map(async (x) => {
-    const wrapper = document.createElement('div');
-    const newBlock = createCardBlock(x, wrapper);
-    block.append(wrapper);
-    await loadBlock(newBlock);
+function createLoadMoreButton(numInitialLoadedArticles, finalArray, actualLength, block) {
+  const loadMoreContainer = document.createElement('div');
+  loadMoreContainer.classList.add('article-load-more-container');
+  const loadMoreButton = document.createElement('button');
+  loadMoreContainer.append(loadMoreButton);
+  loadMoreButton.classList.add('article-list-load-more-button');
+  loadMoreButton.textContent = 'Load more';
+  loadMoreButton.addEventListener('click', async () => {
+    const counter = block.querySelectorAll('.search-results > .card-wrapper').length / numInitialLoadedArticles;
+    // eslint-disable-next-line
+    finalArray.slice(numInitialLoadedArticles * counter, (numInitialLoadedArticles * counter) + numInitialLoadedArticles)
+      .map(async (x) => {
+        const wrapper = document.createElement('div');
+        const newBlock = createCardBlock(x, wrapper);
+        block.append(wrapper);
+        await loadBlock(newBlock);
+      });
+    // eslint-disable-next-line
+      if ((actualLength - (numInitialLoadedArticles * counter)) > numInitialLoadedArticles) { block.append(loadMoreContainer); }
   });
+  block.append(loadMoreContainer);
+}
+
+function createCards(finalArray, block) {
+  const numInitialLoadedArticles = 24;
+  const actualLength = finalArray.length;
+  console.log(actualLength);
+  if (actualLength < 25) {
+    finalArray.map(async (x) => {
+      const wrapper = document.createElement('div');
+      const newBlock = createCardBlock(x, wrapper);
+      block.append(wrapper);
+      await loadBlock(newBlock);
+    });
+  } else {
+    finalArray.slice(0, numInitialLoadedArticles).map(async (x) => {
+      const wrapper = document.createElement('div');
+      const newBlock = createCardBlock(x, wrapper);
+      block.append(wrapper);
+      await loadBlock(newBlock);
+    });
+    const counter = block.querySelectorAll('.search-results > .card-wrapper').length / numInitialLoadedArticles;
+    if ((actualLength - (numInitialLoadedArticles * counter)) > numInitialLoadedArticles) {
+      createLoadMoreButton(numInitialLoadedArticles, finalArray, actualLength, block);
+    }
+  }
 }
 
 function createSet(sumArray, block) {
