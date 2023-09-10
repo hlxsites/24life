@@ -35,7 +35,8 @@ function createLoadMoreButton(numInitialLoadedArticles, finalArray, actualLength
   loadMoreButton.classList.add('article-list-load-more-button');
   loadMoreButton.textContent = 'Load more';
   loadMoreButton.addEventListener('click', async () => {
-    const counter = block.querySelectorAll('.search-results > .card-wrapper').length / numInitialLoadedArticles;
+    const currentLength = block.querySelectorAll('.search-results > .card-wrapper').length;
+    const counter = currentLength / numInitialLoadedArticles;
     // eslint-disable-next-line
     finalArray.slice(numInitialLoadedArticles * counter, (numInitialLoadedArticles * counter) + numInitialLoadedArticles)
       .map(async (x) => {
@@ -44,7 +45,7 @@ function createLoadMoreButton(numInitialLoadedArticles, finalArray, actualLength
         block.append(wrapper);
         await loadBlock(newBlock);
       });
-    // eslint-disable-next-line
+    // eslint-disable-next-line 
       if ((actualLength - (numInitialLoadedArticles * counter)) > numInitialLoadedArticles) { block.after(loadMoreContainer); }
   });
   block.after(loadMoreContainer);
