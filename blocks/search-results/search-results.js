@@ -34,20 +34,17 @@ export default async function decorate(block) {
     if (inputArray.length > 1) inputArray.unshift(searchTerm);
     console.log(inputArray);
     inputArray.forEach(async (filter) => {
-      const results = await searchResults(filter);
-      console.log(results);
-      // const numInitialLoadedArticles = 30;
-      console.log(results.length);
-      if (results.length > 0) {
+      searchResults(filter).then((result) => {
+        console.log(result);
+        console.log(result.length);
         document.querySelector('.section.search-results-container').style.display = 'block';
-        await results
-          .map(async (x) => {
-            const wrapper = document.createElement('div');
-            const newBlock = createCardBlock(x, wrapper);
-            block.append(wrapper);
-            await loadBlock(newBlock);
-          });
-      }
+        result.map(async (x) => {
+          const wrapper = document.createElement('div');
+          const newBlock = createCardBlock(x, wrapper);
+          block.append(wrapper);
+          loadBlock(newBlock);
+        });
+      });
     });
   }
 }
