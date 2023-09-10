@@ -1,3 +1,8 @@
 .search-page-heading.section h1 {
     margin-left: 5rem;
 }
+
+.search-results-wrapper .article-load-more-container {
+    margin: auto;
+    text-align: center;
+}
