@@ -37,12 +37,13 @@ export default async function decorate(block) {
       searchResults(filter).then((result) => {
         console.log(result);
         console.log(result.length);
-        document.querySelector('.section.search-results-container').style.display = 'block';
+        console.log(block);
+        // document.querySelector('.section.search-results-container').style.display = 'block';
         result.map(async (x) => {
           const wrapper = document.createElement('div');
           const newBlock = createCardBlock(x, wrapper);
           block.append(wrapper);
-          await loadBlock(newBlock);
+          loadBlock(newBlock);
         });
       });
     });
