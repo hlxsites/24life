@@ -45,9 +45,9 @@ function createLoadMoreButton(numInitialLoadedArticles, finalArray, actualLength
         await loadBlock(newBlock);
       });
     // eslint-disable-next-line
-      if ((actualLength - (numInitialLoadedArticles * counter)) > numInitialLoadedArticles) { block.append(loadMoreContainer); }
+      if ((actualLength - (numInitialLoadedArticles * counter)) > numInitialLoadedArticles) { block.after(loadMoreContainer); }
   });
-  block.append(loadMoreContainer);
+  block.after(loadMoreContainer);
 }
 
 function createCards(finalArray, block) {
@@ -76,6 +76,7 @@ function createCards(finalArray, block) {
 }
 
 function createSet(sumArray, block) {
+  console.log(sumArray);
   const uniquePath = new Set();
   const finalArray = sumArray.filter((element) => {
     const isDuplicate = uniquePath.has(element.path);
