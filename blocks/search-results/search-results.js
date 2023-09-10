@@ -69,7 +69,7 @@ function createCards(finalArray, block) {
       await loadBlock(newBlock);
     });
     const counter = block.querySelectorAll('.search-results > .card-wrapper').length / numInitialLoadedArticles;
-    if ((actualLength - (numInitialLoadedArticles * counter)) > numInitialLoadedArticles) {
+    if ((actualLength > (numInitialLoadedArticles * counter))) {
       createLoadMoreButton(numInitialLoadedArticles, finalArray, actualLength, block);
     }
   }
