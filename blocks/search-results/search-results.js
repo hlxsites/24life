@@ -42,7 +42,7 @@ export default async function decorate(block) {
           const wrapper = document.createElement('div');
           const newBlock = createCardBlock(x, wrapper);
           block.append(wrapper);
-          loadBlock(newBlock);
+          await loadBlock(newBlock);
         });
       });
     });
