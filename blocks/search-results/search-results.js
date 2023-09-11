@@ -65,7 +65,7 @@ function createCards(finalArray, block) {
       const newBlock = createCardBlock(x, wrapper);
       block.append(wrapper);
       await loadBlock(newBlock);
-      if (index === 0) { document.querySelector('main .results-loading-spinner').style.display = 'none';}
+      if (index === 0) { document.querySelector('main .results-loading-spinner').style.display = 'none'; }
     });
   } else {
     finalArray.slice(0, numInitialLoadedArticles).map(async (x, index) => {
@@ -73,7 +73,7 @@ function createCards(finalArray, block) {
       const newBlock = createCardBlock(x, wrapper);
       block.append(wrapper);
       await loadBlock(newBlock);
-      if (index === 0) { document.querySelector('main .results-loading-spinner').style.display = 'none';}
+      if (index === 0) { document.querySelector('main .results-loading-spinner').style.display = 'none'; }
     });
     const currentLength = block.querySelectorAll('.search-results > .card-wrapper').length;
     if (actualLength > currentLength) {
