@@ -1,125 +1,106 @@
-import { decorateLinkedPictures } from '../../scripts/scripts.js';
+import { toClassName } from '../../scripts/lib-franklin.js';
 
 export default function decorate(block) {
   // When the links on the nested parentContainer are clicked,
   // background image of the parent parentContainer changes.
-  const parentContainer = document.createElement('div');
-  parentContainer.classList.add('container');
-  const linksContainer = document.createElement('div');
-  linksContainer.classList.add('links-container');
-  parentContainer.append(linksContainer);
 
-  const ul = document.createElement('ul');
-  ul.classList.add('links');
-  linksContainer.append(ul);
-
-  // Select all links within the block
-  const links = block.querySelectorAll('a');
+  // collect all links from each cell of the block
   const linkImageList = [];
-
-  links.forEach((link) => {
-    // Find closest common parent (for example, a parentContainer)
-    const parent = link.closest('div');
-
-    // Find the image within that parent
-    const img = parent ? parent.querySelector('img') : null;
-
-    // Add to the array if an image is found
-    if (img) {
+  for (const cell of block.querySelectorAll(':scope > div > div')) {
+    const picture = cell.querySelector('picture');
+    const link = cell.querySelector('a');
+    if (link && picture) {
       linkImageList.push({
-        link: link.cloneNode(true),
-        image: img.cloneNode(true),
+        link,
+        picture,
       });
     }
-
-    // default background image
-    if (link.textContent?.toLowerCase().includes('yoga')) {
-      parentContainer.style.backgroundImage = `url(${img.src})`;
-    }
-
-    // Add event listener for mouseover
-    link.addEventListener('mouseover', () => {
-      if (img) {
-        parentContainer.style.backgroundImage = `url(${img.src})`;
-      }
-    });
-
-    // append links to ul
-    const li = document.createElement('li');
-    li.append(link);
-    ul.append(li);
-  });
-
-  // listen for view port size changes
-  const mediaQuery = window.matchMedia('(min-width: 600px)');
-
-  if (mediaQuery.matches) {
-    block.innerHTML = '';
-    block.append(parentContainer);
-  } else {
-    block.innerHTML = '';
-    block.append(buildMobileView(linkImageList));
-    decorateLinkedPictures(block);
   }
-  block.parentElement.prepend(buildExploreCollectionsButton());
 
-  // listen for view port size changes, and show mobile view if window width is less than 600px
-  mediaQuery.addEventListener('change', (e) => {
-    if (e.matches) {
-      // window width is at least 600px
-      block.innerHTML = '';
-      block.append(parentContainer);
-    } else {
-      block.innerHTML = '';
-      block.append(buildMobileView(linkImageList));
-      decorateLinkedPictures(block);
-    }
-  });
+  block.innerHTML = '';
+  block.append(buildExploreCollectionsButton());
+  block.append(buildDesktopView(linkImageList));
+  block.append(buildMobileView(linkImageList));
 }
 
 /**
- * Build mobile view
- * @param linkImageList {Array} array of link and image objects
- * @returns {HTMLDivElement} parentDiv
+ * @typedef {Object} PictureLinkPair
+ *
+ * @property {HTMLAnchorElement} link
+ * @property {HTMLPictureElement} picture
+ */
+
+/**
+ * @param linkImageList {Array<PictureLinkPair>} array of link and image objects
+ */
+function buildDesktopView(linkImageList) {
+  const desktopView = document.createElement('div');
+  desktopView.classList.add('container', 'desktop-only');
+
+  const pictures = document.createElement('div');
+  pictures.classList.add('pictures');
+  desktopView.append(pictures);
+
+  const links = document.createElement('ul');
+  links.classList.add('links');
+  desktopView.append(links);
+
+  linkImageList.forEach((pair, index) => {
+    const link = pair.link.cloneNode(true);
+    const picture = pair.picture.cloneNode(true);
+
+    const li = document.createElement('li');
+    li.append(link);
+    links.append(li);
+
+    picture.dataset.name = toClassName(link.textContent);
+    if (index === 0) {
+      picture.classList.add('active');
+    }
+    pictures.append(picture);
+
+    link.addEventListener('mouseover', (event) => {
+      event.preventDefault();
+      pictures.querySelector('picture.active').classList.remove('active');
+      picture.classList.add('active');
+    });
+  });
+
+  return desktopView;
+}
+
+/**
+ * @param linkImageList {Array<PictureLinkPair>} array of link and image objects
+ * @returns {HTMLDivElement}
  */
 function buildMobileView(linkImageList) {
-  const parentDiv = document.createElement('div');
-  if (linkImageList.length === 0) return parentDiv;
-  linkImageList.forEach((linkImage) => {
+  const mobileView = document.createElement('div');
+  mobileView.className = 'mobile-only';
+  if (linkImageList.length === 0) return mobileView;
+  for (const pair of linkImageList) {
     const div = document.createElement('div');
-    const { link } = linkImage;
-    const { image } = linkImage;
+    const link = pair.link.cloneNode(true);
+    const picture = pair.picture.cloneNode(true);
+
     const h2 = document.createElement('h2');
     h2.classList.add('img-header');
     h2.textContent = link.textContent;
     link.textContent = '';
     link.className = 'img-link';
     link.append(h2);
-    link.append(image);
+    link.append(picture);
     div.append(link);
-    parentDiv.append(div);
-  });
-  return parentDiv;
+    mobileView.append(div);
+  }
+  return mobileView;
 }
 
 function buildExploreCollectionsButton() {
-  // Create a <div> element with class 'explore'
   const div = document.createElement('div');
   div.className = 'explore';
-
-  // Create button
-  const button = document.createElement('button');
-  button.className = 'btn';
-  button.onclick = () => window.location.replace('/collections');
-  button.textContent = 'Collections';
-
-  // Create a <span> element with class 'msg'
-  const span = document.createElement('span');
-  span.className = 'msg';
-  span.textContent = 'Explore what interests you…';
-
-  div.append(button);
-  div.append(span);
-
+  div.innerHTML = `
+    <a class="btn" href="/collections">Collections</a>
+    <span class="msg">Explore what interests you…</span>
+`;
   return div;
 }
