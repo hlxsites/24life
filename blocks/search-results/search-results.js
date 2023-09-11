@@ -60,18 +60,20 @@ function createCards(finalArray, block) {
   const actualLength = finalArray.length;
   console.log(actualLength);
   if (actualLength < 25) {
-    finalArray.map(async (x) => {
+    finalArray.map(async (x, index) => {
       const wrapper = document.createElement('div');
       const newBlock = createCardBlock(x, wrapper);
       block.append(wrapper);
       await loadBlock(newBlock);
+      if (index === 0) { document.querySelector('main .results-loading-spinner').style.display = 'none';}
     });
   } else {
-    finalArray.slice(0, numInitialLoadedArticles).map(async (x) => {
+    finalArray.slice(0, numInitialLoadedArticles).map(async (x, index) => {
       const wrapper = document.createElement('div');
       const newBlock = createCardBlock(x, wrapper);
       block.append(wrapper);
       await loadBlock(newBlock);
+      if (index === 0) { document.querySelector('main .results-loading-spinner').style.display = 'none';}
     });
     const currentLength = block.querySelectorAll('.search-results > .card-wrapper').length;
     if (actualLength > currentLength) {
@@ -105,6 +107,9 @@ export default async function decorate(block) {
     const textNode = document.createElement('h1');
     textNode.textContent = searchTerm;
     elementHeading.append(textNode);
+    const spinnerDiv = document.createElement('div');
+    spinnerDiv.classList.add('results-loading-spinner');
+    elementHeading.after(spinnerDiv);
     const inputArray = searchTerm.split(' ');
     if (inputArray.length > 1) inputArray.unshift(searchTerm);
     console.log(inputArray);
