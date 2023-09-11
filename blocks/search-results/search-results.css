@@ -38,3 +38,7 @@ main .results-loading-spinner {
     text-align: center;
     margin: auto;
   }
+
+  main .no-results > p {
+    font-size: 2rem;
+  }
