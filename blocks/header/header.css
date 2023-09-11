@@ -40,6 +40,7 @@ header nav .brand {
   display: flex;
   align-items: center;
   padding-left: 15px;
+  margin-left: 15px;
 }
 
 header nav .brand .logo {

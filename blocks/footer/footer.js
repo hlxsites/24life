@@ -64,6 +64,7 @@ export default async function decorate(block) {
     // add horizontal line
     const list = row1.querySelector('ul');
     const horizontalLine = document.createElement('hr');
+    horizontalLine.classList.add('horizontal-line');
     list.after(horizontalLine);
 
     // add target="_blank" to all links in row1
