@@ -24,7 +24,7 @@ export default async function decorate(doc) {
   firstSection.parentElement.append(newSection);
 
   // add a thin gray line to break this up from the previous section
-  const line = document.createElement('div');
+  const line = document.createElement('hr');
   line.classList.add('article-end-line');
   newSectionWrapper.append(line);
 
