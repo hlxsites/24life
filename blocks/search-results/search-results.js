@@ -101,7 +101,10 @@ export default async function decorate(block) {
   console.log(searchTerm);
   block.classList.add('card-container', 'three-columns');
   if (searchTerm) {
-    document.querySelector('.section.search-page-heading').innerHTML = `<h1>${searchTerm}</h1>`;
+    const elementHeading = document.querySelector('.section.search-page-heading');
+    const textNode = document.createElement('h1');
+    textNode.textContent = searchTerm;
+    elementHeading.append(textNode);
     const inputArray = searchTerm.split(' ');
     if (inputArray.length > 1) inputArray.unshift(searchTerm);
     console.log(inputArray);
