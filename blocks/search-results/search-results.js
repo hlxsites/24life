@@ -45,7 +45,7 @@ function createLoadMoreButton(numInitialLoadedArticles, finalArray, actualLength
         block.append(wrapper);
         await loadBlock(newBlock);
       });
-    // eslint-disable-next-line 
+    // eslint-disable-next-line
     const newCurrentLength = block.querySelectorAll('.search-results > .card-wrapper').length;
     if ((actualLength - newCurrentLength) < numInitialLoadedArticles) {
       block.parentNode.querySelector('.article-load-more-container').remove();
@@ -73,10 +73,8 @@ function createCards(finalArray, block) {
       block.append(wrapper);
       await loadBlock(newBlock);
     });
-    const currentLength = block.querySelectorAll('.search-results > .card-wrapper').length
-    const counter = currentLength / numInitialLoadedArticles;
-    // if ((actualLength - (numInitialLoadedArticles * counter)) > numInitialLoadedArticles) {
-      if (actualLength > currentLength) {
+    const currentLength = block.querySelectorAll('.search-results > .card-wrapper').length;
+    if (actualLength > currentLength) {
       createLoadMoreButton(numInitialLoadedArticles, finalArray, actualLength, block);
     }
   }
