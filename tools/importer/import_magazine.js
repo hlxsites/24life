@@ -54,6 +54,7 @@ export default {
       '.image-bg.not-parallax.tfl-constant-contact-wrapper.bg-dark.normal-padding.vc_row.wpb_row.vc_row-fluid.tfl-constant-contact-wrapper.bg-dark.normal-padding',
       '.wpb_text_column.wpb_content_element .wpb_wrapper',
       '.embed-video-container iframe.embed-responsive-item',
+      '.tfl-magazine-current-issue-footer',
     ]);
     const filename = new URL(url).pathname
       .replace(/\/$/, '')
