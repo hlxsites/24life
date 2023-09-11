@@ -23,6 +23,11 @@ export default async function decorate(doc) {
   newSection.append(newSectionWrapper);
   firstSection.parentElement.append(newSection);
 
+  // add a thin gray line to break this up from the previous section
+  const line = document.createElement('div');
+  line.classList.add('article-end-line');
+  newSectionWrapper.append(line);
+
   newSectionWrapper.append(createSocialMediaButtons());
   getMetadata('authors').split(',').forEach((author) => {
     newSectionWrapper.append(createAuthorBlock(author));

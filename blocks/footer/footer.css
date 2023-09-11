@@ -93,7 +93,7 @@ footer li a:hover {
 }
 
 .footer-container .row-1 ul {
-  text-align: center;
+  text-align: left;
 }
 
 .footer-container .footer-menu-list-1 li a {
@@ -168,6 +168,11 @@ footer a.button.jump-to-top:any-link {
 footer a.button.jump-to-top:hover {
   color: #fff;
   opacity: 1;
+}
+
+footer hr.horizontal-line{
+  margin-left:0;
+  width: 96%;
 }
 
 @media only screen and (max-width: 991px) {

@@ -34,6 +34,11 @@ body.article main .article-carousel-wrapper {
     --current-link-color: var(--link-color);
 }
 
+body.article .article-end-line {
+  border: 1px solid var(--faint-gray);
+  margin: 0 0 54px;
+}
+
 @media (min-width: 900px) {
     body.article main .article-carousel-wrapper {
         display: flex;
