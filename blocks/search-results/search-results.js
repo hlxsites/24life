@@ -61,21 +61,21 @@ function createCards(finalArray, block) {
   console.log(actualLength);
   if (actualLength < 25) {
     finalArray.map(async (x, index) => {
-      // if (index === 0) { document.querySelector('.block .results-loading-spinner').style.display = 'none'; }
+      if (index === 0) { block.querySelector('.results-loading-spinner').style.display = 'none'; }
       const wrapper = document.createElement('div');
       const newBlock = createCardBlock(x, wrapper);
       block.append(wrapper);
       await loadBlock(newBlock);
-      if (index === 0) { document.querySelector('.block .results-loading-spinner').style.display = 'none'; }
+      // if (index === 0) { block.querySelector('.results-loading-spinner').style.display = 'none'; }
     });
   } else {
     finalArray.slice(0, numInitialLoadedArticles).map(async (x, index) => {
-      // if (index === 0) { document.querySelector('.block .results-loading-spinner').style.display = 'none'; }
+      if (index === 0) { block.querySelector('.results-loading-spinner').style.display = 'none'; }
       const wrapper = document.createElement('div');
       const newBlock = createCardBlock(x, wrapper);
       block.append(wrapper);
       await loadBlock(newBlock);
-      if (index === 0) { document.querySelector('.block .results-loading-spinner').style.display = 'none'; }
+      // if (index === 0) { block.querySelector('.block .results-loading-spinner').style.display = 'none'; }
     });
     const currentLength = block.querySelectorAll('.search-results > .card-wrapper').length;
     if (actualLength > currentLength) {
