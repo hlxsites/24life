@@ -53,7 +53,7 @@ export default {
     }
     h1.after(img);
 
-    createMetadata(main, document, params);
+    const metadataTable = createMetadata(main, document, params);
 
     // after getting the metadata, remove extra elements
     WebImporter.DOMUtils.remove(main, [
@@ -72,7 +72,7 @@ export default {
 
     // adjust content specific to 24life
     useHighresImagesAndRemoveLinks(main, document);
-    moveFloatingImagesToSeparateLine(main, document);
+    moveFloatingImagesToSeparateLine(main, document, metadataTable);
     makeCaptionTextItalics(main, document);
     detectColumns(main, document, url);
     detectRulers(main, document, url);
@@ -133,7 +133,7 @@ const createMetadata = (main, document, params) => {
 
   // eslint-disable-next-line prefer-destructuring
   params.year = meta['Publication Date'].split('-')[0];
-  return meta;
+  return block;
 };
 
 /** There are a bunch of issues with hlx importer around bold text, which adds ** to the
@@ -339,10 +339,21 @@ function useHighresImagesAndRemoveLinks(main) {
   }
 }
 
-function moveFloatingImagesToSeparateLine(main, document) {
+function moveFloatingImagesToSeparateLine(main, document, metadataTable) {
+  let hasFloatingLeftImages = false;
+  let hasFloatingRightImages = false;
+
   // e.g. https://www.24life.com/pack-your-bag/ has images that are part of the h3.
   // when imported, we want the image to be after the heading, not before.
   for (const img of main.querySelectorAll('h3 img.alignleft, h3 img.alignright')) {
+    if (!img.classList.contains('size-full')) {
+      if (img.classList.contains('alignleft')) {
+        hasFloatingLeftImages = true;
+      }
+      if (img.classList.contains('alignright')) {
+        hasFloatingRightImages = true;
+      }
+    }
     const h3 = img.closest('h3');
     const p = document.createElement('p');
     p.appendChild(img);
@@ -352,6 +363,14 @@ function moveFloatingImagesToSeparateLine(main, document) {
   // e.g. https://www.24life.com/with-hard-knocks-brett-kicks-things-up-a-notch/
   // move images to their own paragraph
   for (const img of main.querySelectorAll('p img.alignleft, p img.alignright')) {
+    if (!img.classList.contains('size-full')) {
+      if (img.classList.contains('alignleft')) {
+        hasFloatingLeftImages = true;
+      }
+      if (img.classList.contains('alignright')) {
+        hasFloatingRightImages = true;
+      }
+    }
     const parent = img.closest('p');
     console.log('parent.childNodeCount', parent.childNodes.length);
     if (parent.childNodes.length > 1 && parent.firstChild === img) {
@@ -359,6 +378,20 @@ function moveFloatingImagesToSeparateLine(main, document) {
       p.appendChild(img);
       parent.before(p);
     }
+  }
+
+  // add section metadata for floats
+  if (hasFloatingLeftImages || hasFloatingRightImages) {
+    let style;
+    if (hasFloatingLeftImages && hasFloatingRightImages) {
+      style = 'float-images-alternate';
+    } else {
+      style = hasFloatingLeftImages ? 'float-images-left' : 'float-images-right';
+    }
+    metadataTable.before(WebImporter.DOMUtils.createTable([
+      ['Section Metadata'],
+      ['Style', `${style}, small-images`],
+    ], document));
   }
 }
 

@@ -353,6 +353,10 @@ main .section.small-images img {
   width: 22%;
 }
 
+main .section.medium-images img {
+  width: 30%;
+}
+
 main .section.float-images-left img,
 main .section.float-images-alternate img.float-left{
     float: left;
