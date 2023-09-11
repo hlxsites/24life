@@ -21,7 +21,6 @@ export default function decorate(block) {
   block.append(buildExploreCollectionsButton());
   block.append(buildDesktopView(linkImageList));
   block.append(buildMobileView(linkImageList));
-  // decorateLinkedPictures(block);
 }
 
 /**
