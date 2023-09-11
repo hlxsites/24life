@@ -346,19 +346,21 @@ main .section.no-gap {
   padding-bottom: 0;
 }
 
+main .section.small-images img {
+  width: 22%;
+}
+
 main .section.float-images-left img {
     float: left;
     margin: 0 30px 30px 0;
 }
 
-main .section.float-images-right img {
+main .section.float-images-right img,
+main .section.float-images-alternate img:nth-of-type(2n){
     float: right;
     margin: 0 30px 30px 0;
 }
 
-main .section.small-images img {
-    width: 22%;
-}
 
 div.experts-page-heading {
   background: #f8f8f8;
