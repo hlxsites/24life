@@ -118,7 +118,16 @@ export default async function decorate(block) {
         total = totalArray(result);
         console.log(total);
         if (index === (inputArray.length - 1)) {
-          createSet(total, block);
+          if (total.length === 0) {
+            document.querySelector('main .results-loading-spinner').style.display = 'none';
+            const sorryDiv = document.createElement('div');
+            const sorryPara = document.createElement('p');
+            sorryDiv.append(sorryPara);
+            sorryPara.textContent = 'Sorry, no results were found, search again ?'
+            elementHeading.after(sorryDiv);
+            sorryDiv.classList.add('no-results');
+          } else {
+             createSet(total, block); }
         }
       });
     });

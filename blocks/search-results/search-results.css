@@ -32,3 +32,9 @@ main .results-loading-spinner {
     opacity: 0;
     visibility: hidden;
   }
+
+  main .no-results {
+    position: relative;
+    text-align: center;
+    margin: auto;
+  }
