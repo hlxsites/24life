@@ -61,19 +61,21 @@ function createCards(finalArray, block) {
   console.log(actualLength);
   if (actualLength < 25) {
     finalArray.map(async (x, index) => {
+      // if (index === 0) { document.querySelector('.block .results-loading-spinner').style.display = 'none'; }
       const wrapper = document.createElement('div');
       const newBlock = createCardBlock(x, wrapper);
       block.append(wrapper);
       await loadBlock(newBlock);
-      if (index === 0) { document.querySelector('main .results-loading-spinner').style.display = 'none'; }
+      if (index === 0) { document.querySelector('.block .results-loading-spinner').style.display = 'none'; }
     });
   } else {
     finalArray.slice(0, numInitialLoadedArticles).map(async (x, index) => {
+      // if (index === 0) { document.querySelector('.block .results-loading-spinner').style.display = 'none'; }
       const wrapper = document.createElement('div');
       const newBlock = createCardBlock(x, wrapper);
       block.append(wrapper);
       await loadBlock(newBlock);
-      if (index === 0) { document.querySelector('main .results-loading-spinner').style.display = 'none'; }
+      if (index === 0) { document.querySelector('.block .results-loading-spinner').style.display = 'none'; }
     });
     const currentLength = block.querySelectorAll('.search-results > .card-wrapper').length;
     if (actualLength > currentLength) {
@@ -97,39 +99,42 @@ function createSet(sumArray, block) {
   createCards(finalArray, block);
 }
 
+function calculate(inputArray, block){
+  inputArray.forEach(async (filter, index) => {
+    searchResults(filter).then((result) => {
+      total = totalArray(result);
+      console.log(total);
+      if (index === (inputArray.length - 1)) {
+        if (total.length === 0) {
+          document.querySelector('main .results-loading-spinner').style.display = 'none';
+          const sorryDiv = document.createElement('div');
+          const sorryPara = document.createElement('p');
+          sorryDiv.append(sorryPara);
+          sorryPara.textContent = 'Sorry, no results were found, search again ?'
+          block.append(sorryDiv);
+          sorryDiv.classList.add('no-results');
+        } else {
+           createSet(total, block); }
+      }
+    });
+  });
+}
+
 export default async function decorate(block) {
   block.innerHTML = '';
   const searchTerm = new URLSearchParams(window.location.search).get('q');
   console.log(searchTerm);
   block.classList.add('card-container', 'three-columns');
   if (searchTerm) {
-    const elementHeading = document.querySelector('.section.search-page-heading');
+    const elementHeading = block.parentNode.parentNode.parentNode.querySelector('.section.search-page-heading');
     const textNode = document.createElement('h1');
     textNode.textContent = searchTerm;
     elementHeading.append(textNode);
     const spinnerDiv = document.createElement('div');
     spinnerDiv.classList.add('results-loading-spinner');
-    elementHeading.after(spinnerDiv);
+    block.append(spinnerDiv);
     const inputArray = searchTerm.split(' ');
     if (inputArray.length > 1) inputArray.unshift(searchTerm);
-    console.log(inputArray);
-    inputArray.forEach(async (filter, index) => {
-      searchResults(filter).then((result) => {
-        total = totalArray(result);
-        console.log(total);
-        if (index === (inputArray.length - 1)) {
-          if (total.length === 0) {
-            document.querySelector('main .results-loading-spinner').style.display = 'none';
-            const sorryDiv = document.createElement('div');
-            const sorryPara = document.createElement('p');
-            sorryDiv.append(sorryPara);
-            sorryPara.textContent = 'Sorry, no results were found, search again ?'
-            elementHeading.after(sorryDiv);
-            sorryDiv.classList.add('no-results');
-          } else {
-             createSet(total, block); }
-        }
-      });
-    });
+    calculate(inputArray, block);
   }
 }

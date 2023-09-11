@@ -7,7 +7,7 @@
     text-align: center;
 }
 
-main .results-loading-spinner {
+.block.search-results .results-loading-spinner {
     text-align: center;
     position: relative;
     top: 10vh;
@@ -28,17 +28,12 @@ main .results-loading-spinner {
     }
   }
 
-  main .loader-hidden {
-    opacity: 0;
-    visibility: hidden;
-  }
-
-  main .no-results {
+  .block.search-results .no-results {
     position: relative;
     text-align: center;
     margin: auto;
   }
 
-  main .no-results > p {
+  .block.search-results .no-results > p {
     font-size: 2rem;
   }
