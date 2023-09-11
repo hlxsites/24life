@@ -443,6 +443,17 @@ function detectColumns(main, document, url) {
 
 function detectQuotes(main, document) {
   for (const quote of main.querySelectorAll('blockquote')) {
+    if (quote.querySelector('h1, h2, h3, h4, h5, h6')) {
+      // if there are headers in there, then it's not a quote. Replace with div instead
+      // e.g. https://www.24life.com/gear-up-2/
+
+      const div = document.createElement('div');
+      div.innerHTML = quote.innerHTML;
+      quote.replaceWith(div);
+
+      // eslint-disable-next-line no-continue
+      continue;
+    }
     let text = quote.textContent.trim();
     if (text.startsWith('“') && text.endsWith('”')) {
       text = text.substring(1, text.length - 1);
