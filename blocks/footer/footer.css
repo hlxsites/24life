@@ -4,6 +4,7 @@ footer {
   background-color: var(--footer-background-color);
   font-size: var(--footer-font-size-copyright);
   color: var(--text-color-on-black-background);
+  clear: both;
 }
 
 footer .footer {

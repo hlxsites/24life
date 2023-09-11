@@ -343,8 +343,31 @@ main .section.highlight {
 }
 
 main .section.no-gap {
-  padding-top: 0;
   padding-bottom: 0;
+}
+
+main .section.no-gap + .section {
+  padding-top: 0;
+}
+
+main .section.small-images img {
+  width: 22%;
+}
+
+main .section.medium-images img {
+  width: 30%;
+}
+
+main .section.float-images-left img,
+main .section.float-images-alternate img.float-left{
+    float: left;
+    margin: 0 30px 30px 0;
+}
+
+main .section.float-images-right img,
+main .section.float-images-alternate img.float-right{
+    float: right;
+    margin: 0 30px 30px 0;
 }
 
 div.experts-page-heading {
