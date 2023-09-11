@@ -342,8 +342,11 @@ main .section.highlight {
 }
 
 main .section.no-gap {
-  padding-top: 0;
   padding-bottom: 0;
+}
+
+main .section.no-gap + .section {
+  padding-top: 0;
 }
 
 main .section.small-images img {
