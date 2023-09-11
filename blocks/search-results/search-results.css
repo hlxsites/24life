@@ -16,7 +16,7 @@
     width: 3.5em;
     height: 3.5em;
     border: 0.5em solid #eee;
-    border-top-color: #888888;
+    border-top-color: #888;
     border-radius: 50%;
     animation: loadingspin 1s linear infinite;
     transition: opacity 1s, visibility 1s;
