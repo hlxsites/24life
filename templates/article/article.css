@@ -1,4 +1,6 @@
 body.article main .default-content-wrapper {
+    clear: both;
+
     --current-link-color: var(--link-color-default-content);
 }
 

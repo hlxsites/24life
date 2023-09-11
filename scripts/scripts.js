@@ -14,6 +14,21 @@ import {
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
 
+export function linkSmallImagesToFullImages(container) {
+  for (const picture of container.querySelectorAll('.section.small-images picture')) {
+    if (picture.closest('div.block')) {
+      // don't link if already in a block.
+      // eslint-disable-next-line no-continue
+      continue;
+    }
+
+    const link = document.createElement('a');
+    link.href = picture.querySelector('img').src;
+    link.innerHTML = picture.outerHTML;
+    picture.replaceWith(link);
+  }
+}
+
 export function decorateLinkedPictures(container, processInBlocks = true) {
   /* MS Word online does not support linked images. As a workaround use any links
   that are directly after the image. */
@@ -143,6 +158,7 @@ export function decorateMain(main) {
   decorateBlocks(main);
   decorateVideoLinks(main);
   decorateSpotifyLinks(main);
+  linkSmallImagesToFullImages(main);
 }
 
 /**
