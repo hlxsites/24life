@@ -66,7 +66,6 @@ function createCards(finalArray, block) {
       const newBlock = createCardBlock(x, wrapper);
       block.append(wrapper);
       await loadBlock(newBlock);
-      // if (index === 0) { block.querySelector('.results-loading-spinner').style.display = 'none'; }
     });
   } else {
     finalArray.slice(0, numInitialLoadedArticles).map(async (x, index) => {
@@ -75,7 +74,6 @@ function createCards(finalArray, block) {
       const newBlock = createCardBlock(x, wrapper);
       block.append(wrapper);
       await loadBlock(newBlock);
-      // if (index === 0) { block.querySelector('.block .results-loading-spinner').style.display = 'none'; }
     });
     const currentLength = block.querySelectorAll('.search-results > .card-wrapper').length;
     if (actualLength > currentLength) {
@@ -99,7 +97,7 @@ function createSet(sumArray, block) {
   createCards(finalArray, block);
 }
 
-function calculate(inputArray, block){
+function calculate(inputArray, block) {
   inputArray.forEach(async (filter, index) => {
     searchResults(filter).then((result) => {
       total = totalArray(result);
@@ -110,11 +108,12 @@ function calculate(inputArray, block){
           const sorryDiv = document.createElement('div');
           const sorryPara = document.createElement('p');
           sorryDiv.append(sorryPara);
-          sorryPara.textContent = 'Sorry, no results were found, search again ?'
+          sorryPara.textContent = 'Sorry, no results were found, search again ?';
           block.append(sorryDiv);
           sorryDiv.classList.add('no-results');
         } else {
-           createSet(total, block); }
+          createSet(total, block);
+        }
       }
     });
   });
