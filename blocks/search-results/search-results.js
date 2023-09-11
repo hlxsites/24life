@@ -46,9 +46,13 @@ function createLoadMoreButton(numInitialLoadedArticles, finalArray, actualLength
         await loadBlock(newBlock);
       });
     // eslint-disable-next-line 
-      if ((actualLength - (numInitialLoadedArticles * counter)) > numInitialLoadedArticles) { block.after(loadMoreContainer); }
+    const newCurrentLength = block.querySelectorAll('.search-results > .card-wrapper').length;
+    if ((actualLength - newCurrentLength) < numInitialLoadedArticles) {
+      block.parentNode.querySelector('.article-load-more-container').remove();
+    }
   });
-  block.after(loadMoreContainer);
+  const newCurrentLength = block.querySelectorAll('.search-results > .card-wrapper').length;
+  if (actualLength > newCurrentLength) { block.after(loadMoreContainer); }
 }
 
 function createCards(finalArray, block) {
@@ -69,8 +73,10 @@ function createCards(finalArray, block) {
       block.append(wrapper);
       await loadBlock(newBlock);
     });
-    const counter = block.querySelectorAll('.search-results > .card-wrapper').length / numInitialLoadedArticles;
-    if ((actualLength - (numInitialLoadedArticles * counter)) > numInitialLoadedArticles) {
+    const currentLength = block.querySelectorAll('.search-results > .card-wrapper').length
+    const counter = currentLength / numInitialLoadedArticles;
+    // if ((actualLength - (numInitialLoadedArticles * counter)) > numInitialLoadedArticles) {
+      if (actualLength > currentLength) {
       createLoadMoreButton(numInitialLoadedArticles, finalArray, actualLength, block);
     }
   }
