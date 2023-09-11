@@ -111,6 +111,19 @@ function calculate(inputArray, block) {
           sorryPara.textContent = 'Sorry, no results were found, search again ?';
           block.append(sorryDiv);
           sorryDiv.classList.add('no-results');
+          const searchFormDiv = document.createElement('div');
+          sorryDiv.after(searchFormDiv);
+          searchFormDiv.innerHTML = `
+           <div class="search-container">
+            <div class="search-wrapper">
+             <div class='search-form'>
+              <form action='/search' method='get'>
+                <input type='search' name='q' class='search-input' placeholder="TYPE HERE"/>
+              </form>
+             </div>
+            </div>
+           </div>
+         `;
         } else {
           createSet(total, block);
         }
