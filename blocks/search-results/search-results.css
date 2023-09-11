@@ -10,7 +10,7 @@
 .block.search-results .results-loading-spinner {
     text-align: center;
     position: relative;
-    bottom: 6vh;
+    bottom: 4vh;
     margin: auto;
     pointer-events: none;
     width: 3.5em;
