@@ -1,7 +1,7 @@
 import { createCardBlock } from '../card/card.js';
 import { loadBlock } from '../../scripts/lib-franklin.js';
 
-export default async function decorate(block) {
+export default function decorate(block) {
   block.innerHTML = '';
   const searchTerm = new URLSearchParams(window.location.search).get('q');
   block.classList.add('card-container', 'three-columns');
@@ -90,7 +90,7 @@ function createLoadMoreButton(numInitialLoadedArticles, finalArray, actualLength
 function createCards(matches, block) {
   const numInitialLoadedArticles = 24;
   const actualLength = matches.length;
-  matches.slice(0, numInitialLoadedArticles).map(async (x, index) => {
+  matches.slice(0, numInitialLoadedArticles).map(async (x) => {
     const wrapper = document.createElement('div');
     const newBlock = createCardBlock(x, wrapper);
     block.append(wrapper);
