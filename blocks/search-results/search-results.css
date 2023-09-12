@@ -50,3 +50,8 @@
     background-color: #f5f5f5;
     border-radius: 0;
   }
+
+  .block.search-results.card-container.three-columns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
