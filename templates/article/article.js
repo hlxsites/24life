@@ -11,6 +11,8 @@ export default async function decorate(doc) {
   link.rel = 'preload';
   link.as = 'image';
   link.href = getMetadata('og:image');
+  link.onload = resolve;
+  link.onerror = reject;
   document.head.append(link);
 
   const firstSection = doc.querySelector('main .section');
