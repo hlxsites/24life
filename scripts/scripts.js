@@ -163,7 +163,7 @@ function buildAutoBlocks(main) {
  */
 // eslint-disable-next-line import/prefer-default-export
 export function decorateMain(main) {
-  // 24life does not use buttons
+  // 24life only uses buttons in article template, so we call this from there instead
   // decorateButtons(main);
 
   decorateIcons(main);
