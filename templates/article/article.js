@@ -17,11 +17,10 @@ export default async function decorate(doc) {
   firstContent.before(createSocialMediaButtons());
 
   const newSection = document.createElement('div');
-  newSection.classList.add('section');
+  newSection.classList.add('section', 'article-author-container');
   const newSectionWrapper = document.createElement('div');
   newSectionWrapper.classList.add('default-content-wrapper');
   newSection.append(newSectionWrapper);
-  firstSection.parentElement.append(newSection);
 
   // add a thin gray line to break this up from the previous section
   const line = document.createElement('hr');
@@ -33,6 +32,7 @@ export default async function decorate(doc) {
     newSectionWrapper.append(createAuthorBlock(author));
   });
   newSectionWrapper.append(createArticleCarousel());
+  firstSection.parentElement.append(newSection);
 }
 
 function createNewSection() {
