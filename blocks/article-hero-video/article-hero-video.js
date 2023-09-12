@@ -7,62 +7,53 @@ export default function decorate(block) {
   block.innerText = '';
 
   const over900px = window.matchMedia('(min-width: 900px)');
-  // create boolean to indicate if we have a video
-  let hasVideo = false;
-  // create video container
+
   const videoContainer = document.createElement('div');
-  videoContainer.classList.add('article-hero-video-element-container');
-  // create overlay container
-  const overlayContainer = document.createElement('div');
-  overlayContainer.classList.add('article-hero-video-overlay-container');
+  videoContainer.classList.add('video-container');
 
   function buildVideo() {
-    if (isYoutubeVideo(data?.video)) {
-      videoContainer.append(buildIframe(data?.video));
+    if (isYoutubeVideo(data.video)) {
+      videoContainer.append(buildIframe(data.video));
     } else {
       // mp4 video
-      videoContainer.append(buildVideoTag(data?.video));
+      videoContainer.append(buildVideoTag(data.video));
     }
-    // add overlay div to avoid clicks on video
-    overlayContainer.append(addVideoOverlay());
   }
 
-  if (data?.video) {
-    hasVideo = true;
+  if (data.video) {
     if (over900px.matches) {
       buildVideo();
     }
   }
   block.append(videoContainer);
-  block.append(overlayContainer);
+  // add overlay div to avoid clicks on video
+  block.append(addVideoOverlay());
 
-  // add change event listener
+  // We don't want to load the video on smaller screens. Make sure to delete or add
+  // the markup when the screen size changes
   over900px.addEventListener('change', (e) => {
     if (e.matches) {
-      // check if we have existing iframe in video container
-      if (videoContainer.querySelector('iframe')) {
+      if (videoContainer.querySelector('iframe, video')) {
         return;
       }
       buildVideo();
     } else {
       videoContainer.innerHTML = '';
-      overlayContainer.innerHTML = '';
     }
   });
 
   function addVideoOverlay() {
-    // create overlay div if it doesn't exist
     const overlay = document.createElement('div');
-    overlay.classList.add('article-hero-video-overlay');
+    overlay.classList.add('overlay-catch-clicks');
     return overlay;
   }
 
   // create image container div
   const imageContainer = document.createElement('div');
-  imageContainer.classList.add('article-hero-video-image-container');
-  picture.classList.add('article-hero-video-image');
+  imageContainer.classList.add('image-container');
+  picture.classList.add('fallback-image');
   imageContainer.append(picture);
-  if (!hasVideo) {
+  if (!data.video) {
     imageContainer.style.display = 'unset';
   }
   // append image container to block
