@@ -150,7 +150,6 @@ function createCardBlocks(main, document) {
     msg = msg.replace(/,\s*$/, '');
     const collectionsContainer = document.createElement('p');
     collectionsContainer.append(msg);
-    
 
     // article link
     const article = document.createElement('h2');
