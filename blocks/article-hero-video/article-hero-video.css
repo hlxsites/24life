@@ -41,8 +41,8 @@ div.article-hero-video-wrapper {
 }
 
 .article-hero-video h1.article-hero-video-title {
-  font-size: 25px;
-  line-height: 30px;
+  font-size: 6vw;
+  line-height: 1;
   font-weight: 100;
   margin-top: 0;
   letter-spacing: 1px;
@@ -53,6 +53,7 @@ div.article-hero-video-wrapper {
   line-height: 18px;
   font-weight: 100;
   margin-bottom: 0;
+  text-transform: uppercase;
 }
 
 .article-hero-video h6.article-hero-video-author {
@@ -90,18 +91,9 @@ div.image-container {
 }
 
 @media screen and (min-width: 600px) {
-  .article-hero-video h1.article-hero-video-title {
-    font-size: 50px;
-    line-height: 60px;
-  }
 }
 
 @media screen and (min-width: 900px) {
-  .article-hero-video h1.article-hero-video-title {
-    font-size: 35px;
-    line-height: 40px;
-  }
-
   .article-hero-video h6.article-hero-video-author {
     font-size: 24px;
     line-height: 32px;
@@ -128,12 +120,5 @@ div.image-container {
 @media screen and (min-width: 1200px) {
   .article-hero-video div.article-hero-video-title-container {
     min-width: 65%;
-  }
-
-
-
-  .article-hero-video h1.article-hero-video-title {
-    font-size: 72px;
-    line-height: 80px;
   }
 }
