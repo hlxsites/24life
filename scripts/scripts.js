@@ -30,8 +30,8 @@ export function decorateFloatImages(container) {
 }
 export function linkSmallImagesToFullImages(container) {
   for (const picture of container.querySelectorAll('.section.small-images picture')) {
-    if (picture.closest('div.block')) {
-      // don't link if already in a block.
+    if (picture.closest('div.block') || picture.closest('a')) {
+      // don't link if already in a block or a link.
       // eslint-disable-next-line no-continue
       continue;
     }
