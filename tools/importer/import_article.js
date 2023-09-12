@@ -33,25 +33,53 @@ export default {
       '.tfl-author-image',
       '#disqus_thread',
       'blockquote.wp-embedded-content',
+      '.tfl-constant-contact-wrapper',
     ]);
+    main.querySelector('ul.social-list.list-inline').parentElement.remove();
 
-    // currently not supporting magazine articles, TODO: handle
-    if (document.querySelector('.mb_YTPlayer')) {
-      throw new Error('Magazine article not supported');
-    }
-    if (!document.querySelector('.tfl-page-title-wrap')) {
-      throw new Error('only normal articles are supported');
-    }
+    // // currently not supporting magazine articles, TODO: handle
+    // if (document.querySelector('.mb_YTPlayer')) {
+    //   throw new Error('Magazine article not supported');
+    // }
+    // if (!document.querySelector('.tfl-page-title-wrap')) {
+    //   throw new Error('only normal articles are supported');
+    // }
 
-    // start with h1, then image
-    const h1 = main.querySelector('h1');
-    main.prepend(h1);
-    let img = main.querySelector('img');
-    if (!img) {
-      img = document.createElement('img');
-      img.src = 'http://localhost:3001/dummy-article-hero-image/media_127d7667d1e27556e2e4570b95d44f0dfc591529a.png?host=https%3A%2F%2Fmain--24life--hlxsites.hlx.page';
+    const magazineSection = main.querySelector('.row.fullscreen .vid-bg');
+
+    if (magazineSection) {
+      // magazine article e.g. https://www.24life.com/make-2019-the-year-you-dont-get-hurt/
+      const h1 = magazineSection.querySelector('h1');
+      const img = main.querySelector('img');
+      const video = magazineSection.querySelector('video source[src^="http"]');
+      params.video = video.src;
+      params.isMagazine = true;
+      const author = magazineSection.querySelector('h4');
+      if (author.textContent.startsWith('By ')) {
+        author.remove();
+      }
+      const collection = magazineSection.querySelector('h6');
+      collection?.remove();
+
+      console.log({ h1 });
+
+      magazineSection.replaceWith(WebImporter.DOMUtils.createTable([
+        ['Article Hero Video'],
+        ['Title', h1],
+        ['Video', 'TODO: add video link'],
+        ['Image', img],
+      ], document));
+    } else {
+      // start with h1, then image
+      const h1 = main.querySelector('h1');
+      main.prepend(h1);
+      let img = main.querySelector('img');
+      if (!img) {
+        img = document.createElement('img');
+        img.src = 'http://localhost:3001/dummy-article-hero-image/media_127d7667d1e27556e2e4570b95d44f0dfc591529a.png?host=https%3A%2F%2Fmain--24life--hlxsites.hlx.page';
+      }
+      h1.after(img);
     }
-    h1.after(img);
 
     const metadataTable = createMetadata(main, document, params);
 
@@ -80,6 +108,7 @@ export default {
     await articleEmbeds(main, document);
     detectQuotes(main, document);
     fixInvalidLists(main, document);
+    magazineLinkMakeBoldAndItalic(main, document);
 
     const filename = new URL(url).pathname
       .replace(/\/$/, '')
@@ -90,18 +119,27 @@ export default {
       throw new Error(`missing params section or year. ${JSON.stringify(params)}`);
     }
     const newPath = WebImporter.FileUtils.sanitizePath(`${toClassName(section)}/${toClassName(year)}/${filename}`);
-    return {
+
+    const transformationResult = [{
       element: main,
       path: newPath,
       report: {
         previewUrl: `https://main--24life--hlxsites.hlx.page${newPath}`,
       },
-    };
+    }];
+    if (params.video) {
+      transformationResult.push({
+        path: `videos/${newPath}.mp4`,
+        from: params.video,
+      });
+    }
+    return transformationResult;
   },
 };
 
 const createMetadata = (main, document, params) => {
   const { ldJSON } = params;
+  const keywords = ldJSON['@graph'].find((item) => item['@type'] === 'Article').keywords.join(', ');
 
   const meta = {};
 
@@ -109,6 +147,14 @@ const createMetadata = (main, document, params) => {
     .content
     .replace(/^- /, '');
   meta.Description = removeOldSectionNamesFromDescriptin(meta.Description);
+
+  if (params.isMagazine) {
+    meta.Issue = keywords
+      .split(',')
+      .filter((keyword) => keyword.toLowerCase().trim().startsWith('volume') && keyword.toLowerCase().includes('issue'))
+      .map((keyword) => toClassName(keyword.trim()))
+      .pop();
+  }
 
   meta.Collections = [...document.querySelectorAll('.tfl-page-title-wrap .tfl-the-tags a.tfl-tag')]
     .map((tag) => tag.textContent.trim())
@@ -124,7 +170,7 @@ const createMetadata = (main, document, params) => {
     .map((item) => item.name)
     .join(', ');
 
-  meta.Keywords = ldJSON['@graph'].find((item) => item['@type'] === 'Article').keywords.join(', ');
+  meta.Keywords = keywords;
 
   meta['Publication Date'] = ldJSON['@graph'].find((item) => item['@type'] === 'Article').datePublished;
 
@@ -259,6 +305,14 @@ function cleanupForImportCompatibility(main, document) {
   fixUnderscoreInLinks(main, document);
   fixBoldedLinks(main, document);
   ignoredItalicSpecialChars(main, document);
+}
+
+function magazineLinkMakeBoldAndItalic(main, document) {
+  [...main.querySelectorAll('a.btn')]
+    .filter((a) => a.textContent.trim() === 'Next')
+    .forEach((a) => {
+      a.innerHTML = `<strong><em>${a.innerHTML}</em></strong>`;
+    });
 }
 
 export function toClassName(name) {
