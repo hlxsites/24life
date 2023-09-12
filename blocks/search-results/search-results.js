@@ -59,20 +59,19 @@ function createCards(finalArray, block) {
   const numInitialLoadedArticles = 24;
   const actualLength = finalArray.length;
   console.log(actualLength);
-    finalArray.slice(0, numInitialLoadedArticles).map(async (x, index) => {
-      if (index === 0) { block.querySelector('.results-loading-spinner').remove(); }
-      const wrapper = document.createElement('div');
-      const newBlock = createCardBlock(x, wrapper);
-      block.append(wrapper);
-      await loadBlock(newBlock);
-    });
-    if (actualLength > numInitialLoadedArticles) {
-      createLoadMoreButton(numInitialLoadedArticles, finalArray, actualLength, block);
- }
+  finalArray.slice(0, numInitialLoadedArticles).map(async (x, index) => {
+    if (index === 0) { block.querySelector('.results-loading-spinner').remove(); }
+    const wrapper = document.createElement('div');
+    const newBlock = createCardBlock(x, wrapper);
+    block.append(wrapper);
+    await loadBlock(newBlock);
+  });
+  if (actualLength > numInitialLoadedArticles) {
+    createLoadMoreButton(numInitialLoadedArticles, finalArray, actualLength, block);
+  }
 }
 
 function createSet(sumArray, block) {
-  console.log(sumArray);
   const uniquePath = new Set();
   const finalArray = sumArray.filter((element) => {
     const isDuplicate = uniquePath.has(element.path);
@@ -82,7 +81,6 @@ function createSet(sumArray, block) {
     }
     return false;
   });
-  console.log(finalArray);
   createCards(finalArray, block);
 }
 
@@ -114,6 +112,7 @@ function calculate(inputArray, block) {
            </div>
          `;
         } else {
+          console.log(inputArray);
           createSet(total, block);
         }
       }
