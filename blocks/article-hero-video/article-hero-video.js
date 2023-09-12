@@ -26,8 +26,11 @@ export default function decorate(block) {
     }
   }
   block.append(videoContainer);
+
   // add overlay div to avoid clicks on video
-  block.append(addVideoOverlay());
+  const overlay = document.createElement('div');
+  overlay.classList.add('overlay-catch-clicks');
+  block.append(overlay);
 
   // We don't want to load the video on smaller screens. Make sure to delete or add
   // the markup when the screen size changes
@@ -42,21 +45,11 @@ export default function decorate(block) {
     }
   });
 
-  function addVideoOverlay() {
-    const overlay = document.createElement('div');
-    overlay.classList.add('overlay-catch-clicks');
-    return overlay;
-  }
-
-  // create image container div
+  // create image
   const imageContainer = document.createElement('div');
   imageContainer.classList.add('image-container');
   picture.classList.add('fallback-image');
   imageContainer.append(picture);
-  if (!data.video) {
-    imageContainer.style.display = 'unset';
-  }
-  // append image container to block
   block.append(imageContainer);
 
   const titleContainer = document.createElement('div');
