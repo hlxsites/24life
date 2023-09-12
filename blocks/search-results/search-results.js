@@ -17,6 +17,8 @@ export default async function decorate(block) {
     const tokenizedSearchWords = tokenizeSearchTerms(searchTerm);
     // noinspection ES6MissingAwait
     loadResults(tokenizedSearchWords, block);
+  } else {
+    // TODO: handle case
   }
 }
 
