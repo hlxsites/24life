@@ -1,30 +1,61 @@
 import { createCardBlock } from '../card/card.js';
 import { loadBlock } from '../../scripts/lib-franklin.js';
 
-let newArray = [];
-let total = [];
+export default async function decorate(block) {
+  block.innerHTML = '';
+  const searchTerm = new URLSearchParams(window.location.search).get('q');
+  block.classList.add('card-container', 'three-columns');
+  if (searchTerm) {
+    const elementHeading = block.parentNode.parentNode.parentNode.querySelector('.section.search-page-heading');
+    const header = document.createElement('h1');
+    header.textContent = searchTerm;
+    elementHeading.append(header);
+    const spinnerDiv = document.createElement('div');
+    spinnerDiv.classList.add('results-loading-spinner');
+    block.append(spinnerDiv);
 
-export async function searchResults(params) {
-  // fetch results from json files
-  const allData = await fetch(`${window.location.origin}/articles.json?sheet=full`);
-  console.log(allData);
-  const jsonData = await allData.json();
-  return jsonData.data.filter((entry) => (
-    entry.title
-    + entry.content
-    + entry.path
-    + entry.authors
-    + entry.collections
-    + entry.section
-    + entry.categories
-  )
-    .toLowerCase()
-    .includes(params.toLowerCase()));
+    const tokenizedSearchWords = tokenizeSearchTerms(searchTerm);
+    // noinspection ES6MissingAwait
+    loadResults(tokenizedSearchWords, block);
+  }
 }
 
-function totalArray(arrayChunk) {
-  newArray = newArray.concat(arrayChunk);
-  return newArray;
+async function loadResults(tokenizedSearchWords, block) {
+  const allData = await fetch(`${window.location.origin}/articles.json?sheet=full`);
+  const jsonData = await allData.json();
+
+  const uniqueMatches = filterMatches(tokenizedSearchWords, jsonData);
+
+  document.querySelector('main .results-loading-spinner').remove();
+
+  if (uniqueMatches.length === 0) {
+    block.append(addNoResultElement());
+  } else {
+    createCards(uniqueMatches, block);
+  }
+}
+
+function filterEntry(entry, filter) {
+  return (
+    entry.title
+      + entry.content
+      + entry.path
+      + entry.authors
+      + entry.collections
+      + entry.section
+      + entry.categories
+  )
+    .toLowerCase()
+    .includes(filter.toLowerCase());
+}
+
+function filterMatches(tokenizedSearchWords, jsonData) {
+  const matches = [];
+  for (const filter of tokenizedSearchWords) {
+    matches.push(...(jsonData.data.filter((entry) => filterEntry(entry, filter))));
+  }
+
+  return filterDuplicates(matches);
 }
 
 function createLoadMoreButton(numInitialLoadedArticles, finalArray, actualLength, block) {
@@ -35,7 +66,7 @@ function createLoadMoreButton(numInitialLoadedArticles, finalArray, actualLength
     const currentLength = block.querySelectorAll('.search-results > .card-wrapper').length;
     const counter = currentLength / numInitialLoadedArticles;
     // eslint-disable-next-line
-    finalArray.slice(numInitialLoadedArticles * counter, (numInitialLoadedArticles * counter) + numInitialLoadedArticles)
+        finalArray.slice(numInitialLoadedArticles * counter, (numInitialLoadedArticles * counter) + numInitialLoadedArticles)
       .map(async (x) => {
         const wrapper = document.createElement('div');
         const newBlock = createCardBlock(x, wrapper);
@@ -43,35 +74,35 @@ function createLoadMoreButton(numInitialLoadedArticles, finalArray, actualLength
         await loadBlock(newBlock);
       });
     // eslint-disable-next-line
-    const newCurrentLength = block.querySelectorAll('.search-results > .card-wrapper').length;
+        const newCurrentLength = block.querySelectorAll('.search-results > .card-wrapper').length;
     if ((actualLength - newCurrentLength) < numInitialLoadedArticles) {
       block.parentNode.querySelector('.article-load-more-container').remove();
     }
   });
   const newCurrentLength = block.querySelectorAll('.search-results > .card-wrapper').length;
-  if (actualLength > newCurrentLength) { block.after(loadMoreContainer); }
+  if (actualLength > newCurrentLength) {
+    block.after(loadMoreContainer);
+  }
 }
 
-function createCards(finalArray, block) {
+function createCards(matches, block) {
   const numInitialLoadedArticles = 24;
-  const actualLength = finalArray.length;
-  console.log(finalArray.values);
-  console.log(actualLength);
-  finalArray.slice(0, numInitialLoadedArticles).map(async (x, index) => {
-    if (index === 0) { block.querySelector('.results-loading-spinner').remove(); }
+  const actualLength = matches.length;
+  matches.slice(0, numInitialLoadedArticles).map(async (x, index) => {
     const wrapper = document.createElement('div');
     const newBlock = createCardBlock(x, wrapper);
     block.append(wrapper);
     await loadBlock(newBlock);
   });
   if (actualLength > numInitialLoadedArticles) {
-    createLoadMoreButton(numInitialLoadedArticles, finalArray, actualLength, block);
+    createLoadMoreButton(numInitialLoadedArticles, matches, actualLength, block);
   }
 }
 
-function createSet(sumArray, block) {
+function filterDuplicates(matches) {
   const uniquePath = new Set();
-  const finalArray = sumArray.filter((element) => {
+
+  return matches.filter((element) => {
     const isDuplicate = uniquePath.has(element.path);
     if (!isDuplicate) {
       uniquePath.add(element.path);
@@ -79,27 +110,16 @@ function createSet(sumArray, block) {
     }
     return false;
   });
-  createCards(finalArray, block);
 }
 
-function calculate(inputArray, block) {
-  inputArray.forEach(async (filter, index) => {
-    searchResults(filter).then((result) => {
-      total = totalArray(result);
-      console.log(total);
-      if (index === (inputArray.length - 1)) {
-        if (total.length === 0) {
-          document.querySelector('main .results-loading-spinner').style.display = 'none';
-          const sorryDiv = document.createElement('div');
-          const sorryPara = document.createElement('p');
-          sorryDiv.append(sorryPara);
-          sorryPara.textContent = 'Sorry, no results were found, search again ?';
-          block.append(sorryDiv);
-          sorryDiv.classList.add('no-results');
-          const searchFormDiv = document.createElement('div');
-          sorryDiv.after(searchFormDiv);
-          searchFormDiv.innerHTML = `
-           <div class="search-container">
+function addNoResultElement() {
+  const sorryDiv = document.createElement('div');
+  sorryDiv.classList.add('no-results');
+  sorryDiv.innerHTML = `
+    <div class="no-results">
+        <p>Sorry, no results were found, search again ?</p>
+    </div>
+     <div class="search-container">
             <div class="search-wrapper">
              <div class='search-form'>
               <form action='/search' method='get'>
@@ -108,31 +128,12 @@ function calculate(inputArray, block) {
              </div>
             </div>
            </div>
-         `;
-        } else {
-          console.log(inputArray);
-          createSet(total, block);
-        }
-      }
-    });
-  });
+    `;
+  return sorryDiv;
 }
 
-export default async function decorate(block) {
-  block.innerHTML = '';
-  const searchTerm = new URLSearchParams(window.location.search).get('q');
-  console.log(searchTerm);
-  block.classList.add('card-container', 'three-columns');
-  if (searchTerm) {
-    const elementHeading = block.parentNode.parentNode.parentNode.querySelector('.section.search-page-heading');
-    const textNode = document.createElement('h1');
-    textNode.textContent = searchTerm;
-    elementHeading.append(textNode);
-    const spinnerDiv = document.createElement('div');
-    spinnerDiv.classList.add('results-loading-spinner');
-    block.append(spinnerDiv);
-    const inputArray = searchTerm.split(' ');
-    if (inputArray.length > 1) inputArray.unshift(searchTerm);
-    calculate(inputArray, block);
-  }
+function tokenizeSearchTerms(searchTerm) {
+  const tokenizedSearchWords = searchTerm.split(' ');
+  if (tokenizedSearchWords.length > 1) tokenizedSearchWords.unshift(searchTerm);
+  return tokenizedSearchWords;
 }
