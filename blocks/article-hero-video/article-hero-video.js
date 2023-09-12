@@ -8,6 +8,13 @@ export default function decorate(block) {
 
   const over900px = window.matchMedia('(min-width: 900px)');
 
+  // create image
+  const imageContainer = document.createElement('div');
+  imageContainer.classList.add('image-container');
+  picture.querySelector('img').classList.add('fallback-image');
+  imageContainer.append(picture);
+  block.append(imageContainer);
+
   const videoContainer = document.createElement('div');
   videoContainer.classList.add('video-container');
 
@@ -45,15 +52,8 @@ export default function decorate(block) {
     }
   });
 
-  // create image
-  const imageContainer = document.createElement('div');
-  imageContainer.classList.add('image-container');
-  picture.classList.add('fallback-image');
-  imageContainer.append(picture);
-  block.append(imageContainer);
-
   const titleContainer = document.createElement('div');
-  titleContainer.classList.add('article-hero-video-title-container');
+  titleContainer.classList.add('title-container');
 
   const section = document.createElement('h4');
   section.classList.add('article-hero-video-section');

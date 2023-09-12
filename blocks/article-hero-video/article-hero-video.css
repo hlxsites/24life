@@ -1,6 +1,20 @@
 div.article-hero-video-container {
   overflow: hidden;
-  padding-top: 0;
+  padding: 0;
+}
+
+div.article-hero-video {
+  width: 100vw;
+  height: calc(100vh - var(--nav-height));
+  animation-timing-function: linear;
+  margin: 0 0 4rem;
+  background-color: var(--footer-background-color);
+
+  --current-link-color: var(--text-color-on-black-background);
+}
+
+div.article-hero-video-wrapper {
+  margin: 0;
 }
 
 .article-hero-video div.overlay-catch-clicks {
@@ -11,25 +25,8 @@ div.article-hero-video-container {
   height: 100%;
 }
 
-div.article-hero-video {
-  width: 100vw;
-  height: auto;
-  aspect-ratio: 16/9;
-  border: none;
-  margin: 0;
-  animation-timing-function: linear;
-  display: block;
-  transform: scaleX(1.1) scaleY(1.1);
 
-  --current-link-color: var(--text-color-on-black-background);
-}
-
-div.article-hero-video-wrapper {
-  margin: 0;
-}
-
-
-.article-hero-video div.article-hero-video-title-container {
+.article-hero-video div.title-container {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -73,23 +70,20 @@ div.article-hero-video-wrapper {
 
 .article-hero-video div.image-container {
   background: #222;
+  height: 100%;
+  overflow: hidden;
 }
 
-.article-hero-video .fallback-image {
-  width: 100vw;
-  height: auto;
-  aspect-ratio: 16/9;
+.article-hero-video img.fallback-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   border: none;
   margin: 0;
   display: block;
   transform: scaleX(1.1) scaleY(1.1);
   filter: brightness(0.80);
-}
 
-.article-hero-video img {
-  width: 100vw;
-  height: 100vh;
-  object-fit: cover;
 }
 
 @media screen and (min-width: 900px) {
@@ -106,9 +100,11 @@ div.article-hero-video-wrapper {
     top: 0;
     left: 0;
     width: 100%;
-    filter: brightness(70%);
     min-width: 100vw;
+    height: 100%;
+    filter: brightness(70%);
     border: 0;
+    object-fit: cover;
   }
 
   /* hide controls on youtube */
@@ -118,7 +114,7 @@ div.article-hero-video-wrapper {
 }
 
 @media screen and (min-width: 1200px) {
-  .article-hero-video div.article-hero-video-title-container {
+  .article-hero-video div.title-container {
     min-width: 65%;
   }
 }
