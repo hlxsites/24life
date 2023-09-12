@@ -129,7 +129,7 @@ export default {
     }];
     if (params.video) {
       transformationResult.push({
-        path: `videos/${newPath}.mp4`,
+        path: `${newPath}.mp4`,
         from: params.video,
       });
     }
@@ -311,7 +311,9 @@ function magazineLinkMakeBoldAndItalic(main, document) {
   [...main.querySelectorAll('a.btn')]
     .filter((a) => a.textContent.trim() === 'Next')
     .forEach((a) => {
-      a.innerHTML = `<strong><em>${a.innerHTML}</em></strong>`;
+      const em = document.createElement('em');
+      em.innerHTML = a.outerHTML;
+      a.replaceWith(em);
     });
 }
 
