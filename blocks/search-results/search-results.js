@@ -1,5 +1,4 @@
 import { createCardBlock } from '../card/card.js';
-import { loadBlock } from '../../scripts/lib-franklin.js';
 
 let newArray = [];
 let total = [];
@@ -28,52 +27,12 @@ function totalArray(arrayChunk) {
   return newArray;
 }
 
-// function createLoadMoreButton(numInitialLoadedArticles, finalArray, actualLength, block) {
-//   const loadMoreContainer = document.createElement('div');
-//   loadMoreContainer.classList.add('article-load-more-container');
-//   loadMoreContainer.innerHTML = '<button class="article-list-load-more-button">Load more</button>';
-//   loadMoreContainer.addEventListener('click', async () => {
-//     const currentLength = block.querySelectorAll('.search-results > .card-wrapper').length;
-//     const counter = currentLength / numInitialLoadedArticles;
-//     // eslint-disable-next-line
-//     finalArray.slice(numInitialLoadedArticles * counter, (numInitialLoadedArticles * counter) + numInitialLoadedArticles)
-//       .map(async (x) => {
-//         const wrapper = document.createElement('div');
-//         const newBlock = createCardBlock(x, wrapper);
-//         block.append(wrapper);
-//         await loadBlock(newBlock);
-//       });
-//     // eslint-disable-next-line
-//     const newCurrentLength = block.querySelectorAll('.search-results > .card-wrapper').length;
-//     if ((actualLength - newCurrentLength) < numInitialLoadedArticles) {
-//       block.parentNode.querySelector('.article-load-more-container').remove();
-//     }
-//   });
-//   const newCurrentLength = block.querySelectorAll('.search-results > .card-wrapper').length;
-//   if (actualLength > newCurrentLength) { block.after(loadMoreContainer); }
-// }
-
-// function createCards(finalArray, block) {
-//   const numInitialLoadedArticles = 24;
-//   const actualLength = finalArray.length;
-//   console.log(finalArray.values());
-//   console.log(actualLength);
-//   finalArray.slice(0, numInitialLoadedArticles).map(async (x, index) => {
-//     if (index === 0) { block.querySelector('.results-loading-spinner').remove(); }
-//     const wrapper = document.createElement('div');
-//     const newBlock = createCardBlock(x, wrapper);
-//     block.append(wrapper);
-//     await loadBlock(newBlock);
-//   });
-//   if (actualLength > numInitialLoadedArticles) {
-//     createLoadMoreButton(numInitialLoadedArticles, finalArray, actualLength, block);
-//   }
-// }
-
-function displayNextEntries(iterator, numInitialLoadedArticles, loadMoreContainer, block){
+function displayNextEntries(iterator, numInitialLoadedArticles, loadMoreContainer, block) {
   console.log(done);
   if (done) { block.querySelector('.results-loading-spinner').remove(); done = false; }
+  // eslint-disable-next-line no-plusplus
   for (let i = 0; i <= numInitialLoadedArticles; i++) {
+    if (i === numInitialLoadedArticles) { block.after(loadMoreContainer); }
     const next = iterator.next();
     if (next.done) {
       loadMoreContainer.remove();
@@ -81,7 +40,7 @@ function displayNextEntries(iterator, numInitialLoadedArticles, loadMoreContaine
     const searchItem = next.value;
     if (!searchItem) break;
     const wrapper = document.createElement('div');
-    const newBlock = createCardBlock(searchItem, wrapper);
+    createCardBlock(searchItem, wrapper);
     block.append(wrapper);
   }
 }
@@ -89,13 +48,11 @@ function displayNextEntries(iterator, numInitialLoadedArticles, loadMoreContaine
 function createCards(finalArray, block) {
   console.log(finalArray);
   const numInitialLoadedArticles = 23;
-  const actualLength = finalArray.length;
   const iterator = finalArray.values();
   const loadMoreContainer = document.createElement('div');
   loadMoreContainer.classList.add('article-load-more-container');
   loadMoreContainer.innerHTML = '<button class="article-list-load-more-button">Load more</button>';
   displayNextEntries(iterator, numInitialLoadedArticles, loadMoreContainer, block);
-  block.after(loadMoreContainer);
   loadMoreContainer.addEventListener('click', () => {
     displayNextEntries(iterator, numInitialLoadedArticles, loadMoreContainer, block);
   });
