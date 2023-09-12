@@ -66,13 +66,12 @@ div.article-hero-video-wrapper {
 }
 
 
-video.article-hero-video-element,
-iframe.article-hero-video-element {
+.article-hero-video video.article-hero-video-element,
+.article-hero-video iframe.article-hero-video-element {
   display: none;
 }
 
-div.image-container {
-  display: block;
+.article-hero-video div.image-container {
   background: #222;
 }
 
@@ -93,29 +92,27 @@ div.image-container {
   object-fit: cover;
 }
 
-@media screen and (min-width: 600px) {
-}
-
 @media screen and (min-width: 900px) {
   .article-hero-video h6.authors {
     font-size: 24px;
     line-height: 32px;
   }
 
-  .article-hero-video div.image-container {
-    display: none;
-  }
 
-  video.article-hero-video-element,
-  iframe.article-hero-video-element {
+  .article-hero-video video.article-hero-video-element,
+  .article-hero-video iframe.article-hero-video-element {
     display: unset;
     position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
+    width: 100%;
     filter: brightness(70%);
     min-width: 100vw;
     border: 0;
+  }
+
+  /* hide controls on youtube */
+  .article-hero-video iframe.article-hero-video-element {
     transform: scale(1.1);
   }
 }
