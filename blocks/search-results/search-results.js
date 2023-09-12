@@ -86,7 +86,7 @@ function calculate(inputArray, block) {
           block.append(sorryDiv);
           sorryDiv.classList.add('no-results');
           const searchFormDiv = document.createElement('div');
-          sorryDiv.after(searchFormDiv);
+          sorryDiv.append(searchFormDiv);
           searchFormDiv.innerHTML = `
            <div class="search-container">
             <div class="search-wrapper">
@@ -98,6 +98,7 @@ function calculate(inputArray, block) {
             </div>
            </div>
          `;
+          document.querySelector('.block.search-results.card-container.three-columns').style.display = 'block';
         } else {
           console.log(inputArray);
           createSet(total, block);
