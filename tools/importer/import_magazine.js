@@ -93,7 +93,15 @@ function createYoutubeLink(document, main) {
   main.append(youtubeLink);
   main.innerHTML += `${youtubeLink} <p> --- </p>`;
 }
+/*
 
+* content structure: in first cell:
+ *  - p > image
+ *  - p > COLLECTIONS (optional)
+ *  - title as linked h1, h2, h3, h4, h5, or h6
+ *  - p > author with link (optional)
+
+   */
 function createCardBlocks(main, document) {
   const articleCards = document.querySelectorAll('.vc_grid-item-mini.vc_clearfix');
   let pillar = '';
@@ -122,43 +130,52 @@ function createCardBlocks(main, document) {
         pillar = 'Recover';
       }
     }
-    const temp = [];
+    const cardsContainer = [];
     const div = document.createElement('div');
 
     // get image
-    div.append(card.querySelector('.vc_gitem-animated-block img'));
-
-    div.innerHTML += '<br/>';
+    const imageWrapper = document.createElement('p');
+    const articleImage = card.querySelector('.vc_gitem-animated-block img');
 
     // get message above the article link
-    const linksAboveArticle = card.querySelector('.vc_gitem-zone.vc_gitem-zone-c.tfl-post-grid-title-wrap .tfl-tags');
+    const collections = card.querySelector('.vc_gitem-zone.vc_gitem-zone-c.tfl-post-grid-title-wrap .tfl-tags');
     // iterate linksAboveArticle to extract anchor link's textContent
     // create a variable to store the textContent
     let msg = '';
-    linksAboveArticle.querySelectorAll('a').forEach((l) => {
+    collections.querySelectorAll('a').forEach((l) => {
       const linkText = l.textContent.toUpperCase();
       msg += `${linkText}, `;
     });
     // remove the last comma
     msg = msg.replace(/,\s*$/, '');
-    const h = document.createElement('h4');
-    h.textContent = msg;
-    div.append(h);
+    const collectionsContainer = document.createElement('p');
+    collectionsContainer.append(msg);
+    
 
-    div.innerHTML += '<br/>';
+    // article link
+    const article = document.createElement('h2');
+    const anchor = card.querySelector('.vc_custom_heading.tfl-post-grid-title.vc_gitem-post-data.vc_gitem-post-data-source-post_title a');
+    anchor.href = `https://main--24life--hlxsites.hlx.page${anchor.href}`;
+    article.append(anchor);
 
-    // new line and article link
-    div.append(card.querySelector('.vc_custom_heading.tfl-post-grid-title.vc_gitem-post-data.vc_gitem-post-data-source-post_title a'));
-    div.innerHTML += '<br/>';
+    // link image to article
+    const articleImgLink = document.createElement('a');
+    articleImgLink.href = anchor.href;
+    // add img tag to anchor tag
+    articleImgLink.append(articleImage);
+    imageWrapper.append(articleImgLink);
+    div.append(imageWrapper);
+    div.append(collectionsContainer);
+    div.append(article);
 
-    // new line and author
+    //   author
     const author = card.querySelector('.vc_gitem-zone.vc_gitem-zone-c.tfl-post-grid-title-wrap .tfl-post-grid-author a').textContent;
     const authorLink = document.createElement('a');
     authorLink.href = `https://main--24life--hlxsites.hlx.page/author/${author.toLowerCase().replace(/\s/g, '-')}`;
     authorLink.textContent = author;
     div.append(document.createTextNode('By '));
     div.innerHTML += authorLink.outerHTML;
-    temp.push(div);
+    cardsContainer.push(div);
 
     let cardName = `Card (${pillar})`;
     if (toggle && (index) % 3 === 0) {
@@ -167,7 +184,7 @@ function createCardBlocks(main, document) {
     if (!toggle && (index + 1) % 6 === 0) {
       cardName = `Card (${pillar}, Large, Right)`;
     }
-    main.append(WebImporter.DOMUtils.createTable([[`${cardName}`], temp], document));
+    main.append(WebImporter.DOMUtils.createTable([[`${cardName}`], cardsContainer], document));
     // add a section metadata block at every 3rd card
     if ((index + 1) % 3 === 0) {
       // add section block
