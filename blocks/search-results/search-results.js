@@ -30,11 +30,8 @@ function totalArray(arrayChunk) {
 function createLoadMoreButton(numInitialLoadedArticles, finalArray, actualLength, block) {
   const loadMoreContainer = document.createElement('div');
   loadMoreContainer.classList.add('article-load-more-container');
-  const loadMoreButton = document.createElement('button');
-  loadMoreContainer.append(loadMoreButton);
-  loadMoreButton.classList.add('article-list-load-more-button');
-  loadMoreButton.textContent = 'Load more';
-  loadMoreButton.addEventListener('click', async () => {
+  loadMoreContainer.innerHTML = '<button class="article-list-load-more-button">Load more</button>';
+  loadMoreContainer.addEventListener('click', async () => {
     const currentLength = block.querySelectorAll('.search-results > .card-wrapper').length;
     const counter = currentLength / numInitialLoadedArticles;
     // eslint-disable-next-line
@@ -58,6 +55,7 @@ function createLoadMoreButton(numInitialLoadedArticles, finalArray, actualLength
 function createCards(finalArray, block) {
   const numInitialLoadedArticles = 24;
   const actualLength = finalArray.length;
+  console.log(finalArray.values);
   console.log(actualLength);
   finalArray.slice(0, numInitialLoadedArticles).map(async (x, index) => {
     if (index === 0) { block.querySelector('.results-loading-spinner').remove(); }
