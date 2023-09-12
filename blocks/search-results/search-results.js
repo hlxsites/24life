@@ -18,7 +18,7 @@ export default async function decorate(block) {
     // noinspection ES6MissingAwait
     loadResults(tokenizedSearchWords, block);
   } else {
-    // TODO: handle case
+    window.location.href = '/';
   }
 }
 
