@@ -7,17 +7,16 @@ import {
 
 export default async function decorate(doc) {
   // preload hero image
-  preloadImage(getMetadata('og:image'));
+  //preloadImage(getMetadata('og:image'));
+  //doc.querySelector('main .section h1').remove();
+  //doc.querySelector('main .section img').remove();
 
   if (getMetadata('section')) {
     doc.querySelector('main').classList.add(`color-${toClassName(getMetadata('section'))}`);
   }
 
   const firstSection = doc.querySelector('main .section');
-  firstSection.before(createSectionWithHeroBlock(
-    doc.querySelector('main .section h1'),
-    doc.querySelector('main .section img'),
-  ));
+  firstSection.before(createSectionWithHeroBlock());
 
   const firstContent = doc.querySelector('main .section .default-content-wrapper');
   firstContent.before(createSocialMediaButtons());
@@ -49,7 +48,7 @@ function createNewSection() {
   return section;
 }
 
-function createSectionWithHeroBlock(h1, img) {
+function createSectionWithHeroBlock() {
   const section = createNewSection();
   section.classList.add('article-hero-container');
 
@@ -65,11 +64,6 @@ function createSectionWithHeroBlock(h1, img) {
   );
   wrapper.append(newBlock);
   decorateBlock(newBlock);
-
-  // remove title and image from existing section
-  h1.remove();
-  img.remove();
-
   section.append(wrapper);
   return section;
 }
