@@ -6,11 +6,12 @@ import {
 } from '../../scripts/scripts.js';
 
 export default async function decorate(doc) {
+  // preload hero image
+  preloadImage(getMetadata('og:image'));
+
   if (getMetadata('section')) {
     doc.querySelector('main').classList.add(`color-${toClassName(getMetadata('section'))}`);
   }
-  // preload hero image
-  preloadImage(getMetadata('og:image'));
 
   const firstSection = doc.querySelector('main .section');
   firstSection.before(createSectionWithHeroBlock(
