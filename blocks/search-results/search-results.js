@@ -59,15 +59,6 @@ function createCards(finalArray, block) {
   const numInitialLoadedArticles = 24;
   const actualLength = finalArray.length;
   console.log(actualLength);
-  if (actualLength < 25) {
-    finalArray.map(async (x, index) => {
-      if (index === 0) { block.querySelector('.results-loading-spinner').remove(); }
-      const wrapper = document.createElement('div');
-      const newBlock = createCardBlock(x, wrapper);
-      block.append(wrapper);
-      await loadBlock(newBlock);
-    });
-  } else {
     finalArray.slice(0, numInitialLoadedArticles).map(async (x, index) => {
       if (index === 0) { block.querySelector('.results-loading-spinner').remove(); }
       const wrapper = document.createElement('div');
@@ -75,11 +66,9 @@ function createCards(finalArray, block) {
       block.append(wrapper);
       await loadBlock(newBlock);
     });
-    const currentLength = block.querySelectorAll('.search-results > .card-wrapper').length;
-    if (actualLength > currentLength) {
+    if (actualLength > numInitialLoadedArticles) {
       createLoadMoreButton(numInitialLoadedArticles, finalArray, actualLength, block);
-    }
-  }
+ }
 }
 
 function createSet(sumArray, block) {
