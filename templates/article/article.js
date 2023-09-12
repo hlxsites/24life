@@ -16,11 +16,12 @@ export default async function decorate(doc) {
   const firstContent = doc.querySelector('main .section .default-content-wrapper');
   firstContent.before(createSocialMediaButtons());
 
-  const newSection = document.createElement('div');
-  newSection.classList.add('section', 'article-author-container');
+  const newSection = createNewSection();
+  newSection.classList.add('article-author-container');
   const newSectionWrapper = document.createElement('div');
   newSectionWrapper.classList.add('default-content-wrapper');
   newSection.append(newSectionWrapper);
+  firstSection.parentElement.append(newSection);
 
   // add a thin gray line to break this up from the previous section
   const line = document.createElement('hr');
@@ -32,12 +33,11 @@ export default async function decorate(doc) {
     newSectionWrapper.append(createAuthorBlock(author));
   });
   newSectionWrapper.append(createArticleCarousel());
-  firstSection.parentElement.append(newSection);
 }
 
 function createNewSection() {
   const section = document.createElement('div');
-  section.classList.add('section', 'article-hero-container');
+  section.classList.add('section');
   section.dataset.sectionStatus = 'initialized';
   section.style.display = 'none';
   return section;
