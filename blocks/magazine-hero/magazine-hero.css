@@ -2,6 +2,10 @@
   padding: 0;
 }
 
+.section.magazine-hero-container > div.default-content-wrapper {
+  max-width: unset;
+}
+
 .section > .magazine-hero-wrapper {
   max-width: unset;
   margin: unset;
