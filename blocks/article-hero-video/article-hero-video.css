@@ -19,7 +19,9 @@ div.article-hero-video {
   margin: 0;
   animation-timing-function: linear;
   display: block;
-  transform: scaleX(1.1) scaleY(1.1)
+  transform: scaleX(1.1) scaleY(1.1);
+
+  --current-link-color: var(--text-color-on-black-background);
 }
 
 div.article-hero-video-wrapper {
@@ -56,12 +58,13 @@ div.article-hero-video-wrapper {
   text-transform: uppercase;
 }
 
-.article-hero-video h6.article-hero-video-author {
+.article-hero-video h6.authors {
   font-size: 14px;
   line-height: 16px;
   font-weight: 300;
   letter-spacing: 1px;
 }
+
 
 video.article-hero-video-element,
 iframe.article-hero-video-element {
@@ -94,7 +97,7 @@ div.image-container {
 }
 
 @media screen and (min-width: 900px) {
-  .article-hero-video h6.article-hero-video-author {
+  .article-hero-video h6.authors {
     font-size: 24px;
     line-height: 32px;
   }

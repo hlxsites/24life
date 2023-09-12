@@ -1,4 +1,4 @@
-import { getMetadata, readBlockConfig } from '../../scripts/lib-franklin.js';
+import { getMetadata, readBlockConfig, toClassName } from '../../scripts/lib-franklin.js';
 
 export default function decorate(block) {
   const data = readBlockConfig(block);
@@ -64,13 +64,22 @@ export default function decorate(block) {
   title.classList.add('article-hero-video-title');
   title.innerText = data?.title.trim();
 
-  const author = document.createElement('h6');
-  author.classList.add('article-hero-video-author');
-  author.innerText = `By ${getMetadata('authors')?.trim()}`;
+  const authorLinks = document.createElement('h6');
+  authorLinks.classList.add('authors');
+  authorLinks.append('By ');
+  getMetadata('authors').trim().split(',').forEach((author, index) => {
+    const authorLink = document.createElement('a');
+    authorLink.href = `/author/${toClassName(author)}`;
+    authorLink.textContent = author;
+    if (index > 0) {
+      authorLinks.append(' and ');
+    }
+    authorLinks.append(authorLink);
+  });
 
   titleContainer.append(section);
   titleContainer.append(title);
-  titleContainer.append(author);
+  titleContainer.append(authorLinks);
   block.append(titleContainer);
 }
 
