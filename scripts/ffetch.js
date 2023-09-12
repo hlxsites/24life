@@ -1,3 +1,6 @@
+// Copied from https://github.com/Buuhuu/ffetch, see also the docs there.
+// If you change this file, please also make a pull request to the original.
+
 /* eslint-disable no-restricted-syntax,  no-await-in-loop */
 
 async function* request(url, context) {
@@ -165,7 +168,7 @@ export default function ffetch(url) {
   return assignOperations(generator, context);
 }
 
-export function ffetcharticles(url) {
+export function ffetchArticles(url) {
   let chunkSize = 5000;
   const fetch = (...rest) => window.fetch.apply(null, rest);
   const parseHtml = (html) => new window.DOMParser().parseFromString(html, 'text/html');

@@ -20,7 +20,11 @@ div.author-list-container {
   width: 100%;
 }
 
-.author-list-item img:hover {
+.author-list .author-list-item {
+  overflow-wrap: break-word;
+}
+
+.author-list .author-list-item img:hover {
   transform: scale(1.075);
 }
 
@@ -56,10 +60,10 @@ div.author-list-container {
   gap: 1rem;
 }
 
-.author-list .load-experts {
+.author-list .author-grid {
   display: grid;
   gap: 2em;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 33%);
 }
 
 .author-list .author-load-more-container {
@@ -70,16 +74,10 @@ div.author-list-container {
 
 /* on smaller screens, show everything in a single column. */
 @media (max-width: 991px) {
-  .author-list {
+  .author-list .author-grid {
     display: flex;
     flex-direction: column;
   }
 }
 
-@media (min-width: 1200px) {
-  .section.experts-page-heading > div,
-  .section.experts-page-editorial-staff > div,
-  .section.author-list-container > div {
-    max-width: 1150px;
-  }
-}
+

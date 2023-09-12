@@ -1,90 +1,89 @@
-import { ffetcharticles } from '../../scripts/ffetch.js';
-import {
-  createOptimizedPicture, decorateIcons,
-} from '../../scripts/lib-franklin.js';
+import ffetch from '../../scripts/ffetch.js';
+import { createOptimizedPicture, decorateIcons } from '../../scripts/lib-franklin.js';
 
 /**
- * loads and decorates the footer
- * @param {Element} block The footer block element
+ * Shows list of authors, separated by role.
+ *
+ * Example block content:
+ * | Staff  | Editorial Staff  |                  |
+ * | Expert | Experts          | Some description |
+ * | Writer | Contributing     | Writers          |
  */
 export default async function decorate(block) {
-  const tempArray = [];
-  const arrayFilters = [];
-  const arrayHeading = [];
-  const arrayDes = [];
-  const arrayStyle = [];
-  const allauthors = await ffetcharticles('/authors.json').all();
-  [...block.children].forEach((row) => {
-    arrayFilters.push([...row.children][0].textContent);
-    arrayHeading.push([...row.children][1].textContent);
-    arrayDes.push([...row.children][2].textContent);
-    arrayStyle.push([...row.children][3].textContent);
-    row.textContent = '';
+  const allAuthors = await ffetch('/authors.json').chunks(5000).all();
+  const roles = [...block.children].map((row) => {
+    const cells = [...row.children];
+    return ({
+      filter: cells[0].textContent,
+      heading: cells[1].textContent,
+      description: cells[2].textContent,
+      style: cells[3].textContent,
+    });
   });
-  // eslint-disable-next-line
-  for (let i = 0; i < arrayFilters.length; i++) { await fetchAuthors(arrayFilters[i], block, tempArray, allauthors, arrayHeading[i], arrayDes[i], arrayStyle[i]).catch((e) => console.log(e));};
+  block.textContent = '';
+  for (const role of roles) {
+    block.append(createMarkupForRole(role, block, allAuthors));
+  }
 }
 
-async function fetchAuthors(filter, block, tempArray, allauthors, head, desc, sty) {
-  // get all authors from authors.json and filter them by role
-  const authors = allauthors.filter((author) => author.role === filter);
-  const total = tempArray.reduce((sum, x) => { let sum1 = sum; sum1 += x; return sum1; }, 0);
-  // sort author list by name
-  authors.sort((a, b) => a.name.localeCompare(b.name));
-  // create the first 30 authors
-  const numInitialLodedAuthors = 30;
-  const firstAuthors = authors.slice(0, numInitialLodedAuthors);
-  const mainDiv = document.createElement('div');
-  const loadExperts = document.createElement('div');
-  const headingParentDiv = document.createElement('div');
-  const headingChildDiv = document.createElement('div');
-  const descDiv = document.createElement('div');
-  headingParentDiv.append(headingChildDiv);
-  headingParentDiv.append(descDiv);
-  mainDiv.append(headingParentDiv);
-  mainDiv.append(loadExperts);
-  loadExperts.classList.add('load-experts');
-  headingChildDiv.innerHTML = `<h2>${head}</h2>`;
-  if (desc) descDiv.innerHTML = `<p>${desc}</p>`;
-  if (sty) headingParentDiv.classList.add(sty);
-  await firstAuthors.forEach((author) => {
-    const newBlock = createAuthorCardBlock(author);
-    loadExperts.append(newBlock);
-  });
-  block.append(mainDiv);
-  // create load more button if there are more authors than shown
-  const counter = (document.querySelectorAll('.author-list-container .author-list.block .author-list-item').length - total) / numInitialLodedAuthors;
-  if ((authors.length - (numInitialLodedAuthors * counter)) > numInitialLodedAuthors) {
-    createLoadMoreButton(numInitialLodedAuthors, authors, block, total, loadExperts);
-  } else { tempArray.push(authors.length); }
+const mediaQuery = window.matchMedia('(min-width: 992px)');
+
+/**
+ * Returns the number of authors to display in one chunk
+ * @return {number}
+ */
+function getDisplayChunkSize() {
+  if (mediaQuery.matches) {
+    // desktop
+    return 30;
+  }
+  // mobile
+  return 10;
 }
 
-function createLoadMoreButton(numInitialLodedAuthors, authors, block, total, loadExperts) {
+function displayNextEntries(iterator, authorCards, loadMoreContainer) {
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < getDisplayChunkSize(); i++) {
+    const next = iterator.next();
+    if (next.done) {
+      loadMoreContainer.remove();
+    }
+    const author = next.value;
+    if (!author) break;
+    authorCards.append(createAuthorCardBlock(author));
+  }
+}
+
+function createMarkupForRole(role, block, allAuthors) {
+  const { filter, heading, description } = role;
+  const authors = allAuthors
+    .filter((author) => author.role.toLowerCase() === filter.toLowerCase())
+    .toSorted((a, b) => a.name.localeCompare(b.name));
+
+  const iterator = authors.values();
+
+  const result = document.createElement('div');
+  const headingElement = document.createElement('h2');
+  headingElement.textContent = heading;
+  result.append(headingElement);
+  result.append(p(description));
+
+  const authorCards = document.createElement('div');
+  authorCards.classList.add('author-grid');
+  result.append(authorCards);
+
+  // always add the button to load more authors. It will be removed once the iterator is done
   const loadMoreContainer = document.createElement('div');
   loadMoreContainer.classList.add('author-load-more-container');
-  const loadMoreButton = document.createElement('button');
-  loadMoreContainer.append(loadMoreButton);
-  loadMoreButton.classList.add('author-list-load-more-button');
-  loadMoreButton.textContent = 'Load more';
-  loadMoreButton.addEventListener('click', async () => {
-    const counter = (document.querySelectorAll('.author-list-container .author-list.block .author-list-item').length - total) / numInitialLodedAuthors;
-    // eslint-disable-next-line
-    const nextAuthors = authors.slice(numInitialLodedAuthors * counter, (numInitialLodedAuthors * counter) + numInitialLodedAuthors);
-    await nextAuthors.forEach((author) => {
-      const newBlock = createAuthorCardBlock(author);
-      loadExperts.append(newBlock);
-    });
-    // eslint-disable-next-line
-    if ((authors.length - (numInitialLodedAuthors * counter)) > numInitialLodedAuthors) { loadExperts.append(loadMoreContainer); }
+  loadMoreContainer.innerHTML = '<button class="author-list-load-more-button">Load more</button>';
+  loadMoreContainer.addEventListener('click', () => {
+    displayNextEntries(iterator, authorCards, loadMoreContainer);
   });
-  loadExperts.append(loadMoreContainer);
-}
+  result.append(loadMoreContainer);
 
-function buildAuthorListItem(className, content) {
-  const container = document.createElement('div');
-  container.classList.add(className);
-  container.append(...content);
-  return container;
+  // initial load the first entries
+  displayNextEntries(iterator, authorCards, loadMoreContainer);
+  return result;
 }
 
 function p(content) {
@@ -93,7 +92,7 @@ function p(content) {
   return result;
 }
 
-/* convenience function to create a block from a JSON object from authors.json */
+/* create a block from a JSON object from authors.json */
 function createAuthorCardBlock(author) {
   const pictureP = p();
   pictureP.classList.add('author-image');
@@ -112,12 +111,15 @@ function createAuthorCardBlock(author) {
   // parse the author.links string and iterate over links
   addAuthorLinks(author, authorLinkContainer);
 
-  return buildAuthorListItem('author-list-item', [
+  const container = document.createElement('div');
+  container.classList.add('author-list-item');
+  container.append(
     pictureP,
     heading,
     p(author.description),
     authorLinkContainer,
-  ]);
+  );
+  return container;
 }
 
 function addAuthorLinks(author, authorLinkContainer) {
