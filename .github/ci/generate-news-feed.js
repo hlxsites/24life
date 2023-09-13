@@ -1,6 +1,5 @@
 import { Feed } from 'feed';
 import fs from 'fs';
-import fetch from 'node-fetch';
 
 /**
  * @type {FeedConfig[]}
