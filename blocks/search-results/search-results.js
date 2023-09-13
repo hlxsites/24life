@@ -42,9 +42,9 @@ async function loadResults(tokenizedSearchWords, resultsDiv) {
 }
 
 function filterMatches(tokenizedSearchWords, jsonData) {
-  let allData = [];
-  tokenizedSearchWords.forEach((element) => {
-    const match = jsonData.data.filter((entry) => (
+  const allMatches = [];
+  tokenizedSearchWords.forEach((searchTerm) => {
+    const matches = jsonData.data.filter((entry) => (
       entry.title
       + entry.content
       + entry.path
@@ -54,10 +54,10 @@ function filterMatches(tokenizedSearchWords, jsonData) {
       + entry.categories
     )
       .toLowerCase()
-      .includes(element.toLowerCase()));
-    if (match) { allData = allData.concat(match); }
+      .includes(searchTerm.toLowerCase()));
+    allMatches.push(...matches);
   });
-  return uniqueMatches(allData);
+  return uniqueMatches(allMatches);
 }
 
 function uniqueMatches(allData) {
