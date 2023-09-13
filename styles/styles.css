@@ -359,7 +359,7 @@ main .section.no-gap + .section {
   padding-top: 0;
 }
 
-main .section.small-images img {
+main .section.small-images .default-content-wrapper img {
   width: 22%;
 }
 
