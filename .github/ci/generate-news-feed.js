@@ -9,12 +9,12 @@ const feeds = [
   {
     title: '24life Updates',
     targetFile: `../../feed.xml`,
-    source: 'https://main--24life--hlxsites.hlx.page/articles.json',  
+    source: 'https://main--24life--hlxsites.hlx.page/articles.json',
     siteRoot: "https://www.24life.com",
     link:	"https://www.24life.com/feed/",
     language:	"en",
-    description:	"24life.com updates"
-  } 
+    description: "24life.com Your best self now"
+  }
 ]
 
 
