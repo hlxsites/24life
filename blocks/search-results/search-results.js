@@ -1,7 +1,5 @@
 import { createCardBlock } from '../card/card.js';
 
-let done = true;
-
 export default async function decorate(block) {
   block.innerHTML = '';
   const searchTerm = new URLSearchParams(window.location.search).get('q');
@@ -18,7 +16,10 @@ export default async function decorate(block) {
     mainDiv.append(resultsDiv);
     block.append(mainDiv);
     const tokenizedSearchWords = searchItems(searchTerm);
+    // noinspection ES6MissingAwait
     loadResults(tokenizedSearchWords, resultsDiv);
+  } else {
+    window.location.href = '/';
   }
 }
 
@@ -30,15 +31,13 @@ function searchItems(searchTerm) {
 
 async function loadResults(tokenizedSearchWords, resultsDiv) {
   const allData = await fetch(`${window.location.origin}/articles.json?sheet=full`);
-  console.log(allData);
   const jsonData = await allData.json();
-  const resultData = filterMatches(tokenizedSearchWords, jsonData);
-  console.log(resultData);
-  console.log(resultData.length);
-  if (resultData[0].length === 0) {
+  const matches = filterMatches(tokenizedSearchWords, jsonData);
+  resultsDiv.parentNode.querySelector('.results-loading-spinner').remove();
+  if (matches.length === 0) {
     noResults(resultsDiv);
   } else {
-    createCards(resultData, resultsDiv);
+    createCards(matches, resultsDiv);
   }
 }
 
@@ -99,7 +98,6 @@ function noResults(resultsDiv) {
 }
 
 function displayNextEntries(iterator, numInitialLoadedArticles, loadMoreContainer, resultsDiv) {
-  if (done) { resultsDiv.parentNode.querySelector('.results-loading-spinner').remove(); done = false; }
   // eslint-disable-next-line no-plusplus
   for (let i = 0; i <= numInitialLoadedArticles; i++) {
     if (i === numInitialLoadedArticles) { resultsDiv.after(loadMoreContainer); }
@@ -122,7 +120,7 @@ function createCards(finalArray, resultsDiv) {
   loadMoreContainer.classList.add('article-load-more-container');
   loadMoreContainer.innerHTML = '<button class="article-list-load-more-button">Load more</button>';
   displayNextEntries(iterator, numInitialLoadedArticles, loadMoreContainer, resultsDiv);
-  loadMoreContainer.addEventListener('click', () => {
+  loadMoreContainer.querySelector('button').addEventListener('click', () => {
     displayNextEntries(iterator, numInitialLoadedArticles, loadMoreContainer, resultsDiv);
   });
 }
