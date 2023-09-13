@@ -83,7 +83,6 @@ div.article-hero-video-wrapper {
   display: block;
   transform: scaleX(1.1) scaleY(1.1);
   filter: brightness(0.80);
-
 }
 
 @media screen and (min-width: 900px) {
@@ -92,6 +91,9 @@ div.article-hero-video-wrapper {
     line-height: 32px;
   }
 
+  .article-hero-video.has-video div.image-container {
+    display: none;
+  }
 
   .article-hero-video video.article-hero-video-element,
   .article-hero-video iframe.article-hero-video-element {

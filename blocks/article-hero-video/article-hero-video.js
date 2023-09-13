@@ -20,7 +20,7 @@ export default function decorate(block) {
 
   function buildVideo() {
     if (isYoutubeVideo(data.video)) {
-      videoContainer.append(buildIframe(data.video));
+      videoContainer.append(buildIframe(data.video, block));
     } else {
       // mp4 video
       videoContainer.append(buildVideoTag(data.video));
@@ -28,6 +28,7 @@ export default function decorate(block) {
   }
 
   if (data.video) {
+    block.classList.add('has-video');
     if (over900px.matches) {
       buildVideo();
     }
