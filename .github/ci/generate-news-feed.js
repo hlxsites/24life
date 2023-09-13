@@ -1,5 +1,6 @@
 import { Feed } from 'feed';
 import fs from 'fs';
+import fetch from 'node-fetch';
 
 /**
  * @type {FeedConfig[]}
@@ -8,7 +9,7 @@ const feeds = [
   {
     title: '24life Updates',
     targetFile: `../../feed.xml`,
-    source: 'https://main--24life--hlxsites.hlx.live/feed.json',  
+    source: 'https://main--24life--hlxsites.hlx.page/articles.json',  
     siteRoot: "https://www.24life.com",
     link:	"https://www.24life.com/feed/",
     language:	"en",
@@ -70,8 +71,8 @@ async function createFeed(feed) {
       id: link,
       link,
       content: post.summary,
-      date: new Date(post.publicationDate * 1000),
-      published: new Date(post.publicationDate * 1000),
+      date: new Date(post.publishDate * 1000),
+      published: new Date(post.publishDate * 1000),
     });
   });
 
