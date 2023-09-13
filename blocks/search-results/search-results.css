@@ -1,3 +1,10 @@
+div.search-page-heading {
+  background: #f8f8f8;
+  letter-spacing: 2px;
+  padding-bottom: 13px;
+  padding-top: 50px;
+}
+
 .search-page-heading.section h1 {
     margin-left: 5rem;
 }
