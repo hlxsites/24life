@@ -458,7 +458,7 @@ function handleFloatingImages(main, document, metadataTable) {
     }
 
     const tableData = [
-      ['Columns (small image)'],
+      ['Columns'],
     ];
     if (imageLeft) {
       tableData.push([img.cloneNode(true), sideText]);
