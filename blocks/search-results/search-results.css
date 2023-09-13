@@ -57,6 +57,10 @@
     grid-template-columns: repeat(3, 1fr);
   }
 
+  .block.search-results.card-container.three-columns .no-results-div {
+    display: block;
+  }
+
   .block.search-results.card-container.three-columns .card-wrapper {
     /* make sure all the cards have the same width */
     flex-grow: 1;

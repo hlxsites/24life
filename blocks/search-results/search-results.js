@@ -63,7 +63,6 @@ function filterMatches(tokenizedSearchWords, jsonData) {
 function uniqueMatches(allData) {
   const uniquePath = new Set();
   return allData.filter((element) => {
-    // console.log(element.path);
     const isDuplicate = uniquePath.has(element.path);
     if (!isDuplicate) {
       uniquePath.add(element.path);
@@ -74,11 +73,8 @@ function uniqueMatches(allData) {
 }
 
 function noResults(resultsDiv) {
-  document.querySelector('main .results-loading-spinner').style.display = 'none';
   const sorryDiv = document.createElement('div');
-  const sorryPara = document.createElement('p');
-  sorryDiv.append(sorryPara);
-  sorryPara.textContent = 'Sorry, no results were found, search again ?';
+  sorryDiv.innerHTML = '<p>Sorry, no results were found, search again ?<p>';
   resultsDiv.append(sorryDiv);
   sorryDiv.classList.add('no-results');
   const searchFormDiv = document.createElement('div');
@@ -94,7 +90,7 @@ function noResults(resultsDiv) {
     </div>
    </div>
  `;
-  document.querySelector('.block.search-results.card-container.three-columns .results-div').style.display = 'block';
+  resultsDiv.parentNode.querySelector('.block.search-results.card-container.three-columns .results-div').classList.add('no-results-div');
 }
 
 function displayNextEntries(iterator, numInitialLoadedArticles, loadMoreContainer, resultsDiv) {
