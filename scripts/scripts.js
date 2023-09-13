@@ -279,19 +279,3 @@ async function loadTemplate(doc, templateName) {
     console.log(`failed to load block ${templateName}`, error);
   }
 }
-
-export async function preloadImage(href) {
-  return new Promise((resolve, reject) => {
-    if (!document.querySelector(`head > link[href="${href}"]`)) {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'image';
-      link.href = href;
-      link.onload = resolve;
-      link.onerror = reject;
-      document.head.append(link);
-    } else {
-      resolve();
-    }
-  });
-}

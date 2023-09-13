@@ -1,15 +1,11 @@
 import {
   buildBlock, decorateBlock, decorateIcons, getMetadata, toClassName,
 } from '../../scripts/lib-franklin.js';
-import {
-  preloadImage,
-} from '../../scripts/scripts.js';
 
 export default async function decorate(doc) {
-  // preload hero image
-  //preloadImage(getMetadata('og:image'));
-  //doc.querySelector('main .section h1').remove();
-  //doc.querySelector('main .section img').remove();
+  // remove title and image from doc
+  doc.querySelector('main .section h1').remove();
+  doc.querySelector('main .section img').remove();
 
   if (getMetadata('section')) {
     doc.querySelector('main').classList.add(`color-${toClassName(getMetadata('section'))}`);
