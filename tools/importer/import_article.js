@@ -37,7 +37,7 @@ export default {
       '.tfl-magazine-current-issue-footer',
       '.fbx-modal',
     ]);
-    main.querySelector('ul.social-list.list-inline').parentElement.remove();
+    main.querySelector('ul.social-list.list-inline')?.parentElement?.remove();
 
     const magazineSection = main.querySelector('.row.fullscreen .vid-bg');
 
@@ -450,7 +450,8 @@ function handleFloatingImages(main, document, metadataTable) {
     const sideText = collectContentUntil(
       img,
       (el) => el.tagName.toLowerCase().match('h[1-6]')
-        || el.classList.contains('vc_column-inner'),
+        || el.classList.contains('vc_column-inner')
+        || el.tagName.toLowerCase() === 'table',
       document,
     );
 
