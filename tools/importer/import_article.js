@@ -34,6 +34,8 @@ export default {
       '#disqus_thread',
       'blockquote.wp-embedded-content',
       '.tfl-constant-contact-wrapper',
+      '.tfl-magazine-current-issue-footer',
+      '.fbx-modal',
     ]);
     main.querySelector('ul.social-list.list-inline').parentElement.remove();
 
