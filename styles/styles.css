@@ -367,17 +367,6 @@ main .section.medium-images .default-content-wrapper img {
   width: 30%;
 }
 
-main .section.float-images-left .default-content-wrapper img,
-main .section.float-images-alternate .default-content-wrapper img.float-left{
-    float: left;
-    margin: 0 30px 30px 0;
-}
-
-main .section.float-images-right .default-content-wrapper img,
-main .section.float-images-alternate .default-content-wrapper img.float-right{
-    float: right;
-    margin: 0 30px 30px 0;
-}
 
 div.experts-page-heading {
   background: #f8f8f8;

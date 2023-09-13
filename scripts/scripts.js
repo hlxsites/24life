@@ -14,20 +14,6 @@ import {
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
 
-export function decorateFloatImages(container) {
-  for (const section of container.querySelectorAll('.section.float-images-alternate')) {
-    let isOdd = true;
-    for (const img of section.querySelectorAll('img')) {
-      if (img.closest('div.block')) {
-        // don't link if already in a block.
-        // eslint-disable-next-line no-continue
-        continue;
-      }
-      img.classList.add(isOdd ? 'float-left' : 'float-right');
-      isOdd = !isOdd;
-    }
-  }
-}
 export function linkSmallImagesToFullImages(container) {
   for (const picture of container.querySelectorAll('.section.small-images picture')) {
     if (picture.closest('div.block') || picture.closest('a')) {
@@ -173,7 +159,6 @@ export function decorateMain(main) {
   decorateVideoLinks(main);
   decorateSpotifyLinks(main);
   linkSmallImagesToFullImages(main);
-  decorateFloatImages(main);
 }
 
 /**
