@@ -402,20 +402,17 @@ function useHighresImagesAndRemoveLinks(main) {
 }
 
 function handleFloatingImages(main, document, metadataTable) {
-  let hasFloatingLeftImages = false;
-  let hasFloatingRightImages = false;
-
   // e.g. https://www.24life.com/pack-your-bag/ has images that are part of the h3.
   // when imported, we want the image to be after the heading, not before.
   for (const img of main.querySelectorAll('h3 img.alignleft, h3 img.alignright')) {
-    if (!img.classList.contains('size-full')) {
-      if (img.classList.contains('alignleft')) {
-        hasFloatingLeftImages = true;
-      }
-      if (img.classList.contains('alignright')) {
-        hasFloatingRightImages = true;
-      }
-    }
+    // if (!img.classList.contains('attachment-full')) {
+    //   if (img.classList.contains('alignleft')) {
+    //     // hasFloatingLeftImages = true;
+    //   }
+    //   if (img.classList.contains('alignright')) {
+    //     // hasFloatingRightImages = true;
+    //   }
+    // }
     const h3 = img.closest('h3');
     const p = document.createElement('p');
     p.appendChild(img);
@@ -425,36 +422,77 @@ function handleFloatingImages(main, document, metadataTable) {
   // e.g. https://www.24life.com/with-hard-knocks-brett-kicks-things-up-a-notch/
   // move images to their own paragraph
   for (const img of main.querySelectorAll('p img.alignleft, p img.alignright')) {
-    if (!img.classList.contains('size-full')) {
-      if (img.classList.contains('alignleft')) {
-        hasFloatingLeftImages = true;
+    if (img.classList.contains('attachment-full')) {
+      // eslint-disable-next-line no-continue
+      continue;
+    }
+    // put everything in a Columns block until the next header or `.vc_column-inner`
+    const imageLeft = img.classList.contains('alignleft');
+    const sideText = document.createElement('div');
+    let next = img.nextSibling || img.parentNode.nextSibling;
+    while (next) {
+      const nextNext = next.nextSibling;
+      const parent = next.parentNode;
+
+      if (next.nodeType === Node.TEXT_NODE) {
+        sideText.append(next);
+      } else {
+        // Element
+        if (next?.tagName.toLowerCase().startsWith('h')) {
+          break;
+        }
+        if (next?.classList.contains('vc_column-inner')) {
+          break;
+        }
+        sideText.append(next);
+        // if (next.tagName.toLowerCase() === 'p') {
+        // } else {
+        //   sideText.append(next.cloneNode(true));
+        // }
       }
-      if (img.classList.contains('alignright')) {
-        hasFloatingRightImages = true;
+      if (nextNext) {
+        next = nextNext;
+      } else {
+        next = parent.nextSibling;
       }
     }
-    const parent = img.closest('p');
-    console.log('parent.childNodeCount', parent.childNodes.length);
-    if (parent.childNodes.length > 1 && parent.firstChild === img) {
-      const p = document.createElement('p');
-      p.appendChild(img);
-      parent.before(p);
+
+    const tableData = [
+      ['Columns (small image)'],
+    ];
+    if (imageLeft) {
+      tableData.push([img.cloneNode(true), sideText]);
+    } else {
+      tableData.push([sideText, img.cloneNode(true)]);
     }
+    const columns = WebImporter.DOMUtils.createTable(tableData, document);
+    const columnsWrapper = document.createElement('div');
+    columnsWrapper.append(columns);
+    img.replaceWith(columnsWrapper);
+
+    // const parent = img.closest('p');
+    // if (parent.childNodes.length > 1 && parent.firstChild === img) {
+    //   const p = document.createElement('p');
+    //   p.appendChild(columns);
+    //   parent.before(p);
+    // } else {
+    //   // TODO
+    // }
   }
 
   // add section metadata for floats
-  if (hasFloatingLeftImages || hasFloatingRightImages) {
-    let style;
-    if (hasFloatingLeftImages && hasFloatingRightImages) {
-      style = 'float-images-alternate';
-    } else {
-      style = hasFloatingLeftImages ? 'float-images-left' : 'float-images-right';
-    }
-    metadataTable.before(WebImporter.DOMUtils.createTable([
-      ['Section Metadata'],
-      ['Style', `${style}, small-images`],
-    ], document));
-  }
+  // if (hasFloatingLeftImages || hasFloatingRightImages) {
+  //   let style;
+  //   if (hasFloatingLeftImages && hasFloatingRightImages) {
+  //     style = 'float-images-alternate';
+  //   } else {
+  //     style = hasFloatingLeftImages ? 'float-images-left' : 'float-images-right';
+  //   }
+  //
+  //
+  //
+  //
+  // }
 }
 
 function makeCaptionTextItalics(main, document) {
