@@ -51,7 +51,7 @@
     border-radius: 0;
   }
 
-  .block.search-results.card-container.three-columns {
+  .block.search-results.card-container.three-columns .results-div {
     gap: 2em;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -64,3 +64,4 @@
     margin: 0;
     max-width: unset;
   }
+  
