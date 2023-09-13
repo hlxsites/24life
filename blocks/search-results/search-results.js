@@ -1,13 +1,10 @@
 import { createCardBlock } from '../card/card.js';
 
-let newArray = [];
-let total = [];
 let done = true;
 
 export default async function decorate(block) {
   block.innerHTML = '';
   const searchTerm = new URLSearchParams(window.location.search).get('q');
-  console.log(searchTerm);
   block.classList.add('card-container', 'three-columns');
   if (searchTerm) {
     const elementHeading = block.parentNode.parentNode.parentNode.querySelector('.section.search-page-heading');
@@ -20,74 +17,88 @@ export default async function decorate(block) {
     resultsDiv.classList.add('results-div');
     mainDiv.append(resultsDiv);
     block.append(mainDiv);
-    const tokenizedSearchWords = searchTerm.split(' ');
-    if (tokenizedSearchWords.length > 1) tokenizedSearchWords.unshift(searchTerm);
+    const tokenizedSearchWords = searchItems(searchTerm);
     loadResults(tokenizedSearchWords, resultsDiv);
   }
 }
 
-function loadResults(tokenizedSearchWords, resultsDiv) {
-  tokenizedSearchWords.forEach(async (filter, index) => {
-    searchResults(filter).then((result) => {
-      total = totalArray(result);
-      console.log(total);
-      if (index === (tokenizedSearchWords.length - 1)) {
-        if (total.length === 0) {
-          document.querySelector('main .results-loading-spinner').style.display = 'none';
-          const sorryDiv = document.createElement('div');
-          const sorryPara = document.createElement('p');
-          sorryDiv.append(sorryPara);
-          sorryPara.textContent = 'Sorry, no results were found, search again ?';
-          resultsDiv.append(sorryDiv);
-          sorryDiv.classList.add('no-results');
-          const searchFormDiv = document.createElement('div');
-          sorryDiv.append(searchFormDiv);
-          searchFormDiv.innerHTML = `
-           <div class="search-container">
-            <div class="search-wrapper">
-             <div class='search-form'>
-              <form action='/search' method='get'>
-                <input type='search' name='q' class='search-input' placeholder="TYPE HERE"/>
-              </form>
-             </div>
-            </div>
-           </div>
-         `;
-          document.querySelector('.block.search-results.card-container.three-columns .results-div').style.display = 'block';
-        } else {
-          console.log(tokenizedSearchWords);
-          createSet(total, resultsDiv);
-        }
-      }
-    });
-  });
+function searchItems(searchTerm) {
+  const tokenizedSearchWords = searchTerm.split(' ');
+  if (tokenizedSearchWords.length > 1) tokenizedSearchWords.unshift(searchTerm);
+  return tokenizedSearchWords;
 }
 
-export async function searchResults(params) {
-  // fetch results from json files
+async function loadResults(tokenizedSearchWords, resultsDiv) {
   const allData = await fetch(`${window.location.origin}/articles.json?sheet=full`);
   console.log(allData);
   const jsonData = await allData.json();
-  return jsonData.data.filter((entry) => (
-    entry.title
-    + entry.content
-    + entry.path
-    + entry.authors
-    + entry.collections
-    + entry.section
-    + entry.categories
-  )
-    .toLowerCase()
-    .includes(params.toLowerCase()));
+  const resultData = filterMatches(tokenizedSearchWords, jsonData);
+  console.log(resultData);
+  console.log(resultData.length);
+  if (resultData[0].length === 0) {
+    noResults(resultsDiv);
+  } else {
+    createCards(resultData, resultsDiv);
+  }
 }
 
-function totalArray(arrayChunk) {
-  newArray = newArray.concat(arrayChunk);
-  return newArray;
+function filterMatches(tokenizedSearchWords, jsonData) {
+  let allData = [];
+  tokenizedSearchWords.forEach((element) => {
+    const match = jsonData.data.filter((entry) => (
+      entry.title
+      + entry.content
+      + entry.path
+      + entry.authors
+      + entry.collections
+      + entry.section
+      + entry.categories
+    )
+      .toLowerCase()
+      .includes(element.toLowerCase()));
+    if (match) { allData = allData.concat(match); }
+  });
+  return uniqueMatches(allData);
+}
+
+function uniqueMatches(allData) {
+  const uniquePath = new Set();
+  return allData.filter((element) => {
+    // console.log(element.path);
+    const isDuplicate = uniquePath.has(element.path);
+    if (!isDuplicate) {
+      uniquePath.add(element.path);
+      return true;
+    }
+    return false;
+  });
+}
+
+function noResults(resultsDiv) {
+  document.querySelector('main .results-loading-spinner').style.display = 'none';
+  const sorryDiv = document.createElement('div');
+  const sorryPara = document.createElement('p');
+  sorryDiv.append(sorryPara);
+  sorryPara.textContent = 'Sorry, no results were found, search again ?';
+  resultsDiv.append(sorryDiv);
+  sorryDiv.classList.add('no-results');
+  const searchFormDiv = document.createElement('div');
+  sorryDiv.append(searchFormDiv);
+  searchFormDiv.innerHTML = `
+   <div class="search-container">
+    <div class="search-wrapper">
+     <div class='search-form'>
+      <form action='/search' method='get'>
+        <input type='search' name='q' class='search-input' placeholder="TYPE HERE"/>
+      </form>
+     </div>
+    </div>
+   </div>
+ `;
+  document.querySelector('.block.search-results.card-container.three-columns .results-div').style.display = 'block';
 }
 
 function displayNextEntries(iterator, numInitialLoadedArticles, loadMoreContainer, resultsDiv) {
-  console.log(resultsDiv);
   if (done) { resultsDiv.parentNode.querySelector('.results-loading-spinner').remove(); done = false; }
   // eslint-disable-next-line no-plusplus
   for (let i = 0; i <= numInitialLoadedArticles; i++) {
@@ -105,7 +116,6 @@ function displayNextEntries(iterator, numInitialLoadedArticles, loadMoreContaine
 }
 
 function createCards(finalArray, resultsDiv) {
-  console.log(finalArray);
   const numInitialLoadedArticles = 23;
   const iterator = finalArray.values();
   const loadMoreContainer = document.createElement('div');
@@ -116,72 +126,3 @@ function createCards(finalArray, resultsDiv) {
     displayNextEntries(iterator, numInitialLoadedArticles, loadMoreContainer, resultsDiv);
   });
 }
-
-function createSet(sumArray, resultsDiv) {
-  const uniquePath = new Set();
-  const finalArray = sumArray.filter((element) => {
-    const isDuplicate = uniquePath.has(element.path);
-    if (!isDuplicate) {
-      uniquePath.add(element.path);
-      return true;
-    }
-    return false;
-  });
-  createCards(finalArray, resultsDiv);
-}
-
-// function calculate(inputArray, block) {
-//   inputArray.forEach(async (filter, index) => {
-//     searchResults(filter).then((result) => {
-//       total = totalArray(result);
-//       console.log(total);
-//       if (index === (inputArray.length - 1)) {
-//         if (total.length === 0) {
-//           document.querySelector('main .results-loading-spinner').style.display = 'none';
-//           const sorryDiv = document.createElement('div');
-//           const sorryPara = document.createElement('p');
-//           sorryDiv.append(sorryPara);
-//           sorryPara.textContent = 'Sorry, no results were found, search again ?';
-//           block.append(sorryDiv);
-//           sorryDiv.classList.add('no-results');
-//           const searchFormDiv = document.createElement('div');
-//           sorryDiv.append(searchFormDiv);
-//           searchFormDiv.innerHTML = `
-//            <div class="search-container">
-//             <div class="search-wrapper">
-//              <div class='search-form'>
-//               <form action='/search' method='get'>
-//                 <input type='search' name='q' class='search-input' placeholder="TYPE HERE"/>
-//               </form>
-//              </div>
-//             </div>
-//            </div>
-//          `;
-//           document.querySelector('.block.search-results.card-container.three-columns').style.display = 'block';
-//         } else {
-//           console.log(inputArray);
-//           createSet(total, block);
-//         }
-//       }
-//     });
-//   });
-// }
-
-// export default async function decorate(block) {
-//   block.innerHTML = '';
-//   const searchTerm = new URLSearchParams(window.location.search).get('q');
-//   console.log(searchTerm);
-//   block.classList.add('card-container', 'three-columns');
-//   if (searchTerm) {
-//     const elementHeading = block.parentNode.parentNode.parentNode.querySelector('.section.search-page-heading');
-//     const textNode = document.createElement('h1');
-//     textNode.textContent = searchTerm;
-//     elementHeading.append(textNode);
-//     const spinnerDiv = document.createElement('div');
-//     spinnerDiv.classList.add('results-loading-spinner');
-//     block.append(spinnerDiv);
-//     const inputArray = searchTerm.split(' ');
-//     if (inputArray.length > 1) inputArray.unshift(searchTerm);
-//     calculate(inputArray, block);
-//   }
-// }
