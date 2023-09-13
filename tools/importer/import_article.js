@@ -39,14 +39,6 @@ export default {
     ]);
     main.querySelector('ul.social-list.list-inline').parentElement.remove();
 
-    // // currently not supporting magazine articles, TODO: handle
-    // if (document.querySelector('.mb_YTPlayer')) {
-    //   throw new Error('Magazine article not supported');
-    // }
-    // if (!document.querySelector('.tfl-page-title-wrap')) {
-    //   throw new Error('only normal articles are supported');
-    // }
-
     const magazineSection = main.querySelector('.row.fullscreen .vid-bg');
 
     if (magazineSection) {
@@ -114,7 +106,7 @@ export default {
 
     // adjust content specific to 24life
     useHighresImagesAndRemoveLinks(main, document);
-    moveFloatingImagesToSeparateLine(main, document, metadataTable);
+    handleFloatingImages(main, document, metadataTable);
     makeCaptionTextItalics(main, document);
     detectColumns(main, document, url);
     detectRulers(main, document, url);
@@ -409,7 +401,7 @@ function useHighresImagesAndRemoveLinks(main) {
   }
 }
 
-function moveFloatingImagesToSeparateLine(main, document, metadataTable) {
+function handleFloatingImages(main, document, metadataTable) {
   let hasFloatingLeftImages = false;
   let hasFloatingRightImages = false;
 
