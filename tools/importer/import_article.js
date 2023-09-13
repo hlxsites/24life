@@ -9,14 +9,14 @@ export default {
   },
 
   /**
-     * Apply DOM operations to the provided document and return
-     * the root element to be then transformed to Markdown.
-     * @param {HTMLDocument} document The document
-     * @param {string} url The url of the page imported
-     * @param {string} html The raw html (the document is cleaned up during preprocessing)
-     * @param {object} params Object containing some parameters given by the import process.
-     * @returns {HTMLElement} The root element to be transformed
-     */
+   * Apply DOM operations to the provided document and return
+   * the root element to be then transformed to Markdown.
+   * @param {HTMLDocument} document The document
+   * @param {string} url The url of the page imported
+   * @param {string} html The raw html (the document is cleaned up during preprocessing)
+   * @param {object} params Object containing some parameters given by the import process.
+   * @returns {HTMLElement} The root element to be transformed
+   */
   transform: async ({
     document, url, html, params,
   }) => {
@@ -118,7 +118,7 @@ export default {
 
     const filename = new URL(url).pathname
       .replace(/\/$/, '')
-    // eslint-disable-next-line prefer-regex-literals
+      // eslint-disable-next-line prefer-regex-literals
       .replace(new RegExp('^/'), '');
     const { section, year } = params;
     if (!section || !year) {
@@ -292,6 +292,7 @@ function cleanupForImportCompatibility(main, document) {
       strong.remove();
     });
   }
+
   function ignoredItalicSpecialChars() {
     // e.g. https://www.24life.com/the-art-of-focus/
     for (const em of main.querySelectorAll('em, i')) {
@@ -344,10 +345,10 @@ function getMainSectionFromArticleSection(articleSections) {
     articleSection = articleSection.toLowerCase();
 
     if (articleSection === 'mindset'
-            || articleSection === 'lifestyle'
-            || articleSection === 'discover'
-            || articleSection === 'flexibility'
-            || articleSection === 'motivate') {
+      || articleSection === 'lifestyle'
+      || articleSection === 'discover'
+      || articleSection === 'flexibility'
+      || articleSection === 'motivate') {
       return 'focus';
     }
     if (articleSection === 'nourishment') {
@@ -368,9 +369,9 @@ function getAdditionalCategoriesFromArticleSection(articleSections) {
   return articleSections.filter((section) => {
     const lowercaseSection = section.toLowerCase();
     return lowercaseSection !== 'mindset'
-            && lowercaseSection !== 'movement'
-            && lowercaseSection !== 'nourishment'
-            && lowercaseSection !== 'regeneration';
+      && lowercaseSection !== 'movement'
+      && lowercaseSection !== 'nourishment'
+      && lowercaseSection !== 'regeneration';
   });
 }
 
@@ -401,6 +402,23 @@ function useHighresImagesAndRemoveLinks(main) {
   }
 }
 
+function collectContentUntil(img, stopCriteria, document) {
+  const content = document.createElement('div');
+  let next = img.nextSibling || img.parentNode.nextSibling;
+  while (next) {
+    const nextNext = next.nextSibling;
+    const parent = next.parentNode;
+
+    if (next.nodeType === Node.ELEMENT_NODE && stopCriteria(next)) {
+      break;
+    }
+    const newNext = next.nextSibling || next.parentNode.nextSibling;
+    content.append(next);
+    next = newNext;
+  }
+  return content;
+}
+
 function handleFloatingImages(main, document, metadataTable) {
   // e.g. https://www.24life.com/pack-your-bag/ has images that are part of the h3.
   // when imported, we want the image to be after the heading, not before.
@@ -428,34 +446,13 @@ function handleFloatingImages(main, document, metadataTable) {
     }
     // put everything in a Columns block until the next header or `.vc_column-inner`
     const imageLeft = img.classList.contains('alignleft');
-    const sideText = document.createElement('div');
-    let next = img.nextSibling || img.parentNode.nextSibling;
-    while (next) {
-      const nextNext = next.nextSibling;
-      const parent = next.parentNode;
 
-      if (next.nodeType === Node.TEXT_NODE) {
-        sideText.append(next);
-      } else {
-        // Element
-        if (next?.tagName.toLowerCase().startsWith('h')) {
-          break;
-        }
-        if (next?.classList.contains('vc_column-inner')) {
-          break;
-        }
-        sideText.append(next);
-        // if (next.tagName.toLowerCase() === 'p') {
-        // } else {
-        //   sideText.append(next.cloneNode(true));
-        // }
-      }
-      if (nextNext) {
-        next = nextNext;
-      } else {
-        next = parent.nextSibling;
-      }
-    }
+    const sideText = collectContentUntil(
+      img,
+      (el) => el.tagName.toLowerCase().match('h[1-6]')
+        || el.classList.contains('vc_column-inner'),
+      document,
+    );
 
     const tableData = [
       ['Columns'],
@@ -514,7 +511,7 @@ function detectRulers(main, document, url) {
 
 function detectColumns(main, document, url) {
   const rows = [...main.querySelectorAll('.row :is([class^="col-"], [class*=" col-"])')]
-  // note: we ignore large columns like col-sm-12, col-md-10, etc.
+    // note: we ignore large columns like col-sm-12, col-md-10, etc.
     .filter((col) => {
       const width = [...col.classList].find((c) => c.includes('col-'))
         .split('-')[2];
