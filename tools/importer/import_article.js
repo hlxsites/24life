@@ -49,11 +49,23 @@ export default {
 
     if (magazineSection) {
       // magazine article e.g. https://www.24life.com/make-2019-the-year-you-dont-get-hurt/
+      params.isMagazine = true;
       const h1 = magazineSection.querySelector('h1');
       const img = main.querySelector('img');
+      let videoLink;
       const video = magazineSection.querySelector('video source[src^="http"]');
-      params.video = video.src;
-      params.isMagazine = true;
+      if (video) {
+        params.videoToDownload = video.src;
+        videoLink = document.createTextNode('TODO: add video link');
+      } else {
+        const youtube = magazineSection.querySelector('div.player[data-video-id]');
+        if (youtube) {
+          videoLink = document.createElement('a');
+          videoLink.href = youtube.dataset.videoId;
+          videoLink.textContent = youtube.dataset.videoId;
+        }
+      }
+
       const author = magazineSection.querySelector('h4');
       if (author.textContent.startsWith('By ')) {
         author.remove();
@@ -66,7 +78,7 @@ export default {
       magazineSection.replaceWith(WebImporter.DOMUtils.createTable([
         ['Article Hero Video'],
         ['Title', h1],
-        ['Video', 'TODO: add video link'],
+        ['Video', videoLink],
         ['Image', img],
       ], document));
     } else {
@@ -127,10 +139,10 @@ export default {
         previewUrl: `https://main--24life--hlxsites.hlx.page${newPath}`,
       },
     }];
-    if (params.video) {
+    if (params.videoToDownload) {
       transformationResult.push({
         path: `${newPath}.mp4`,
-        from: params.video,
+        from: params.videoToDownload,
       });
     }
     return transformationResult;
