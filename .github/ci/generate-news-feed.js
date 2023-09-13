@@ -9,7 +9,7 @@ const feeds = [
   {
     title: '24life Updates',
     targetFile: `../../feed.xml`,
-    source: 'https://main--24life--hlxsites.hlx.page/articles.json',
+    source: 'https://main--24life--hlxsites.hlx.live/articles.json',
     siteRoot: "https://www.24life.com",
     link:	"https://www.24life.com/feed/",
     language:	"en",
