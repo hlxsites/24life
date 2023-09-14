@@ -9,7 +9,7 @@ done
 
 export TEST_PATHS=""
 TEST_PATHS="$(cat generated-test-paths.txt)"
-
+mkdir -p test-results
 
 # we ignore the exit code of the test command because we want to continue
 npx playwright test
