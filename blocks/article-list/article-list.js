@@ -23,9 +23,9 @@ export default async function decorate(block) {
     filters.collections = new URL(document.location).pathname.split('/').pop();
     filters.collections = filters.collections?.replace(/-/g, ' ');
   }
+
   block.textContent = '';
   block.classList.add('card-container', 'three-columns');
-  // eslint-disable-next-line no-console
   await fetchArticlesAndAddCards(filters, block);
 }
 
@@ -39,58 +39,50 @@ function removeEmptyKeyOrValue(obj) {
   );
 }
 
+async function displayNextEntries(iterator, block, loadMoreContainer) {
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < 30; i++) {
+    const next = iterator.next();
+    if (next.done) {
+      loadMoreContainer.remove();
+    }
+    const article = next.value;
+    if (!article) break;
+
+    const wrapper = document.createElement('div');
+    const newBlock = createCardBlock(article, wrapper);
+    if (article.section) {
+      newBlock.classList.add(toClassName(article.section));
+    }
+    if (next.done) {
+      block.append(wrapper);
+    } else {
+      loadMoreContainer.before(wrapper);
+    }
+    // eslint-disable-next-line no-await-in-loop
+    await loadBlock(newBlock);
+  }
+}
+
 async function fetchArticlesAndAddCards(filters, block) {
   const articles = await ffetchArticles('/articles.json').all();
-  const numInitialLoadedArticles = 30;
-  const actualLength = articles.filter((article) => Object.keys(filters).every(
-    (key) => article[key]?.toLowerCase().includes(filters[key].toLowerCase()),
-  )).length;
-  await Promise.all(articles
+  const matches = articles
     // make sure all filters match
     .filter((article) => Object.keys(filters).every(
       (key) => article[key]?.toLowerCase().includes(filters[key].toLowerCase()),
-    )).slice(0, numInitialLoadedArticles)
-    .map(async (article) => {
-      const wrapper = document.createElement('div');
-      const newBlock = createCardBlock(article, wrapper);
-      if (article.section) {
-        newBlock.classList.add(toClassName(article.section));
-      }
-      block.append(wrapper);
-      await loadBlock(newBlock);
-    }));
-  const counter = document.querySelectorAll('.author .card-wrapper').length / 30;
-  if ((actualLength - (numInitialLoadedArticles * counter)) > 30) {
-  // eslint-disable-next-line
-    createLoadMoreButton(numInitialLoadedArticles, articles, filters, actualLength, block);
-  }
-}
-// eslint-disable-next-line
-function createLoadMoreButton(numInitialLoadedArticles, articles, filters, actualLength, block) {
+    ));
+
+  const iterator = matches.values();
+
+  // always add the button to load more. It will be removed once the iterator is done
   const loadMoreContainer = document.createElement('div');
   loadMoreContainer.classList.add('article-load-more-container');
-  const loadMoreButton = document.createElement('button');
-  loadMoreContainer.append(loadMoreButton);
-  loadMoreButton.classList.add('article-list-load-more-button');
-  loadMoreButton.textContent = 'Load more';
-  loadMoreButton.addEventListener('click', async () => {
-    const counter = document.querySelectorAll('.author .card-wrapper').length / numInitialLoadedArticles;
-    await Promise.all(articles
-      .filter((article) => Object.keys(filters).every(
-        (key) => article[key]?.toLowerCase().includes(filters[key].toLowerCase()),
-      )).slice(numInitialLoadedArticles * counter, (numInitialLoadedArticles * counter) + 30)
-      .map(async (article) => {
-        const wrapper = document.createElement('div');
-        const newBlock = createCardBlock(article, wrapper);
-        if (article.section) {
-          newBlock.classList.add(toClassName(article.section));
-        }
-        block.append(wrapper);
-        await loadBlock(newBlock);
-      }));
-    // eslint-disable-next-line
-      if ((actualLength - (numInitialLoadedArticles * counter)) > 30) { block.append(loadMoreContainer); }
+  loadMoreContainer.innerHTML = '<button class="article-list-load-more-button">Load more</button>';
+  loadMoreContainer.addEventListener('click', () => {
+    displayNextEntries(iterator, block, loadMoreContainer);
   });
-  // eslint-disable-next-line
   block.append(loadMoreContainer);
+
+  // initial load the first entries
+  await displayNextEntries(iterator, block, loadMoreContainer);
 }
