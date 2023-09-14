@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-#export DOMAIN_MAIN="main--vg-macktrucks-com--hlxsites.hlx.page"
-#export DOMAIN_BRANCH="update-from-boilerplate--vg-macktrucks-com--hlxsites.hlx.page"
-
 export DOMAIN_MAIN="main--24life--hlxsites.hlx.live"
 export DOMAIN_BRANCH="author-bug--24life--hlxsites.hlx.live"
 
