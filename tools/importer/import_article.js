@@ -110,6 +110,7 @@ export default {
     useHighresImagesAndRemoveLinks(main, document);
     handleFloatingImages(main, document, metadataTable);
     makeCaptionTextItalics(main, document);
+    removeFullWidthColumns(main, document);
     detectColumns(main, document, url);
     detectRulers(main, document, url);
     detectYoutube(main, document);
@@ -425,14 +426,6 @@ function handleFloatingImages(main, document, metadataTable) {
   // e.g. https://www.24life.com/pack-your-bag/ has images that are part of the h3.
   // when imported, we want the image to be after the heading, not before.
   for (const img of main.querySelectorAll('h3 img.alignleft, h3 img.alignright')) {
-    // if (!img.classList.contains('attachment-full')) {
-    //   if (img.classList.contains('alignleft')) {
-    //     // hasFloatingLeftImages = true;
-    //   }
-    //   if (img.classList.contains('alignright')) {
-    //     // hasFloatingRightImages = true;
-    //   }
-    // }
     const h3 = img.closest('h3');
     const p = document.createElement('p');
     p.appendChild(img);
@@ -469,35 +462,23 @@ function handleFloatingImages(main, document, metadataTable) {
     const columnsWrapper = document.createElement('div');
     columnsWrapper.append(columns);
     img.replaceWith(columnsWrapper);
-
-    // const parent = img.closest('p');
-    // if (parent.childNodes.length > 1 && parent.firstChild === img) {
-    //   const p = document.createElement('p');
-    //   p.appendChild(columns);
-    //   parent.before(p);
-    // } else {
-    //   // TODO
-    // }
   }
-
-  // add section metadata for floats
-  // if (hasFloatingLeftImages || hasFloatingRightImages) {
-  //   let style;
-  //   if (hasFloatingLeftImages && hasFloatingRightImages) {
-  //     style = 'float-images-alternate';
-  //   } else {
-  //     style = hasFloatingLeftImages ? 'float-images-left' : 'float-images-right';
-  //   }
-  //
-  //
-  //
-  //
-  // }
 }
 
 function makeCaptionTextItalics(main, document) {
   for (const caption of main.querySelectorAll('.wp-caption-text')) {
     caption.innerHTML = `<em>${caption.innerHTML}</em>`;
+  }
+}
+
+function removeFullWidthColumns(main, document) {
+  // e.g. https://www.24life.com/four-experts-share-daily-rituals-for-a-season-and-life-of-success/
+  for (const col of main.querySelectorAll('.row .col-md-12, .row .col-sm-12, .row .col-lg-12, .row .col-12')) {
+    const row = col.closest('.row');
+    if (row && row.childElementCount === 1) {
+      row.before(...col.childNodes);
+      row.remove();
+    }
   }
 }
 
@@ -513,14 +494,14 @@ function detectRulers(main, document, url) {
 }
 
 function detectColumns(main, document, url) {
-  const rows = [...main.querySelectorAll('.row :is([class^="col-"], [class*=" col-"])')]
+  const rows = [...main.querySelectorAll(':is([class^="col-"], [class*=" col-"])')]
     // note: we ignore large columns like col-sm-12, col-md-10, etc.
     .filter((col) => {
       const width = [...col.classList].find((c) => c.includes('col-'))
         .split('-')[2];
       return width < 10;
     })
-    .map((col) => col.closest('.row'));
+    .map((col) => col.parentElement);
   const uniqueRows = [...new Set(rows)];
 
   let variant = '';
@@ -532,6 +513,10 @@ function detectColumns(main, document, url) {
     // convert row to columns block
     const columns = Array.from(row.querySelectorAll('[class^="col-"], [class*=" col-"]'));
     if (columns.length) {
+      if (columns.length === 2 && columns[0].classList.contains('col-md-push-6')) {
+        // swap columns, e.g. https://www.24life.com/four-experts-share-daily-rituals-for-a-season-and-life-of-success/
+        columns.reverse();
+      }
       row.textContent = '';
       row.append(WebImporter.DOMUtils.createTable([
         [`Columns ${variant}`],
