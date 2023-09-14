@@ -79,3 +79,11 @@ div.search-page-heading {
   margin: 0;
   max-width: unset;
 }
+
+.block.search-results.card-container.three-columns .card-wrapper img {
+    width: 100%;
+    transition: .7s ease-in-out;
+    aspect-ratio: 410/220;
+    object-fit: cover;
+    object-position: top;
+}
