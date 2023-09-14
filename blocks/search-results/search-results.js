@@ -57,19 +57,8 @@ function filterMatches(tokenizedSearchWords, jsonData) {
       .includes(searchTerm.toLowerCase()));
     allMatches.push(...matches);
   });
-  return uniqueMatches(allMatches);
-}
-
-function uniqueMatches(allData) {
-  const uniquePath = new Set();
-  return allData.filter((element) => {
-    const isDuplicate = uniquePath.has(element.path);
-    if (!isDuplicate) {
-      uniquePath.add(element.path);
-      return true;
-    }
-    return false;
-  });
+  // remove duplicates:
+  return [...new Set(allMatches)];
 }
 
 function noResults(resultsDiv) {
