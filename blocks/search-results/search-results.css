@@ -1,0 +1,77 @@
+div.search-page-heading {
+  background: #f8f8f8;
+  letter-spacing: 2px;
+  padding-bottom: 13px;
+  padding-top: 50px;
+}
+
+.search-page-heading.section h1 {
+  margin-left: 5rem;
+}
+
+.search-results-wrapper .article-load-more-container {
+  margin: auto;
+  text-align: center;
+}
+
+.block.search-results .results-loading-spinner {
+  text-align: center;
+  position: relative;
+  bottom: 4vh;
+  margin: auto;
+  pointer-events: none;
+  width: 3.5em;
+  height: 3.5em;
+  border: 0.5em solid #eee;
+  border-top-color: #888;
+  border-radius: 50%;
+  animation: loadingspin 1s linear infinite;
+  transition: opacity 1s, visibility 1s;
+}
+
+@keyframes loadingspin {
+  100% {
+    transform: rotate(360deg)
+  }
+}
+
+.block.search-results .no-results {
+  position: relative;
+  text-align: left;
+}
+
+.block.search-results .no-results>p {
+  font-size: 1rem;
+}
+
+.block.search-results input {
+  font-size: 1rem;
+  width: 100%;
+  max-width: 50rem;
+  display: block;
+  margin-bottom: 1rem;
+  padding: 0.75rem 0.6rem;
+  box-sizing: border-box;
+  border: 1px solid #f5f5f5;
+  color: var(--text-color);
+  background-color: #f5f5f5;
+  border-radius: 0;
+}
+
+.block.search-results.card-container.three-columns .results-div {
+  gap: 2em;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.block.search-results.card-container.three-columns .no-results-div {
+  display: block;
+}
+
+.block.search-results.card-container.three-columns .card-wrapper {
+  /* make sure all the cards have the same width */
+  flex-grow: 1;
+  flex-basis: 0;
+  margin: 0;
+  max-width: unset;
+}
