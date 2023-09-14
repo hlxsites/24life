@@ -1,5 +1,5 @@
 import {
-  buildBlock, decorateBlock, decorateIcons, getMetadata, toClassName,
+  buildBlock, decorateBlock, decorateButtons, decorateIcons, getMetadata, toClassName,
 } from '../../scripts/lib-franklin.js';
 
 export default async function decorate(doc) {
@@ -12,7 +12,10 @@ export default async function decorate(doc) {
   }
 
   const firstSection = doc.querySelector('main .section');
-  firstSection.before(createSectionWithHeroBlock());
+  const videoHero = firstSection.querySelector('.block.article-hero-video');
+  if (!videoHero) {
+    firstSection.before(createSectionWithHeroBlock());
+  }
 
   const firstContent = doc.querySelector('main .section .default-content-wrapper');
   firstContent.before(createSocialMediaButtons());
@@ -34,6 +37,8 @@ export default async function decorate(doc) {
     newSectionWrapper.append(createAuthorBlock(author));
   });
   newSectionWrapper.append(createArticleCarousel());
+
+  decorateButtons(doc);
 }
 
 function createNewSection() {
