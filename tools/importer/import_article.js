@@ -39,7 +39,7 @@ export default {
     ]);
     main.querySelector('ul.social-list.list-inline')?.parentElement?.remove();
 
-    const magazineSection = main.querySelector('.row.fullscreen .vid-bg');
+    const magazineSection = main.querySelector('.row.fullscreen .vid-bg, .cover.fullscreen');
 
     if (magazineSection) {
       // magazine article e.g. https://www.24life.com/make-2019-the-year-you-dont-get-hurt/
@@ -57,6 +57,8 @@ export default {
           videoLink = document.createElement('a');
           videoLink.href = youtube.dataset.videoId;
           videoLink.textContent = youtube.dataset.videoId;
+        } else {
+          videoLink = document.createTextNode('');
         }
       }
 
