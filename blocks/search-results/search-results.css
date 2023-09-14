@@ -58,6 +58,10 @@ div.search-page-heading {
   border-radius: 0;
 }
 
+.block.search-results.card-container.three-columns {
+  display: block;
+}
+
 .block.search-results.card-container.three-columns .results-div {
   gap: 2em;
   display: grid;
