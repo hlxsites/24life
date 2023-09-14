@@ -38,6 +38,7 @@ export default {
       '.fbx-modal',
     ]);
     main.querySelector('ul.social-list.list-inline')?.parentElement?.remove();
+    main.querySelector('form.js-cm-form')?.closest('section').remove();
 
     const magazineSection = main.querySelector('.row.fullscreen .vid-bg, .cover.fullscreen');
 
