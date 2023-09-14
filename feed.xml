@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://main--24life--hlxsites.hlx.live</id>
-    <title>24life Updates</title>
-    <updated>1970-01-01T00:00:00.000Z</updated>
+    <id>https://main--24life--hlxsites.hlx.live/feed.xml</id>
+    <title>24life</title>
+    <updated>2022-01-08T00:46:19.000Z</updated>
     <generator>AEM Project Franklin News feed generator (GitHub action)</generator>
-    <link rel="alternate" href="https://main--24life--hlxsites.hlx.live"/>
+    <link rel="alternate" href="https://main--24life--hlxsites.hlx.live/feed.xml"/>
     <subtitle>Your best self now</subtitle>
     <entry>
         <title type="html"><![CDATA[Leilani Fights Her Way Back to Fitness]]></title>
@@ -1384,6 +1384,13 @@
         <link href="https://main--24life--hlxsites.hlx.live/fitness/2019/no-time-try-this-express-workout"/>
         <updated>2019-12-17T22:17:48.000Z</updated>
         <published>2019-12-17T22:17:48.000Z</published>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[The Change Master: John Berardi’s Second Act Will Help You, Too]]></title>
+        <id>https://main--24life--hlxsites.hlx.live/focus/2019/the-change-master-john-berardis-second-act-will-help-you-too</id>
+        <link href="https://main--24life--hlxsites.hlx.live/focus/2019/the-change-master-john-berardis-second-act-will-help-you-too"/>
+        <updated>2019-12-16T22:38:02.000Z</updated>
+        <published>2019-12-16T22:38:02.000Z</published>
     </entry>
     <entry>
         <title type="html"><![CDATA[Should I Workout Alone Or With A Group? Science Tells You What To Do]]></title>
@@ -4018,6 +4025,13 @@
         <published>2019-01-02T17:05:29.000Z</published>
     </entry>
     <entry>
+        <title type="html"><![CDATA[Make 2019 the Year You Don’t Get Hurt]]></title>
+        <id>https://main--24life--hlxsites.hlx.live/fitness/2019/make-2019-the-year-you-dont-get-hurt</id>
+        <link href="https://main--24life--hlxsites.hlx.live/fitness/2019/make-2019-the-year-you-dont-get-hurt"/>
+        <updated>2019-01-01T21:50:50.000Z</updated>
+        <published>2019-01-01T21:50:50.000Z</published>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[Expert David Bray Explains Why You Should Care About a People-Centric Digital Future]]></title>
         <id>https://main--24life--hlxsites.hlx.live/focus/2018/expert-david-bray-explains-why-you-should-care-about-a-people-centric-digital-future</id>
         <link href="https://main--24life--hlxsites.hlx.live/focus/2018/expert-david-bray-explains-why-you-should-care-about-a-people-centric-digital-future"/>
@@ -5523,6 +5537,13 @@
         <published>2018-06-12T17:12:01.000Z</published>
     </entry>
     <entry>
+        <title type="html"><![CDATA[Josh Williamson Will Find the Next Olympic Hopeful in You]]></title>
+        <id>https://main--24life--hlxsites.hlx.live/focus/2018/josh-williamson-will-find-the-next-olympic-hopeful-in-you</id>
+        <link href="https://main--24life--hlxsites.hlx.live/focus/2018/josh-williamson-will-find-the-next-olympic-hopeful-in-you"/>
+        <updated>2018-06-12T16:48:12.000Z</updated>
+        <published>2018-06-12T16:48:12.000Z</published>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[HIIT or Miss? New Study Reveals Optimum High-Intensity Interval Training Levels]]></title>
         <id>https://main--24life--hlxsites.hlx.live/fitness/2018/hiit-or-miss-new-study-reveals-optimum-high-intensity-interval-training-levels</id>
         <link href="https://main--24life--hlxsites.hlx.live/fitness/2018/hiit-or-miss-new-study-reveals-optimum-high-intensity-interval-training-levels"/>
@@ -5773,6 +5794,62 @@
         <link href="https://main--24life--hlxsites.hlx.live/fitness/2018/how-i-did-it-kevin-dunns-transformation-story"/>
         <updated>2018-05-11T16:30:51.000Z</updated>
         <published>2018-05-11T16:30:51.000Z</published>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Create a Community You Love]]></title>
+        <id>https://main--24life--hlxsites.hlx.live/focus/2018/create-a-community-you-love</id>
+        <link href="https://main--24life--hlxsites.hlx.live/focus/2018/create-a-community-you-love"/>
+        <updated>2018-05-11T05:04:33.000Z</updated>
+        <published>2018-05-11T05:04:33.000Z</published>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[This Well-Spiced Stew Feeds a Crowd]]></title>
+        <id>https://main--24life--hlxsites.hlx.live/fuel/2018/this-well-spiced-stew-feeds-a-crowd</id>
+        <link href="https://main--24life--hlxsites.hlx.live/fuel/2018/this-well-spiced-stew-feeds-a-crowd"/>
+        <updated>2018-05-11T05:04:23.000Z</updated>
+        <published>2018-05-11T05:04:23.000Z</published>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Surprising Ways to Lower Your Risk of Heart Attack]]></title>
+        <id>https://main--24life--hlxsites.hlx.live/fitness/2018/surprising-ways-to-lower-your-risk-of-heart-attack</id>
+        <link href="https://main--24life--hlxsites.hlx.live/fitness/2018/surprising-ways-to-lower-your-risk-of-heart-attack"/>
+        <updated>2018-05-11T05:03:42.000Z</updated>
+        <published>2018-05-11T05:03:42.000Z</published>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[SpringtimeSix-Pack]]></title>
+        <id>https://main--24life--hlxsites.hlx.live/fitness/2018/springtime-six-pack</id>
+        <link href="https://main--24life--hlxsites.hlx.live/fitness/2018/springtime-six-pack"/>
+        <updated>2018-05-11T05:02:16.000Z</updated>
+        <published>2018-05-11T05:02:16.000Z</published>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Hot Topic: Health Perks From Infrared Saunas]]></title>
+        <id>https://main--24life--hlxsites.hlx.live/recover/2018/hot-topic-health-perks-from-infrared-saunas</id>
+        <link href="https://main--24life--hlxsites.hlx.live/recover/2018/hot-topic-health-perks-from-infrared-saunas"/>
+        <updated>2018-05-11T04:04:56.000Z</updated>
+        <published>2018-05-11T04:04:56.000Z</published>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Want to Fuel Your Workouts? Get These Nutrients]]></title>
+        <id>https://main--24life--hlxsites.hlx.live/fuel/2018/want-to-fuel-your-workouts-get-these-nutrients</id>
+        <link href="https://main--24life--hlxsites.hlx.live/fuel/2018/want-to-fuel-your-workouts-get-these-nutrients"/>
+        <updated>2018-05-11T04:02:17.000Z</updated>
+        <published>2018-05-11T04:02:17.000Z</published>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Four Experts Share Daily Rituals for a Season (and Life) of Success]]></title>
+        <id>https://main--24life--hlxsites.hlx.live/recover/2018/four-experts-share-daily-rituals-for-a-season-and-life-of-success</id>
+        <link href="https://main--24life--hlxsites.hlx.live/recover/2018/four-experts-share-daily-rituals-for-a-season-and-life-of-success"/>
+        <updated>2018-05-11T04:00:48.000Z</updated>
+        <published>2018-05-11T04:00:48.000Z</published>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[24Life Editor’s Challenge: All In]]></title>
+        <id>https://main--24life--hlxsites.hlx.live/fuel/2018/editor-challenge-all-in</id>
+        <link href="https://main--24life--hlxsites.hlx.live/fuel/2018/editor-challenge-all-in"/>
+        <updated>2018-05-11T04:00:39.000Z</updated>
+        <published>2018-05-11T04:00:39.000Z</published>
     </entry>
     <entry>
         <title type="html"><![CDATA[News Flash: Extreme Temperatures, Fit Dads and Smart Babies, and Eggs]]></title>
