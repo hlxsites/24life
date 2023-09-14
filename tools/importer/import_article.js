@@ -9,14 +9,14 @@ export default {
   },
 
   /**
-     * Apply DOM operations to the provided document and return
-     * the root element to be then transformed to Markdown.
-     * @param {HTMLDocument} document The document
-     * @param {string} url The url of the page imported
-     * @param {string} html The raw html (the document is cleaned up during preprocessing)
-     * @param {object} params Object containing some parameters given by the import process.
-     * @returns {HTMLElement} The root element to be transformed
-     */
+   * Apply DOM operations to the provided document and return
+   * the root element to be then transformed to Markdown.
+   * @param {HTMLDocument} document The document
+   * @param {string} url The url of the page imported
+   * @param {string} html The raw html (the document is cleaned up during preprocessing)
+   * @param {object} params Object containing some parameters given by the import process.
+   * @returns {HTMLElement} The root element to be transformed
+   */
   transform: async ({
     document, url, html, params,
   }) => {
@@ -33,25 +33,61 @@ export default {
       '.tfl-author-image',
       '#disqus_thread',
       'blockquote.wp-embedded-content',
+      '.tfl-constant-contact-wrapper',
+      '.tfl-magazine-current-issue-footer',
+      '.fbx-modal',
     ]);
+    main.querySelector('ul.social-list.list-inline')?.parentElement?.remove();
 
-    // currently not supporting magazine articles, TODO: handle
-    if (document.querySelector('.mb_YTPlayer')) {
-      throw new Error('Magazine article not supported');
-    }
-    if (!document.querySelector('.tfl-page-title-wrap')) {
-      throw new Error('only normal articles are supported');
-    }
+    const magazineSection = main.querySelector('.row.fullscreen .vid-bg, .cover.fullscreen');
 
-    // start with h1, then image
-    const h1 = main.querySelector('h1');
-    main.prepend(h1);
-    let img = main.querySelector('img');
-    if (!img) {
-      img = document.createElement('img');
-      img.src = 'http://localhost:3001/dummy-article-hero-image/media_127d7667d1e27556e2e4570b95d44f0dfc591529a.png?host=https%3A%2F%2Fmain--24life--hlxsites.hlx.page';
+    if (magazineSection) {
+      // magazine article e.g. https://www.24life.com/make-2019-the-year-you-dont-get-hurt/
+      params.isMagazine = true;
+      const h1 = magazineSection.querySelector('h1');
+      const img = main.querySelector('img');
+      let videoLink;
+      const video = magazineSection.querySelector('video source[src^="http"]');
+      if (video) {
+        params.videoToDownload = video.src;
+        videoLink = document.createTextNode('TODO: add video link');
+      } else {
+        const youtube = magazineSection.querySelector('div.player[data-video-id]');
+        if (youtube) {
+          videoLink = document.createElement('a');
+          videoLink.href = youtube.dataset.videoId;
+          videoLink.textContent = youtube.dataset.videoId;
+        } else {
+          videoLink = document.createTextNode('');
+        }
+      }
+
+      const author = magazineSection.querySelector('h4');
+      if (author.textContent.startsWith('By ')) {
+        author.remove();
+      }
+      const collection = magazineSection.querySelector('h6');
+      collection?.remove();
+
+      console.log({ h1 });
+
+      magazineSection.replaceWith(WebImporter.DOMUtils.createTable([
+        ['Article Hero Video'],
+        ['Title', h1],
+        ['Video', videoLink],
+        ['Image', img],
+      ], document));
+    } else {
+      // start with h1, then image
+      const h1 = main.querySelector('h1');
+      main.prepend(h1);
+      let img = main.querySelector('img');
+      if (!img) {
+        img = document.createElement('img');
+        img.src = 'http://localhost:3001/dummy-article-hero-image/media_127d7667d1e27556e2e4570b95d44f0dfc591529a.png?host=https%3A%2F%2Fmain--24life--hlxsites.hlx.page';
+      }
+      h1.after(img);
     }
-    h1.after(img);
 
     const metadataTable = createMetadata(main, document, params);
 
@@ -72,7 +108,7 @@ export default {
 
     // adjust content specific to 24life
     useHighresImagesAndRemoveLinks(main, document);
-    moveFloatingImagesToSeparateLine(main, document, metadataTable);
+    handleFloatingImages(main, document, metadataTable);
     makeCaptionTextItalics(main, document);
     detectColumns(main, document, url);
     detectRulers(main, document, url);
@@ -80,28 +116,38 @@ export default {
     await articleEmbeds(main, document);
     detectQuotes(main, document);
     fixInvalidLists(main, document);
+    magazineLinkMakeBoldAndItalic(main, document);
 
     const filename = new URL(url).pathname
       .replace(/\/$/, '')
-    // eslint-disable-next-line prefer-regex-literals
+      // eslint-disable-next-line prefer-regex-literals
       .replace(new RegExp('^/'), '');
     const { section, year } = params;
     if (!section || !year) {
       throw new Error(`missing params section or year. ${JSON.stringify(params)}`);
     }
     const newPath = WebImporter.FileUtils.sanitizePath(`${toClassName(section)}/${toClassName(year)}/${filename}`);
-    return {
+
+    const transformationResult = [{
       element: main,
       path: newPath,
       report: {
         previewUrl: `https://main--24life--hlxsites.hlx.page${newPath}`,
       },
-    };
+    }];
+    if (params.videoToDownload) {
+      transformationResult.push({
+        path: `${newPath}.mp4`,
+        from: params.videoToDownload,
+      });
+    }
+    return transformationResult;
   },
 };
 
 const createMetadata = (main, document, params) => {
   const { ldJSON } = params;
+  const keywords = ldJSON['@graph'].find((item) => item['@type'] === 'Article').keywords.join(', ');
 
   const meta = {};
 
@@ -109,6 +155,14 @@ const createMetadata = (main, document, params) => {
     .content
     .replace(/^- /, '');
   meta.Description = removeOldSectionNamesFromDescriptin(meta.Description);
+
+  if (params.isMagazine) {
+    meta.Issue = keywords
+      .split(',')
+      .filter((keyword) => keyword.toLowerCase().trim().startsWith('volume') && keyword.toLowerCase().includes('issue'))
+      .map((keyword) => toClassName(keyword.trim()))
+      .pop();
+  }
 
   meta.Collections = [...document.querySelectorAll('.tfl-page-title-wrap .tfl-the-tags a.tfl-tag')]
     .map((tag) => tag.textContent.trim())
@@ -124,7 +178,7 @@ const createMetadata = (main, document, params) => {
     .map((item) => item.name)
     .join(', ');
 
-  meta.Keywords = ldJSON['@graph'].find((item) => item['@type'] === 'Article').keywords.join(', ');
+  meta.Keywords = keywords;
 
   meta['Publication Date'] = ldJSON['@graph'].find((item) => item['@type'] === 'Article').datePublished;
 
@@ -240,6 +294,7 @@ function cleanupForImportCompatibility(main, document) {
       strong.remove();
     });
   }
+
   function ignoredItalicSpecialChars() {
     // e.g. https://www.24life.com/the-art-of-focus/
     for (const em of main.querySelectorAll('em, i')) {
@@ -259,6 +314,16 @@ function cleanupForImportCompatibility(main, document) {
   fixUnderscoreInLinks(main, document);
   fixBoldedLinks(main, document);
   ignoredItalicSpecialChars(main, document);
+}
+
+function magazineLinkMakeBoldAndItalic(main, document) {
+  [...main.querySelectorAll('a.btn')]
+    .filter((a) => a.textContent.trim() === 'Next')
+    .forEach((a) => {
+      const em = document.createElement('em');
+      em.innerHTML = a.outerHTML;
+      a.replaceWith(em);
+    });
 }
 
 export function toClassName(name) {
@@ -282,10 +347,10 @@ function getMainSectionFromArticleSection(articleSections) {
     articleSection = articleSection.toLowerCase();
 
     if (articleSection === 'mindset'
-            || articleSection === 'lifestyle'
-            || articleSection === 'discover'
-            || articleSection === 'flexibility'
-            || articleSection === 'motivate') {
+      || articleSection === 'lifestyle'
+      || articleSection === 'discover'
+      || articleSection === 'flexibility'
+      || articleSection === 'motivate') {
       return 'focus';
     }
     if (articleSection === 'nourishment') {
@@ -306,9 +371,9 @@ function getAdditionalCategoriesFromArticleSection(articleSections) {
   return articleSections.filter((section) => {
     const lowercaseSection = section.toLowerCase();
     return lowercaseSection !== 'mindset'
-            && lowercaseSection !== 'movement'
-            && lowercaseSection !== 'nourishment'
-            && lowercaseSection !== 'regeneration';
+      && lowercaseSection !== 'movement'
+      && lowercaseSection !== 'nourishment'
+      && lowercaseSection !== 'regeneration';
   });
 }
 
@@ -339,21 +404,35 @@ function useHighresImagesAndRemoveLinks(main) {
   }
 }
 
-function moveFloatingImagesToSeparateLine(main, document, metadataTable) {
-  let hasFloatingLeftImages = false;
-  let hasFloatingRightImages = false;
+function collectContentUntil(img, stopCriteria, document) {
+  const content = document.createElement('div');
+  let next = img.nextSibling || img.parentNode.nextSibling;
+  while (next) {
+    const nextNext = next.nextSibling;
+    const parent = next.parentNode;
 
+    if (next.nodeType === Node.ELEMENT_NODE && stopCriteria(next)) {
+      break;
+    }
+    const newNext = next.nextSibling || next.parentNode.nextSibling;
+    content.append(next);
+    next = newNext;
+  }
+  return content;
+}
+
+function handleFloatingImages(main, document, metadataTable) {
   // e.g. https://www.24life.com/pack-your-bag/ has images that are part of the h3.
   // when imported, we want the image to be after the heading, not before.
   for (const img of main.querySelectorAll('h3 img.alignleft, h3 img.alignright')) {
-    if (!img.classList.contains('size-full')) {
-      if (img.classList.contains('alignleft')) {
-        hasFloatingLeftImages = true;
-      }
-      if (img.classList.contains('alignright')) {
-        hasFloatingRightImages = true;
-      }
-    }
+    // if (!img.classList.contains('attachment-full')) {
+    //   if (img.classList.contains('alignleft')) {
+    //     // hasFloatingLeftImages = true;
+    //   }
+    //   if (img.classList.contains('alignright')) {
+    //     // hasFloatingRightImages = true;
+    //   }
+    // }
     const h3 = img.closest('h3');
     const p = document.createElement('p');
     p.appendChild(img);
@@ -363,36 +442,57 @@ function moveFloatingImagesToSeparateLine(main, document, metadataTable) {
   // e.g. https://www.24life.com/with-hard-knocks-brett-kicks-things-up-a-notch/
   // move images to their own paragraph
   for (const img of main.querySelectorAll('p img.alignleft, p img.alignright')) {
-    if (!img.classList.contains('size-full')) {
-      if (img.classList.contains('alignleft')) {
-        hasFloatingLeftImages = true;
-      }
-      if (img.classList.contains('alignright')) {
-        hasFloatingRightImages = true;
-      }
+    if (img.classList.contains('attachment-full')) {
+      // eslint-disable-next-line no-continue
+      continue;
     }
-    const parent = img.closest('p');
-    console.log('parent.childNodeCount', parent.childNodes.length);
-    if (parent.childNodes.length > 1 && parent.firstChild === img) {
-      const p = document.createElement('p');
-      p.appendChild(img);
-      parent.before(p);
+    // put everything in a Columns block until the next header or `.vc_column-inner`
+    const imageLeft = img.classList.contains('alignleft');
+
+    const sideText = collectContentUntil(
+      img,
+      (el) => el.tagName.toLowerCase().match('h[1-6]')
+        || el.classList.contains('vc_column-inner')
+        || el.tagName.toLowerCase() === 'table',
+      document,
+    );
+
+    const tableData = [
+      ['Columns'],
+    ];
+    if (imageLeft) {
+      tableData.push([img.cloneNode(true), sideText]);
+    } else {
+      tableData.push([sideText, img.cloneNode(true)]);
     }
+    const columns = WebImporter.DOMUtils.createTable(tableData, document);
+    const columnsWrapper = document.createElement('div');
+    columnsWrapper.append(columns);
+    img.replaceWith(columnsWrapper);
+
+    // const parent = img.closest('p');
+    // if (parent.childNodes.length > 1 && parent.firstChild === img) {
+    //   const p = document.createElement('p');
+    //   p.appendChild(columns);
+    //   parent.before(p);
+    // } else {
+    //   // TODO
+    // }
   }
 
   // add section metadata for floats
-  if (hasFloatingLeftImages || hasFloatingRightImages) {
-    let style;
-    if (hasFloatingLeftImages && hasFloatingRightImages) {
-      style = 'float-images-alternate';
-    } else {
-      style = hasFloatingLeftImages ? 'float-images-left' : 'float-images-right';
-    }
-    metadataTable.before(WebImporter.DOMUtils.createTable([
-      ['Section Metadata'],
-      ['Style', `${style}, small-images`],
-    ], document));
-  }
+  // if (hasFloatingLeftImages || hasFloatingRightImages) {
+  //   let style;
+  //   if (hasFloatingLeftImages && hasFloatingRightImages) {
+  //     style = 'float-images-alternate';
+  //   } else {
+  //     style = hasFloatingLeftImages ? 'float-images-left' : 'float-images-right';
+  //   }
+  //
+  //
+  //
+  //
+  // }
 }
 
 function makeCaptionTextItalics(main, document) {
@@ -414,7 +514,7 @@ function detectRulers(main, document, url) {
 
 function detectColumns(main, document, url) {
   const rows = [...main.querySelectorAll('.row :is([class^="col-"], [class*=" col-"])')]
-  // note: we ignore large columns like col-sm-12, col-md-10, etc.
+    // note: we ignore large columns like col-sm-12, col-md-10, etc.
     .filter((col) => {
       const width = [...col.classList].find((c) => c.includes('col-'))
         .split('-')[2];

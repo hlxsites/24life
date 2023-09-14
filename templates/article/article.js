@@ -1,5 +1,5 @@
 import {
-  buildBlock, decorateBlock, decorateIcons, getMetadata, toClassName,
+  buildBlock, decorateBlock, decorateButtons, decorateIcons, getMetadata, toClassName,
 } from '../../scripts/lib-franklin.js';
 
 export default async function decorate(doc) {
@@ -8,16 +8,20 @@ export default async function decorate(doc) {
   }
 
   const firstSection = doc.querySelector('main .section');
-  firstSection.before(createSectionWithHeroBlock(
-    doc.querySelector('main .section h1'),
-    doc.querySelector('main .section img'),
-  ));
+  const videoHero = firstSection.querySelector('.block.article-hero-video');
+  if (!videoHero) {
+    // remove title and image from doc
+    doc.querySelector('main .section h1').remove();
+    doc.querySelector('main .section img').remove();
+
+    firstSection.before(createSectionWithHeroBlock());
+  }
 
   const firstContent = doc.querySelector('main .section .default-content-wrapper');
   firstContent.before(createSocialMediaButtons());
 
-  const newSection = document.createElement('div');
-  newSection.classList.add('section');
+  const newSection = createNewSection();
+  newSection.classList.add('article-author-container');
   const newSectionWrapper = document.createElement('div');
   newSectionWrapper.classList.add('default-content-wrapper');
   newSection.append(newSectionWrapper);
@@ -32,18 +36,29 @@ export default async function decorate(doc) {
   getMetadata('authors').split(',').forEach((author) => {
     newSectionWrapper.append(createAuthorBlock(author));
   });
-  newSectionWrapper.append(createArticleCarousel());
+  if (getMetadata('issue')) {
+    // add a thin gray line to break this up from the previous section
+    const grayLine = document.createElement('hr');
+    grayLine.classList.add('article-end-line');
+    newSectionWrapper.append(grayLine);
+
+    newSectionWrapper.append('TODO: add issue summary here');
+  } else {
+    newSectionWrapper.append(createArticleCarousel());
+  }
+
+  decorateButtons(doc);
 }
 
 function createNewSection() {
   const section = document.createElement('div');
-  section.classList.add('section', 'article-hero-container');
+  section.classList.add('section');
   section.dataset.sectionStatus = 'initialized';
   section.style.display = 'none';
   return section;
 }
 
-function createSectionWithHeroBlock(h1, img) {
+function createSectionWithHeroBlock() {
   const section = createNewSection();
   section.classList.add('article-hero-container');
 
@@ -59,11 +74,6 @@ function createSectionWithHeroBlock(h1, img) {
   );
   wrapper.append(newBlock);
   decorateBlock(newBlock);
-
-  // remove title and image from existing section
-  h1.remove();
-  img.remove();
-
   section.append(wrapper);
   return section;
 }

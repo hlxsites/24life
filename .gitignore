@@ -11,5 +11,6 @@ tmp
 /tools/validation/24life/
 /tools/importer/.cache/
 /tools/validation/24life-reference/
-
-.github/ci/node_modules/*
+/.github/visual-tests/screenshots/
+/.github/visual-tests/test-results/
+/.github/visual-tests/node_modules/
