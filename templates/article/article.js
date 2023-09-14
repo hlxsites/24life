@@ -26,13 +26,13 @@ export default async function decorate(doc) {
   newSectionWrapper.classList.add('default-content-wrapper');
   newSection.append(newSectionWrapper);
   firstSection.parentElement.append(newSection);
+  newSectionWrapper.append(createSocialMediaButtons());
 
   // add a thin gray line to break this up from the previous section
   const line = document.createElement('hr');
   line.classList.add('article-end-line');
   newSectionWrapper.append(line);
 
-  newSectionWrapper.append(createSocialMediaButtons());
   getMetadata('authors').split(',').forEach((author) => {
     newSectionWrapper.append(createAuthorBlock(author));
   });
