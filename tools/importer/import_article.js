@@ -176,7 +176,8 @@ const createMetadata = (main, document, params) => {
   meta.Categories = getAdditionalCategoriesFromArticleSection(ldJSON['@graph'].find((item) => item['@type'] === 'Article').articleSection);
 
   meta.Authors = ldJSON['@graph'].filter((item) => item['@type'] === 'Person')
-    .map((item) => item.name)
+    // e.g. https://www.24life.com/this-well-spiced-stew-feeds-a-crowd/
+    .map((item) => item.name.replaceAll(', Ph.D.', '').replaceAll(', MPH RD', ''))
     .join(', ');
 
   meta.Keywords = keywords;
