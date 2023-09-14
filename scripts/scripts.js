@@ -87,8 +87,11 @@ function decorateVideoLinks(main) {
     .filter(({ href }) => !!href)
   // only convert plain links
     .filter((a) => a.textContent?.trim()?.toLowerCase().startsWith('http'))
-  // don't decorate if already in a block.
-    .filter((a) => !a.closest('div.block'))
+  // don't decorate if already in a block. unless it's `columns`.
+    .filter((a) => {
+      const block = a.closest('div.block');
+      return block.classList.contains('columns');
+    })
     .forEach((link) => {
       let youtubeVideoId = '';
       if (link.href.includes('youtube.com/watch?v=')) {
