@@ -36,7 +36,16 @@ export default async function decorate(doc) {
   getMetadata('authors').split(',').forEach((author) => {
     newSectionWrapper.append(createAuthorBlock(author));
   });
-  newSectionWrapper.append(createArticleCarousel());
+  if (getMetadata('issue')) {
+    // add a thin gray line to break this up from the previous section
+    const grayLine = document.createElement('hr');
+    grayLine.classList.add('article-end-line');
+    newSectionWrapper.append(grayLine);
+
+    newSectionWrapper.append('TODO: add issue summary here');
+  } else {
+    newSectionWrapper.append(createArticleCarousel());
+  }
 
   decorateButtons(doc);
 }
