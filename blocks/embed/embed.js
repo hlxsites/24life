@@ -6,6 +6,25 @@
 
 import { loadScript, loadCSS } from '../../scripts/lib-franklin.js';
 
+export default function decorate(block) {
+  const link = block.querySelector('a').href;
+  const childDiv = block.querySelector('div');
+  const grandChilds = childDiv ? childDiv.querySelectorAll('div') : [];
+  block.textContent = '';
+
+  if (block.closest('body')) {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        observer.disconnect();
+        loadEmbed(block, grandChilds, link);
+      }
+    });
+    observer.observe(block);
+  } else {
+    loadEmbed(block, grandChilds, link);
+  }
+}
+
 const embedYoutube = (url, isLite) => {
   const usp = new URLSearchParams(url.search);
   let suffix = '';
@@ -76,22 +95,3 @@ const loadEmbed = (block, grandChilds, link) => {
     block.appendChild(captionDiv);
   }
 };
-
-export default function decorate(block) {
-  const link = block.querySelector('a').href;
-  const childDiv = block.querySelector('div');
-  const grandChilds = childDiv ? childDiv.querySelectorAll('div') : [];
-  block.textContent = '';
-
-  if (block.closest('body')) {
-    const observer = new IntersectionObserver((entries) => {
-      if (entries.some((e) => e.isIntersecting)) {
-        observer.disconnect();
-        loadEmbed(block, grandChilds, link);
-      }
-    });
-    observer.observe(block);
-  } else {
-    loadEmbed(block, grandChilds, link);
-  }
-}
