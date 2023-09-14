@@ -3,10 +3,6 @@ import {
 } from '../../scripts/lib-franklin.js';
 
 export default async function decorate(doc) {
-  // remove title and image from doc
-  doc.querySelector('main .section h1').remove();
-  doc.querySelector('main .section img').remove();
-
   if (getMetadata('section')) {
     doc.querySelector('main').classList.add(`color-${toClassName(getMetadata('section'))}`);
   }
@@ -14,6 +10,10 @@ export default async function decorate(doc) {
   const firstSection = doc.querySelector('main .section');
   const videoHero = firstSection.querySelector('.block.article-hero-video');
   if (!videoHero) {
+    // remove title and image from doc
+    doc.querySelector('main .section h1').remove();
+    doc.querySelector('main .section img').remove();
+
     firstSection.before(createSectionWithHeroBlock());
   }
 
