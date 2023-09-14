@@ -6,11 +6,11 @@ import fs from 'fs';
  */
 const feeds = [
   {
-    title: '24life Updates',
+    title: '24life',
     targetFile: `../../feed.xml`,
     source: 'https://main--24life--hlxsites.hlx.live/articles.json',
     siteRoot: "https://main--24life--hlxsites.hlx.live",
-    link:	"https://main--24life--hlxsites.hlx.live",
+    link:	"https://main--24life--hlxsites.hlx.live/feed.xml",
     language:	"en",
     description: "Your best self now"
   }
@@ -50,7 +50,7 @@ async function createFeed(feed) {
 
 
   const newestPost = allPosts
-    .map((post) => new Date(post.publicationDate * 1000))
+    .map((post) => new Date(post.publishDate * 1000))
     .reduce((maxDate, date) => (date > maxDate ? date : maxDate), new Date(0));
 
   const atomFeed = new Feed({

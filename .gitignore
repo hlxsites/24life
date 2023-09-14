@@ -14,3 +14,4 @@ tmp
 /.github/visual-tests/screenshots/
 /.github/visual-tests/test-results/
 /.github/visual-tests/node_modules/
+/.github/ci/node_modules/*
