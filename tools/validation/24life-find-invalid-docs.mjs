@@ -19,6 +19,7 @@ async function main() {
     await checkForString("player.vimeo.com");
 
     // blocks that are not rendered:
+    await checkForString("TODO: add video link");
     await checkForString("Columns</th>");
     await checkForString("By 24Life ");
     await checkForString("null ");
