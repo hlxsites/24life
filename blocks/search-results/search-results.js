@@ -70,26 +70,17 @@ function uniqueMatches(allData) {
   });
 }
 
-function noResults(resultsDiv) {
-  const sorryDiv = document.createElement('div');
-  sorryDiv.innerHTML = '<p>Sorry, no results were found, search again ?<p>';
-  resultsDiv.append(sorryDiv);
-  sorryDiv.classList.add('no-results');
-  const searchFormDiv = document.createElement('div');
-  sorryDiv.append(searchFormDiv);
-  searchFormDiv.innerHTML = `
-   <div class="search-container">
-    <div class="search-wrapper">
-     <div class='search-form'>
-      <form action='/search' method='get'>
-        <input type='search' name='q' class='search-input' placeholder="TYPE HERE"/>
-      </form>
-     </div>
-    </div>
-   </div>
- `;
-  resultsDiv.parentNode.querySelector('.block.search-results.card-container.three-columns .results-div').classList.add('no-results-div');
+async function createCards(finalArray, resultsDiv) {
+  const iterator = finalArray.values();
+  const loadMoreContainer = document.createElement('div');
+  loadMoreContainer.classList.add('article-load-more-container');
+  loadMoreContainer.innerHTML = '<button class="article-list-load-more-button">Load more</button>';
+  await displayNextEntries(iterator, loadMoreContainer, resultsDiv);
+  loadMoreContainer.querySelector('button').addEventListener('click', async () => {
+    await displayNextEntries(iterator, loadMoreContainer, resultsDiv);
+  });
 }
+
 // eslint-disable-next-line
 async function displayNextEntries(iterator, loadMoreContainer, resultsDiv) {
   const numInitialLoadedArticles = 23;
@@ -113,13 +104,23 @@ async function displayNextEntries(iterator, loadMoreContainer, resultsDiv) {
   }
 }
 
-async function createCards(finalArray, resultsDiv) {
-  const iterator = finalArray.values();
-  const loadMoreContainer = document.createElement('div');
-  loadMoreContainer.classList.add('article-load-more-container');
-  loadMoreContainer.innerHTML = '<button class="article-list-load-more-button">Load more</button>';
-  await displayNextEntries(iterator, loadMoreContainer, resultsDiv);
-  loadMoreContainer.querySelector('button').addEventListener('click', async () => {
-    await displayNextEntries(iterator, loadMoreContainer, resultsDiv);
-  });
+function noResults(resultsDiv) {
+  const sorryDiv = document.createElement('div');
+  sorryDiv.innerHTML = '<p>Sorry, no results were found, search again ?<p>';
+  resultsDiv.append(sorryDiv);
+  sorryDiv.classList.add('no-results');
+  const searchFormDiv = document.createElement('div');
+  sorryDiv.append(searchFormDiv);
+  searchFormDiv.innerHTML = `
+   <div class="search-container">
+    <div class="search-wrapper">
+     <div class='search-form'>
+      <form action='/search' method='get'>
+        <input type='search' name='q' class='search-input' placeholder="TYPE HERE"/>
+      </form>
+     </div>
+    </div>
+   </div>
+ `;
+  resultsDiv.parentNode.querySelector('.block.search-results.card-container.three-columns .results-div').classList.add('no-results-div');
 }
