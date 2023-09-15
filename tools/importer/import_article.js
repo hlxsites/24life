@@ -113,6 +113,7 @@ export default {
     makeCaptionTextItalics(main, document);
     removeFullWidthColumns(main, document);
     detectColumns(main, document, url);
+    detectCarousel(main, document, url);
     detectRulers(main, document, url);
     detectYoutube(main, document);
     await articleEmbeds(main, document);
@@ -463,7 +464,14 @@ function handleFloatingImages(main, document, metadataTable) {
     const columns = WebImporter.DOMUtils.createTable(tableData, document);
     const columnsWrapper = document.createElement('div');
     columnsWrapper.append(columns);
-    img.replaceWith(columnsWrapper);
+    // if this is already inside a table, open a new table below
+    if (img.closest('table')) {
+      // e.g. https://www.24life.com/koya-webb-from-self-care-will-come-answers-and-purpose/
+      img.closest('table').after(columnsWrapper);
+      img.remove();
+    } else {
+      img.replaceWith(columnsWrapper);
+    }
   }
 }
 
@@ -492,6 +500,19 @@ function detectRulers(main, document, url) {
         th.closest('table').after(hr);
       }
     }
+  }
+}
+
+function detectCarousel(main, document, url) {
+  // e.g. https://www.24life.com/koya-webb-from-self-care-will-come-answers-and-purpose/
+  for (const slideShow of main.querySelectorAll('.wpb_gallery_slides')) {
+    const tableData = [
+      ['Carousel'],
+    ];
+    for (const image of slideShow.querySelectorAll('img.attachment-full')) {
+      tableData.push([image]);
+    }
+    slideShow.replaceWith(WebImporter.DOMUtils.createTable(tableData, document));
   }
 }
 
