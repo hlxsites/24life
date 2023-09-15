@@ -21,6 +21,7 @@ export default {
     document, url, html, params,
   }) => {
     const main = document.body;
+    params.pdfsToDownload = [];
 
     // use helper method to remove header, footer, etc.
     WebImporter.DOMUtils.remove(main, [
@@ -96,6 +97,7 @@ export default {
 
     // adjust content specific to 24life
     useHighresImagesAndRemoveLinks(main, document);
+    detectPdfLinks(main, document, params);
     handleFloatingImages(main, document, metadataTable);
     makeCaptionTextItalics(main, document);
     removeFullWidthColumns(main, document);
@@ -116,11 +118,9 @@ export default {
       },
     }];
     if (params.videoToDownload) {
-      transformationResult.push({
-        path: `${newPath}.mp4`,
-        from: params.videoToDownload,
-      });
+      transformationResult.push(params.videoToDownload);
     }
+    transformationResult.push(...params.pdfsToDownload);
     return transformationResult;
   },
 };
@@ -171,7 +171,7 @@ const createMetadata = (main, document, params) => {
   return block;
 };
 
-async function getMediaUrlForVideo(videoPath) {
+async function previewAndGetMediaUrlForFile(videoPath) {
   try {
     const postResp = await fetch(
       `https://admin.hlx.page/preview/hlxsites/24life/main/${videoPath}`,
@@ -196,14 +196,23 @@ async function detectMagazineHero(params, magazineSection, main, document) {
   let videoLink;
   const video = magazineSection.querySelector('video source[src^="http"]');
   if (video) {
-    params.videoToDownload = video.src;
-    const helixMediaUrl = await getMediaUrlForVideo(`${params.newPath}.mp4`);
+    const extension = video.src.split('.').pop();
+
+    params.videoToDownload = {
+      path: `${params.newPath}.${extension}`,
+      from: video.src,
+    };
+
+    // check if the mp4 variant is ready
+    const helixMediaUrl = await previewAndGetMediaUrlForFile(`${params.newPath}.mp4`);
     if (helixMediaUrl) {
       videoLink = document.createElement('a');
       videoLink.href = `https://main--24life--hlxsites.hlx.page${helixMediaUrl}`;
       videoLink.textContent = videoLink.href;
-    } else {
+    } else if (extension === 'mp4') {
       videoLink = document.createTextNode('TODO: add video link');
+    } else {
+      videoLink = document.createTextNode(`TODO: add video link (not mp4: ${params.newPath}.${extension})`);
     }
   } else {
     const youtube = magazineSection.querySelector('div.player[data-video-id]');
@@ -508,6 +517,24 @@ function handleFloatingImages(main, document, metadataTable) {
       img.remove();
     } else {
       img.replaceWith(columnsWrapper);
+    }
+  }
+}
+
+async function detectPdfLinks(main, document, params) {
+  for (const a of main.querySelectorAll('a[href$=".pdf"]')) {
+    if (a.href.includes('twentyfourlife.wpenginepowered.com')) {
+      const pdfName = a.href.split('/').pop();
+      const hlxPdfPath = WebImporter.FileUtils.sanitizePath(`${params.newPath}/${pdfName}`);
+      params.pdfsToDownload.push(
+        {
+          from: a.href,
+          path: hlxPdfPath,
+        },
+      );
+      a.href = hlxPdfPath;
+      // eslint-disable-next-line no-await-in-loop
+      await previewAndGetMediaUrlForFile(hlxPdfPath);
     }
   }
 }
