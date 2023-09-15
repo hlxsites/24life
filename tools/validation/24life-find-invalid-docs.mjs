@@ -20,6 +20,7 @@ async function main() {
 
     // blocks that are not rendered:
     await checkForString("Columns</th>");
+    await checkForString("By 24Life ");
 }
 
 async function searchFilesInDirectoryAsync(dir, searchText) {
