@@ -185,6 +185,20 @@ async function previewAndGetMediaUrlForFile(videoPath) {
     return null;
   }
 }
+async function publishAndGetMediaUrlForFile(videoPath) {
+  try {
+    const postResp = await fetch(
+      `https://admin.hlx.page/publish/hlxsites/24life/main/${videoPath}`,
+      { method: 'POST' },
+    );
+    const status = await postResp.json();
+    return status.live.redirectLocation;
+  } catch (e) {
+    console.log('could not get media url for ', videoPath, e);
+    console.log("run with 'save to files', then try again");
+    return null;
+  }
+}
 
 async function detectMagazineHero(params, magazineSection, main, document) {
   let h1 = magazineSection.querySelector('h1');
@@ -205,6 +219,7 @@ async function detectMagazineHero(params, magazineSection, main, document) {
 
     // check if the mp4 variant is ready
     const helixMediaUrl = await previewAndGetMediaUrlForFile(`${params.newPath}.mp4`);
+    await publishAndGetMediaUrlForFile(`${params.newPath}.mp4`);
     if (helixMediaUrl) {
       videoLink = document.createElement('a');
       videoLink.href = `https://main--24life--hlxsites.hlx.page${helixMediaUrl}`;
@@ -535,6 +550,8 @@ async function detectPdfLinks(main, document, params) {
       a.href = hlxPdfPath;
       // eslint-disable-next-line no-await-in-loop
       await previewAndGetMediaUrlForFile(hlxPdfPath);
+      // eslint-disable-next-line no-await-in-loop
+      await publishAndGetMediaUrlForFile(hlxPdfPath);
     }
   }
 }
