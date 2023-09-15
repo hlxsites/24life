@@ -49,7 +49,7 @@ export default {
     }
 
     // detect magazine
-    const magazineSection = main.querySelector('.row.fullscreen .vid-bg, .cover.fullscreen');
+    const magazineSection = main.querySelector('.row.fullscreen .vid-bg,.row .fullscreen.vid-bg, .cover.fullscreen');
     params.isMagazine = !!magazineSection;
 
     // Metadata table
@@ -239,13 +239,6 @@ async function detectMagazineHero(params, magazineSection, main, document) {
       videoLink = document.createTextNode('');
     }
   }
-
-  const author = magazineSection.querySelector('h4');
-  if (author.textContent.startsWith('By ')) {
-    author.remove();
-  }
-  const collection = magazineSection.querySelector('h6');
-  collection?.remove();
 
   magazineSection.replaceWith(WebImporter.DOMUtils.createTable([
     ['Article Hero Video'],
