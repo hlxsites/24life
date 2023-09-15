@@ -35,7 +35,7 @@ async function loadResults(tokenizedSearchWords, resultsDiv) {
   if (matches.length === 0) {
     noResults(resultsDiv);
   } else {
-    createCards(matches, resultsDiv);
+    await createCards(matches, resultsDiv);
   }
 }
 
@@ -91,7 +91,7 @@ function noResults(resultsDiv) {
   resultsDiv.parentNode.querySelector('.block.search-results.card-container.three-columns .results-div').classList.add('no-results-div');
 }
 // eslint-disable-next-line
- function displayNextEntries(iterator, loadMoreContainer, resultsDiv) {
+async function displayNextEntries(iterator, loadMoreContainer, resultsDiv) {
   const numInitialLoadedArticles = 23;
   // eslint-disable-next-line no-plusplus
   for (let i = 0; i <= numInitialLoadedArticles; i++) {
@@ -109,17 +109,17 @@ function noResults(resultsDiv) {
     }
     resultsDiv.append(wrapper);
     // eslint-disable-next-line
-    loadBlock(newBlock);
+    await loadBlock(newBlock);
   }
 }
 
-function createCards(finalArray, resultsDiv) {
+async function createCards(finalArray, resultsDiv) {
   const iterator = finalArray.values();
   const loadMoreContainer = document.createElement('div');
   loadMoreContainer.classList.add('article-load-more-container');
   loadMoreContainer.innerHTML = '<button class="article-list-load-more-button">Load more</button>';
-  displayNextEntries(iterator, loadMoreContainer, resultsDiv);
-  loadMoreContainer.querySelector('button').addEventListener('click', () => {
-    displayNextEntries(iterator, loadMoreContainer, resultsDiv);
+  await displayNextEntries(iterator, loadMoreContainer, resultsDiv);
+  loadMoreContainer.querySelector('button').addEventListener('click', async () => {
+    await displayNextEntries(iterator, loadMoreContainer, resultsDiv);
   });
 }
