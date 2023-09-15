@@ -40,6 +40,12 @@ export default {
     ]);
     main.querySelector('ul.social-list.list-inline')?.parentElement?.remove();
     main.querySelector('form.js-cm-form')?.closest('section').remove();
+    for (const h5 of main.querySelectorAll('h5')) {
+      // e.g. https://www.24life.com/a-day-in-the-life-of-a-u-s-olympian/
+      if (h5.textContent.trim() === 'More to Explore') {
+        h5.closest('section').remove();
+      }
+    }
 
     // detect magazine
     const magazineSection = main.querySelector('.row.fullscreen .vid-bg, .cover.fullscreen');
@@ -181,7 +187,11 @@ async function getMediaUrlForVideo(videoPath) {
 }
 
 async function detectMagazineHero(params, magazineSection, main, document) {
-  const h1 = magazineSection.querySelector('h1');
+  let h1 = magazineSection.querySelector('h1');
+  if (!h1) {
+    // e.g. https://www.24life.com/saralyn-ward-helps-moms-feel-even-better-after-baby-than-before/
+    h1 = magazineSection.querySelector('h2');
+  }
   const img = main.querySelector('img');
   let videoLink;
   const video = magazineSection.querySelector('video source[src^="http"]');
@@ -536,7 +546,11 @@ function detectCarousel(main, document, url) {
     const tableData = [
       ['Carousel'],
     ];
-    for (const image of slideShow.querySelectorAll('img.attachment-full')) {
+    const images = [...slideShow.querySelectorAll('img.attachment-full')].map((img) => img.src);
+    const uniqueImages = [...new Set(images)];
+    for (const src of uniqueImages) {
+      const image = document.createElement('img');
+      image.src = src;
       tableData.push([image]);
     }
     slideShow.replaceWith(WebImporter.DOMUtils.createTable(tableData, document));
