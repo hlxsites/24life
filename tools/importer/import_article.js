@@ -41,6 +41,11 @@ export default {
     main.querySelector('ul.social-list.list-inline')?.parentElement?.remove();
     main.querySelector('form.js-cm-form')?.closest('section').remove();
 
+    // detect magazine
+    const magazineSection = main.querySelector('.row.fullscreen .vid-bg, .cover.fullscreen');
+    params.isMagazine = !!magazineSection;
+
+    // Metadata table
     const metadataTable = createMetadata(main, document, params);
     const filename = new URL(url).pathname
       .replace(/\/$/, '')
@@ -53,7 +58,6 @@ export default {
     const newPath = WebImporter.FileUtils.sanitizePath(`${toClassName(section)}/${toClassName(year)}/${filename}`);
     params.newPath = newPath;
 
-    const magazineSection = main.querySelector('.row.fullscreen .vid-bg, .cover.fullscreen');
     if (magazineSection) {
       // magazine article e.g. https://www.24life.com/make-2019-the-year-you-dont-get-hurt/
       await detectMagazineHero(params, magazineSection, main, document);
@@ -177,7 +181,6 @@ async function getMediaUrlForVideo(videoPath) {
 }
 
 async function detectMagazineHero(params, magazineSection, main, document) {
-  params.isMagazine = true;
   const h1 = magazineSection.querySelector('h1');
   const img = main.querySelector('img');
   let videoLink;
@@ -346,7 +349,7 @@ function cleanupForImportCompatibility(main, document) {
 
 function magazineLinkMakeBoldAndItalic(main, document) {
   [...main.querySelectorAll('a.btn')]
-    .filter((a) => a.textContent.trim() === 'Next')
+    .filter((a) => a.textContent.trim() === 'Next' || a.classList.contains('bg-dark'))
     .forEach((a) => {
       const em = document.createElement('em');
       em.innerHTML = a.outerHTML;
