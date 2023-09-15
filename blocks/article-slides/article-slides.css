@@ -111,7 +111,6 @@
   }
 
   .article-slides .slideshow-buttons button {
-    min-width: unset;
     height: 1.1vw;
     aspect-ratio: 1/1;
     padding: 0;

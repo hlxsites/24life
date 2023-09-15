@@ -59,3 +59,7 @@ body.article main .article-carousel-wrapper .article-carousel-title {
 body.article main .article-carousel-wrapper .article-carousel {
     width: 80%;
 }
+
+body.article main .default-content-wrapper .button {
+  min-width: 200px;
+}

@@ -216,7 +216,6 @@ a.button:any-link, button {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  min-width: 200px;
 }
 
 .button-container {
