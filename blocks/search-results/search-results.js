@@ -81,7 +81,6 @@ async function createCards(finalArray, resultsDiv) {
   });
 }
 
-// eslint-disable-next-line
 async function displayNextEntries(iterator, loadMoreContainer, resultsDiv) {
   const numInitialLoadedArticles = 23;
   // eslint-disable-next-line no-plusplus
@@ -99,7 +98,7 @@ async function displayNextEntries(iterator, loadMoreContainer, resultsDiv) {
       newBlock.classList.add(toClassName(searchItem.section));
     }
     resultsDiv.append(wrapper);
-    // eslint-disable-next-line
+    // eslint-disable-next-line no-await-in-loop
     await loadBlock(newBlock);
   }
 }

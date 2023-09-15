@@ -264,7 +264,6 @@ export async function fetchPlaceholders(prefix = 'default') {
  */
 export function decorateBlock(block) {
   const shortBlockName = block.classList[0];
-  console.log(shortBlockName);
   if (shortBlockName) {
     block.classList.add('block');
     block.dataset.blockName = shortBlockName;
