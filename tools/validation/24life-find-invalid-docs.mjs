@@ -17,6 +17,9 @@ async function main() {
 
     // vimeo links need to be removed if invalid.
     await checkForString("player.vimeo.com");
+
+    // blocks that are not rendered:
+    await checkForString("Columns</th>");
 }
 
 async function searchFilesInDirectoryAsync(dir, searchText) {
