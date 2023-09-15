@@ -1,6 +1,7 @@
 import {
-  buildBlock, decorateBlock, decorateButtons, decorateIcons, getMetadata, toClassName,
+  buildBlock, decorateBlock, decorateButtons, decorateIcons, getMetadata, toClassName, loadBlocks,
 } from '../../scripts/lib-franklin.js';
+import { decorateMain } from '../../scripts/scripts.js';
 
 export default async function decorate(doc) {
   if (getMetadata('section')) {
@@ -41,8 +42,7 @@ export default async function decorate(doc) {
     const grayLine = document.createElement('hr');
     grayLine.classList.add('article-end-line');
     newSectionWrapper.append(grayLine);
-
-    newSectionWrapper.append('TODO: add issue summary here');
+    firstSection.parentElement.append(await createMagazineFooter());
   } else {
     newSectionWrapper.append(createArticleCarousel());
   }
@@ -135,4 +135,20 @@ function createSocialMediaButtons() {
   // noinspection JSIgnoredPromiseFromCall
   decorateIcons(socialMediaButtons);
   return socialMediaButtons;
+}
+
+async function createMagazineFooter() {
+  try {
+    const issue = getMetadata('issue').toLowerCase();
+    const summary = await fetch(`/fragments/magazine-footers/${issue}.plain.html`);
+    if (summary.ok) {
+      const fragment = document.createElement('div');
+      fragment.innerHTML = await summary.text();
+      decorateMain(fragment);
+      await loadBlocks(fragment);
+      return fragment;
+    }
+  } catch (e) {
+    throw e;
+  }
 }

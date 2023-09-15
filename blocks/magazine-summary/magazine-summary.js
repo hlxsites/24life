@@ -11,6 +11,7 @@ import {
 export default async function decorate(block) {
   const config = readBlockConfig(block);
   config.isSubNav = block.classList.contains('navigation');
+  config.isFooter = block.classList.contains('footer');
   config.labels = block.querySelectorAll('div > div:nth-child(2) > p:first-child');
   config.links = [...block.querySelectorAll('div > div:nth-child(2) > p:not(:first-child) > a')];
   block.innerText = '';
@@ -44,14 +45,18 @@ function createCoverColumn(config) {
   const titleH6 = document.createElement('h6');
   titleH6.classList.add('red');
   if (!config.isSubNav) {
-    const title = getMetadata('og:title').toUpperCase();
+    // page
+    const title = config.isFooter ? config.title.toUpperCase() : getMetadata('og:title').toUpperCase();
+    const location = config.isFooter ? config.link : new URL(document.location).pathname;
+    const coverPic = config.isFooter ? config.image : getMetadata('og:image');
     titleH4.textContent = `In This Issue - ${title}`;
-    titleH6.textContent = new URL(document.location).pathname.split('/').pop().replaceAll(/-/g, ' ').toUpperCase();
+    titleH6.textContent = location.split('/').pop().replaceAll(/-/g, ' ').toUpperCase();
     textCol.append(titleH4);
     textCol.append(titleH6);
-    const coverImage = createOptimizedPicture(getMetadata('og:image'), title, false, [{ width: '200' }]);
+    const coverImage = createOptimizedPicture(coverPic, title, false, [{ width: '200' }]);
     textCol.append(coverImage);
   } else {
+    // navigation header
     const coverImage = createOptimizedPicture(config.image, config.title, false, [{ width: '200' }]);
     titleH4.textContent = config.title;
     titleH6.textContent = config.link.split('/').pop().replaceAll(/-/g, ' ').toUpperCase();
@@ -74,7 +79,7 @@ function createListColumn(config, index) {
   const sectionTitle = document.createElement('div');
   sectionTitle.classList.add('section-title', `${section}`);
   sectionTitle.style.setProperty('color', `var(--color-${section}-text)`);
-  if (!config.isSubNav) {
+  if (!config.isSubNav && !config.isFooter) {
     sectionTitle.textContent = config[section];
     links = document.querySelectorAll(`.card-container .card-wrapper .card.${section} h2 > a`);
   } else {
