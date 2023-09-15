@@ -36,6 +36,7 @@ export default {
       '.tfl-constant-contact-wrapper',
       '.tfl-magazine-current-issue-footer',
       '.fbx-modal',
+      'iframe[title="Twitter settings iframe"]',
     ]);
     main.querySelector('ul.social-list.list-inline')?.parentElement?.remove();
     main.querySelector('form.js-cm-form')?.closest('section').remove();
@@ -537,6 +538,19 @@ function detectCarousel(main, document, url) {
     }
     slideShow.replaceWith(WebImporter.DOMUtils.createTable(tableData, document));
   }
+  // e.g. https://www.24life.com/how-to-keep-your-feet-on-the-ground-and-head-in-the-stars/
+  for (const slideShow of main.querySelectorAll('.ts-pagawa-slideshow-container')) {
+    const tableData = [
+      ['Carousel'],
+    ];
+    for (const image of slideShow.querySelectorAll('.ps-current ul li img')) {
+      const imageAndCaption = document.createElement('div');
+      imageAndCaption.append(p(image, document));
+      imageAndCaption.append(p(image.alt, document));
+      tableData.push([imageAndCaption]);
+    }
+    slideShow.replaceWith(WebImporter.DOMUtils.createTable(tableData, document));
+  }
 }
 
 function detectColumns(main, document, url) {
@@ -671,4 +685,10 @@ function fixInvalidLists(main, document) {
     ul.before(...ul.childNodes);
     ul.remove();
   }
+}
+
+function p(content, document) {
+  const result = document.createElement('p');
+  result.append(content);
+  return result;
 }
