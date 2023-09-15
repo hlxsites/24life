@@ -21,6 +21,7 @@ async function main() {
     // blocks that are not rendered:
     await checkForString("Columns</th>");
     await checkForString("By 24Life ");
+    await checkForString("null ");
 }
 
 async function searchFilesInDirectoryAsync(dir, searchText) {
