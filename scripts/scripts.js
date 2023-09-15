@@ -90,6 +90,7 @@ function decorateVideoLinks(main) {
   // don't decorate if already in a block. unless it's `columns`.
     .filter((a) => {
       const block = a.closest('div.block');
+      if (!block) return true;
       return block.classList.contains('columns');
     })
     .forEach((link) => {
