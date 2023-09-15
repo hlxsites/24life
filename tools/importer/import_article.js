@@ -69,6 +69,9 @@ export default {
       // magazine article e.g. https://www.24life.com/make-2019-the-year-you-dont-get-hurt/
       await detectMagazineHero(params, magazineSection, main, document);
     } else {
+      // currently we only import magazine articles. If something else is detected, that is an error.
+      throw new Error('not a magazine article');
+
       // start with h1, then image
       const h1 = main.querySelector('h1');
       main.prepend(h1);
