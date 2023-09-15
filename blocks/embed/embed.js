@@ -8,22 +8,39 @@ import { loadScript, loadCSS } from '../../scripts/lib-franklin.js';
 
 export default function decorate(block) {
   const link = block.querySelector('a').href;
-  const childDiv = block.querySelector('div');
-  const grandChilds = childDiv ? childDiv.querySelectorAll('div') : [];
   block.textContent = '';
 
-  if (block.closest('body')) {
-    const observer = new IntersectionObserver((entries) => {
-      if (entries.some((e) => e.isIntersecting)) {
-        observer.disconnect();
-        loadEmbed(block, grandChilds, link);
-      }
-    });
-    observer.observe(block);
-  } else {
-    loadEmbed(block, grandChilds, link);
-  }
+  const observer = new IntersectionObserver((entries) => {
+    if (entries.some((e) => e.isIntersecting)) {
+      observer.disconnect();
+      loadEmbed(block, link);
+    }
+  });
+  observer.observe(block);
 }
+
+const loadEmbed = (block, link) => {
+  if (block.classList.contains('embed-is-loaded')) {
+    return;
+  }
+
+  const EMBEDS_CONFIG = [
+    {
+      match: ['youtube', 'youtu.be'],
+      embed: embedYoutube,
+    },
+  ];
+
+  const config = EMBEDS_CONFIG.find((e) => e.match.some((match) => link.includes(match)));
+  const url = new URL(link);
+  const isLite = block.classList.contains('lite');
+
+  if (config) {
+    block.innerHTML = config.embed(url, isLite);
+    block.classList = `block embed embed-${config.match[0]}`;
+  }
+  block.classList.add('embed-is-loaded');
+};
 
 const embedYoutube = (url, isLite) => {
   const usp = new URLSearchParams(url.search);
@@ -64,34 +81,4 @@ const embedYoutube = (url, isLite) => {
   }
 
   return embedHTML;
-};
-
-const loadEmbed = (block, grandChilds, link) => {
-  if (block.classList.contains('embed-is-loaded')) {
-    return;
-  }
-
-  const EMBEDS_CONFIG = [
-    {
-      match: ['youtube', 'youtu.be'],
-      embed: embedYoutube,
-    },
-  ];
-
-  const config = EMBEDS_CONFIG.find((e) => e.match.some((match) => link.includes(match)));
-  const url = new URL(link);
-  const isLite = block.classList.contains('lite');
-
-  if (config) {
-    block.innerHTML = config.embed(url, isLite);
-    block.classList = `block embed embed-${config.match[0]}`;
-  }
-  block.classList.add('embed-is-loaded');
-
-  if (grandChilds.length === 2) {
-    // This handles video with caption
-    const captionDiv = grandChilds[1];
-    captionDiv.classList.add('caption');
-    block.appendChild(captionDiv);
-  }
 };
