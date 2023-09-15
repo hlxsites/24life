@@ -40,44 +40,22 @@ export default {
     main.querySelector('ul.social-list.list-inline')?.parentElement?.remove();
     main.querySelector('form.js-cm-form')?.closest('section').remove();
 
-    const magazineSection = main.querySelector('.row.fullscreen .vid-bg, .cover.fullscreen');
+    const metadataTable = createMetadata(main, document, params);
+    const filename = new URL(url).pathname
+      .replace(/\/$/, '')
+    // eslint-disable-next-line prefer-regex-literals
+      .replace(new RegExp('^/'), '');
+    const { section, year } = params;
+    if (!section || !year) {
+      throw new Error(`missing params section or year. ${JSON.stringify(params)}`);
+    }
+    const newPath = WebImporter.FileUtils.sanitizePath(`${toClassName(section)}/${toClassName(year)}/${filename}`);
+    params.newPath = newPath;
 
+    const magazineSection = main.querySelector('.row.fullscreen .vid-bg, .cover.fullscreen');
     if (magazineSection) {
       // magazine article e.g. https://www.24life.com/make-2019-the-year-you-dont-get-hurt/
-      params.isMagazine = true;
-      const h1 = magazineSection.querySelector('h1');
-      const img = main.querySelector('img');
-      let videoLink;
-      const video = magazineSection.querySelector('video source[src^="http"]');
-      if (video) {
-        params.videoToDownload = video.src;
-        videoLink = document.createTextNode('TODO: add video link');
-      } else {
-        const youtube = magazineSection.querySelector('div.player[data-video-id]');
-        if (youtube) {
-          videoLink = document.createElement('a');
-          videoLink.href = youtube.dataset.videoId;
-          videoLink.textContent = youtube.dataset.videoId;
-        } else {
-          videoLink = document.createTextNode('');
-        }
-      }
-
-      const author = magazineSection.querySelector('h4');
-      if (author.textContent.startsWith('By ')) {
-        author.remove();
-      }
-      const collection = magazineSection.querySelector('h6');
-      collection?.remove();
-
-      console.log({ h1 });
-
-      magazineSection.replaceWith(WebImporter.DOMUtils.createTable([
-        ['Article Hero Video'],
-        ['Title', h1],
-        ['Video', videoLink],
-        ['Image', img],
-      ], document));
+      await detectMagazineHero(params, magazineSection, main, document);
     } else {
       // start with h1, then image
       const h1 = main.querySelector('h1');
@@ -89,8 +67,6 @@ export default {
       }
       h1.after(img);
     }
-
-    const metadataTable = createMetadata(main, document, params);
 
     // after getting the metadata, remove extra elements
     WebImporter.DOMUtils.remove(main, [
@@ -120,16 +96,6 @@ export default {
     detectQuotes(main, document);
     fixInvalidLists(main, document);
     magazineLinkMakeBoldAndItalic(main, document);
-
-    const filename = new URL(url).pathname
-      .replace(/\/$/, '')
-      // eslint-disable-next-line prefer-regex-literals
-      .replace(new RegExp('^/'), '');
-    const { section, year } = params;
-    if (!section || !year) {
-      throw new Error(`missing params section or year. ${JSON.stringify(params)}`);
-    }
-    const newPath = WebImporter.FileUtils.sanitizePath(`${toClassName(section)}/${toClassName(year)}/${filename}`);
 
     const transformationResult = [{
       element: main,
@@ -193,6 +159,63 @@ const createMetadata = (main, document, params) => {
   params.year = meta['Publication Date'].split('-')[0];
   return block;
 };
+
+async function getMediaUrlForVideo(videoPath) {
+  try {
+    const postResp = await fetch(
+      `https://admin.hlx.page/preview/hlxsites/24life/main/${videoPath}`,
+      { method: 'POST' },
+    );
+    const status = await postResp.json();
+    return status.preview.redirectLocation;
+  } catch (e) {
+    console.log('could not get media url for ', videoPath, e);
+    console.log("run with 'save to files', then try again");
+    return null;
+  }
+}
+
+async function detectMagazineHero(params, magazineSection, main, document) {
+  params.isMagazine = true;
+  const h1 = magazineSection.querySelector('h1');
+  const img = main.querySelector('img');
+  let videoLink;
+  const video = magazineSection.querySelector('video source[src^="http"]');
+  if (video) {
+    params.videoToDownload = video.src;
+    const helixMediaUrl = await getMediaUrlForVideo(`${params.newPath}.mp4`);
+    if (helixMediaUrl) {
+      videoLink = document.createElement('a');
+      videoLink.href = `https://main--24life--hlxsites.hlx.page${helixMediaUrl}`;
+      videoLink.textContent = videoLink.href;
+    } else {
+      videoLink = document.createTextNode('TODO: add video link');
+    }
+  } else {
+    const youtube = magazineSection.querySelector('div.player[data-video-id]');
+    if (youtube) {
+      videoLink = document.createElement('a');
+      videoLink.href = youtube.dataset.videoId;
+      videoLink.textContent = youtube.dataset.videoId;
+    } else {
+      videoLink = document.createTextNode('');
+    }
+  }
+
+  const author = magazineSection.querySelector('h4');
+  if (author.textContent.startsWith('By ')) {
+    author.remove();
+  }
+  const collection = magazineSection.querySelector('h6');
+  collection?.remove();
+
+  magazineSection.replaceWith(WebImporter.DOMUtils.createTable([
+    ['Article Hero Video'],
+    ['Title', h1],
+    ['Video', videoLink],
+    ['Image', img],
+  ], document));
+}
 
 /** There are a bunch of issues with hlx importer around bold text, which adds ** to the
  * final document. This is to prevent these issues. */
