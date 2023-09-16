@@ -138,17 +138,13 @@ function createSocialMediaButtons() {
 }
 
 async function createMagazineFooter() {
-  try {
     const issue = getMetadata('issue').toLowerCase();
     const summary = await fetch(`/fragments/magazine-footers/${issue}.plain.html`);
+    const fragment = document.createElement('div');
     if (summary.ok) {
-      const fragment = document.createElement('div');
       fragment.innerHTML = await summary.text();
       decorateMain(fragment);
       await loadBlocks(fragment);
-      return fragment;
     }
-  } catch (e) {
-    throw e;
-  }
+  return fragment;
 }
