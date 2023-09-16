@@ -215,11 +215,6 @@ async function detectMagazineHero(params, magazineSection, main, document) {
   if (video) {
     const extension = video.src.split('.').pop();
 
-    params.videoToDownload = {
-      path: `${params.newPath}.${extension}`,
-      from: video.src,
-    };
-
     // check if the mp4 variant is ready
     const helixMediaUrl = await previewAndGetMediaUrlForFile(`${params.newPath}.mp4`);
     await publishAndGetMediaUrlForFile(`${params.newPath}.mp4`);
@@ -227,10 +222,18 @@ async function detectMagazineHero(params, magazineSection, main, document) {
       videoLink = document.createElement('a');
       videoLink.href = `https://main--24life--hlxsites.hlx.page${helixMediaUrl}`;
       videoLink.textContent = videoLink.href;
-    } else if (extension === 'mp4') {
-      videoLink = document.createTextNode('TODO: add video link');
     } else {
-      videoLink = document.createTextNode(`TODO: add video link (not mp4: ${params.newPath}.${extension})`);
+      // only download the original if the mp4 variant in Helix is not ready
+      params.videoToDownload = {
+        path: `${params.newPath}.${extension}`,
+        from: video.src,
+      };
+
+      if (extension === 'mp4') {
+        videoLink = document.createTextNode('TODO: add video link');
+      } else {
+        videoLink = document.createTextNode(`TODO: add video link (not mp4: ${params.newPath}.${extension})`);
+      }
     }
   } else {
     const youtube = magazineSection.querySelector('div.player[data-video-id]');
