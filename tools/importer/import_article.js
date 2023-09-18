@@ -69,18 +69,9 @@ export default {
       // magazine article e.g. https://www.24life.com/make-2019-the-year-you-dont-get-hurt/
       await detectMagazineHero(params, magazineSection, main, document);
     } else {
-      // currently we only import magazine articles. If something else is detected, that is an error.
+      // currently we only import magazine articles.
+      // If something else is detected, that is an error.
       throw new Error('not a magazine article');
-
-      // start with h1, then image
-      const h1 = main.querySelector('h1');
-      main.prepend(h1);
-      let img = main.querySelector('img');
-      if (!img) {
-        img = document.createElement('img');
-        img.src = 'http://localhost:3001/dummy-article-hero-image/media_127d7667d1e27556e2e4570b95d44f0dfc591529a.png?host=https%3A%2F%2Fmain--24life--hlxsites.hlx.page';
-      }
-      h1.after(img);
     }
 
     // after getting the metadata, remove extra elements
@@ -490,9 +481,9 @@ function handleFloatingImages(main, document, metadataTable) {
   // when imported, we want the image to be after the heading, not before.
   for (const img of main.querySelectorAll('h3 img.alignleft, h3 img.alignright')) {
     const h3 = img.closest('h3');
-    const p = document.createElement('p');
-    p.appendChild(img);
-    h3.after(p);
+    const para = document.createElement('p');
+    para.appendChild(img);
+    h3.after(para);
   }
 
   // e.g. https://www.24life.com/with-hard-knocks-brett-kicks-things-up-a-notch/

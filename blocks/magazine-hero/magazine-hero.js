@@ -56,14 +56,9 @@ function createLeftOverlay(overlay, config) {
   return leftSide;
 }
 
-function scrollToVideo() {
-  const video = document.querySelector('.magazine-hero-container iframe');
-  if (video) {
-    video.scrollIntoView({ behavior: 'smooth' });
-    return;
-  }
-  // if video is not present, scroll to article cards
-  document.querySelector('.card-container')?.scrollIntoView({ behavior: 'smooth' });
+function scrollToNext(event) {
+  const heroContainer = event.target.closest('.magazine-hero-container');
+  heroContainer.nextElementSibling?.scrollIntoView({ behavior: 'smooth' });
 }
 
 function createRightOverlay(overlay, config, linkTexts) {
@@ -78,7 +73,7 @@ function createRightOverlay(overlay, config, linkTexts) {
   const downButton = document.createElement('button');
   downButton.classList.add('down-button');
   downButton.innerHTML = 'Explore This Issue <span class="icon icon-arrow-down-solid"></span>';
-  downButton.addEventListener('click', scrollToVideo);
+  downButton.addEventListener('click', scrollToNext);
 
   rightSide.append(downButton);
 
