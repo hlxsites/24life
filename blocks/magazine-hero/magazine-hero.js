@@ -56,8 +56,7 @@ function createLeftOverlay(overlay, config) {
   return leftSide;
 }
 
-function scrollToFirstParagraph() {
-  // looking for iframe youtube video, does not cover mp4
+function scrollToVideo() {
   const video = document.querySelector('.magazine-hero-container iframe');
   if (video) {
     video.scrollIntoView({ behavior: 'smooth' });
@@ -79,7 +78,7 @@ function createRightOverlay(overlay, config, linkTexts) {
   const downButton = document.createElement('button');
   downButton.classList.add('down-button');
   downButton.innerHTML = 'Explore This Issue <span class="icon icon-arrow-down-solid"></span>';
-  downButton.addEventListener('click', scrollToFirstParagraph);
+  downButton.addEventListener('click', scrollToVideo);
 
   rightSide.append(downButton);
 
