@@ -57,12 +57,14 @@ function createLeftOverlay(overlay, config) {
 }
 
 function scrollToFirstParagraph() {
-  for (const p of document.querySelectorAll('.default-content-wrapper p')) {
-    if (!p.querySelector('iframe')) {
-      p.scrollIntoView({ behavior: 'smooth' });
-      break;
-    }
+  // looking for iframe youtube video, does not cover mp4
+  const video = document.querySelector('.magazine-hero-container iframe');
+  if (video) {
+    video.scrollIntoView({ behavior: 'smooth' });
+    return;
   }
+  // if video is not present, scroll to article cards
+  document.querySelector('.card-container')?.scrollIntoView({ behavior: 'smooth' });
 }
 
 function createRightOverlay(overlay, config, linkTexts) {
@@ -137,7 +139,7 @@ function createBackgroundSlideshow(block, images) {
   });
   block.append(backgroundImages);
   block.append(slideshowButtons);
-  autoplaySlides(goToNextSlide);
+  autoplaySlides();
 
   /** detect swipe gestures on touch screens to advance slides */
   function gestureStart(event) {
