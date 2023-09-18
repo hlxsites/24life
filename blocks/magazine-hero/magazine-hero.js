@@ -57,8 +57,10 @@ function createLeftOverlay(overlay, config) {
 }
 
 function scrollToNext(event) {
-  const heroContainer = event.target.closest('.magazine-hero-container');
-  heroContainer.nextElementSibling?.scrollIntoView({ behavior: 'smooth' });
+  const block = event.target.closest('.magazine-hero.block');
+  const element = block?.closest('.magazine-hero-wrapper')?.nextElementSibling
+    || block?.closest('.section')?.nextElementSibling;
+  element?.scrollIntoView({ behavior: 'smooth' });
 }
 
 function createRightOverlay(overlay, config, linkTexts) {
