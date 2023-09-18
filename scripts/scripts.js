@@ -161,18 +161,6 @@ function decorateVideoLinks(main) {
         // link.replaceWith(embedHTML);
         link.parentNode.innerHTML = embedHTML;
       }
-      // if (youtubeVideoId) {
-      //   const iframe = document.createElement('iframe');
-      //   iframe.classList.add('youtube-video');
-      //   iframe.width = 560;
-      //   iframe.height = 315;
-      //   iframe.src = `https://www.youtube-nocookie.com/embed/${youtubeVideoId}?rel=0`;
-      //   iframe.title = 'YouTube video player';
-      //   iframe.frameborder = 0;
-      //   iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;';
-      //   iframe.allowfullscreen = true;
-      //   link.replaceWith(iframe);
-      // }
     });
 }
 
