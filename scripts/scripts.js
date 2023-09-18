@@ -10,6 +10,7 @@ import {
   loadBlocks,
   loadCSS,
   waitForLCP,
+  loadScript,
 } from './lib-franklin.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
@@ -107,21 +108,71 @@ function decorateVideoLinks(main) {
       let youtubeVideoId = '';
       if (link.href.includes('youtube.com/watch?v=')) {
         youtubeVideoId = new URL(link.href).searchParams.get('v');
+        const url = new URL(link.href);
+        const embed = url.pathname;
+        const embedSplit = embed.split('/');
+        const usp = new URLSearchParams(url.search);
+        let suffix = '';
+        const autoplayParam = usp.get('autoplay');
+        const mutedParam = usp.get('muted');
+        if (autoplayParam && mutedParam) {
+          suffix += `&autoplay=${autoplayParam}&muted=${mutedParam}`;
+        } else if (autoplayParam) {
+          suffix += `&autoplay=${autoplayParam}&muted=1`;
+        } else if (mutedParam) {
+          suffix += `&muted=${mutedParam}`;
+        }
+        const vid = youtubeVideoId;
+        let embedHTML = '';
+        embedHTML = `
+      <lite-youtube videoid=${vid || embedSplit[embedSplit.length - 1]}>
+        <a href="https://www.youtube.com${vid ? `/embed/${vid}?rel=0&v=${vid}${suffix}` : embed}" class="lty-playbtn" title="Play Video">
+      </a>
+      </lite-youtube>`;
+        loadCSS(`${window.hlx.codeBasePath}/blocks/embed/lite-yt-embed.css`);
+        loadScript(`${window.hlx.codeBasePath}/blocks/embed/lite-yt-embed.js`);
+        // link.replaceWith(embedHTML);
+        link.parentNode.innerHTML = embedHTML;
       } else if (link.href.includes('youtube.com/embed/') || link.href.includes('youtu.be/')) {
         youtubeVideoId = new URL(link.href).pathname.split('/').pop();
+        const url = new URL(link.href);
+        const embed = url.pathname;
+        const embedSplit = embed.split('/');
+        const usp = new URLSearchParams(url.search);
+        let suffix = '';
+        const autoplayParam = usp.get('autoplay');
+        const mutedParam = usp.get('muted');
+        if (autoplayParam && mutedParam) {
+          suffix += `&autoplay=${autoplayParam}&muted=${mutedParam}`;
+        } else if (autoplayParam) {
+          suffix += `&autoplay=${autoplayParam}&muted=1`;
+        } else if (mutedParam) {
+          suffix += `&muted=${mutedParam}`;
+        }
+        const vid = youtubeVideoId;
+        let embedHTML = '';
+        embedHTML = `
+      <lite-youtube videoid=${vid || embedSplit[embedSplit.length - 1]}>
+        <a href="https://www.youtube.com${vid ? `/embed/${vid}?rel=0&v=${vid}${suffix}` : embed}" class="lty-playbtn" title="Play Video">
+      </a>
+      </lite-youtube>`;
+        loadCSS(`${window.hlx.codeBasePath}/blocks/embed/lite-yt-embed.css`);
+        loadScript(`${window.hlx.codeBasePath}/blocks/embed/lite-yt-embed.js`);
+        // link.replaceWith(embedHTML);
+        link.parentNode.innerHTML = embedHTML;
       }
-      if (youtubeVideoId) {
-        const iframe = document.createElement('iframe');
-        iframe.classList.add('youtube-video');
-        iframe.width = 560;
-        iframe.height = 315;
-        iframe.src = `https://www.youtube-nocookie.com/embed/${youtubeVideoId}?rel=0`;
-        iframe.title = 'YouTube video player';
-        iframe.frameborder = 0;
-        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;';
-        iframe.allowfullscreen = true;
-        link.replaceWith(iframe);
-      }
+      // if (youtubeVideoId) {
+      //   const iframe = document.createElement('iframe');
+      //   iframe.classList.add('youtube-video');
+      //   iframe.width = 560;
+      //   iframe.height = 315;
+      //   iframe.src = `https://www.youtube-nocookie.com/embed/${youtubeVideoId}?rel=0`;
+      //   iframe.title = 'YouTube video player';
+      //   iframe.frameborder = 0;
+      //   iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;';
+      //   iframe.allowfullscreen = true;
+      //   link.replaceWith(iframe);
+      // }
     });
 }
 
