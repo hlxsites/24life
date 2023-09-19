@@ -82,7 +82,7 @@ async function createCards(finalArray, resultsDiv) {
 }
 
 async function displayNextEntries(iterator, loadMoreContainer, resultsDiv) {
-  const numInitialLoadedArticles = 23;
+  const numInitialLoadedArticles = 15;
   // eslint-disable-next-line no-plusplus
   for (let i = 0; i <= numInitialLoadedArticles; i++) {
     if (i === numInitialLoadedArticles) { resultsDiv.after(loadMoreContainer); }

@@ -1,3 +1,15 @@
+.block.search-results {
+  min-height: 100vh;
+}
+
+.block.search-results .card.block {
+ display: none;
+}
+
+.block.search-results .card.block[data-block-status = 'loaded'] {
+  display: block;
+ }
+
 div.search-page-heading {
   background: #f8f8f8;
   letter-spacing: 2px;
@@ -58,3 +70,4 @@ div.search-page-heading {
   background-color: #f5f5f5;
   border-radius: 0;
 }
+
