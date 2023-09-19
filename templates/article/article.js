@@ -1,6 +1,7 @@
 import {
-  buildBlock, decorateBlock, decorateButtons, decorateIcons, getMetadata, toClassName,
+  buildBlock, decorateBlock, decorateButtons, decorateIcons, getMetadata, toClassName, loadBlocks,
 } from '../../scripts/lib-franklin.js';
+import { decorateMain } from '../../scripts/scripts.js';
 
 export default async function decorate(doc) {
   if (getMetadata('section')) {
@@ -28,22 +29,27 @@ export default async function decorate(doc) {
   firstSection.parentElement.append(newSection);
   newSectionWrapper.append(createSocialMediaButtons());
 
-  // add a thin gray line to break this up from the previous section
-  const line = document.createElement('hr');
-  line.classList.add('article-end-line');
-  newSectionWrapper.append(line);
+  if (!getMetadata('issue')) {
+    // add a thin gray line to break this up from the previous section
+    const line = document.createElement('hr');
+    line.classList.add('article-end-line');
+    newSectionWrapper.append(line);
+    newSectionWrapper.append(createSocialMediaButtons());
+  }
 
   getMetadata('authors').split(',').forEach((author) => {
     newSectionWrapper.append(createAuthorBlock(author));
   });
+
   if (getMetadata('issue')) {
+    const magSummary = createNewSection();
+    firstSection.parentElement.append(magSummary);
+    magSummary.replaceWith((await createMagazineFooter()));
+  } else {
     // add a thin gray line to break this up from the previous section
     const grayLine = document.createElement('hr');
     grayLine.classList.add('article-end-line');
     newSectionWrapper.append(grayLine);
-
-    newSectionWrapper.append('TODO: add issue summary here');
-  } else {
     newSectionWrapper.append(createArticleCarousel());
   }
 
@@ -135,4 +141,16 @@ function createSocialMediaButtons() {
   // noinspection JSIgnoredPromiseFromCall
   decorateIcons(socialMediaButtons);
   return socialMediaButtons;
+}
+
+async function createMagazineFooter() {
+  const issue = getMetadata('issue').toLowerCase();
+  const summary = await fetch(`/navigation/magazine-summary/${issue}.plain.html`);
+  const fragment = document.createElement('div');
+  if (summary.ok) {
+    fragment.innerHTML = await summary.text();
+    decorateMain(fragment);
+    await loadBlocks(fragment);
+  }
+  return fragment;
 }

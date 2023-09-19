@@ -16,7 +16,7 @@ body.article main .default-content-wrapper .block a {
 body.article main .article-social-media-buttons {
     display: flex;
     justify-content: center;
-    margin: 1em;
+    padding: 1em;
     gap: 1em;
 }
 

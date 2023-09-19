@@ -33,7 +33,7 @@ async function buildSectionMenuContent(header, section) {
 
   CREATED[section] = true;
   try {
-    const menu = await fetch(`/fragments/menu-${section}.plain.html`);
+    const menu = await fetch(`/navigation/menu-${section}.plain.html`);
     if (menu.ok) {
       const fragment = document.createElement('div');
       fragment.classList.add('nav-fragment', section);
