@@ -8,6 +8,7 @@ indices:
       - /drafts/**
       - /block-library/**
       - /template-*
+      - /tools/**
     target: /query-index.json
     properties:
       lastModified:
