@@ -106,35 +106,8 @@ function decorateVideoLinks(main) {
     .filter((a) => !a.closest('div.block'))
     .forEach((link) => {
       let youtubeVideoId = '';
-      if (link.href.includes('youtube.com/watch?v=')) {
+      if (link.href.includes('youtube.com/watch?v=') || link.href.includes('youtube.com/embed/') || link.href.includes('youtu.be/')) {
         youtubeVideoId = new URL(link.href).searchParams.get('v');
-        const url = new URL(link.href);
-        const embed = url.pathname;
-        const embedSplit = embed.split('/');
-        const usp = new URLSearchParams(url.search);
-        let suffix = '';
-        const autoplayParam = usp.get('autoplay');
-        const mutedParam = usp.get('muted');
-        if (autoplayParam && mutedParam) {
-          suffix += `&autoplay=${autoplayParam}&muted=${mutedParam}`;
-        } else if (autoplayParam) {
-          suffix += `&autoplay=${autoplayParam}&muted=1`;
-        } else if (mutedParam) {
-          suffix += `&muted=${mutedParam}`;
-        }
-        const vid = youtubeVideoId;
-        let embedHTML = '';
-        embedHTML = `
-      <lite-youtube videoid=${vid || embedSplit[embedSplit.length - 1]}>
-        <a href="https://www.youtube.com${vid ? `/embed/${vid}?rel=0&v=${vid}${suffix}` : embed}" class="lty-playbtn" title="Play Video">
-      </a>
-      </lite-youtube>`;
-        loadCSS(`${window.hlx.codeBasePath}/blocks/embed/lite-yt-embed.css`);
-        loadScript(`${window.hlx.codeBasePath}/blocks/embed/lite-yt-embed.js`);
-        // link.replaceWith(embedHTML);
-        link.parentNode.innerHTML = embedHTML;
-      } else if (link.href.includes('youtube.com/embed/') || link.href.includes('youtu.be/')) {
-        youtubeVideoId = new URL(link.href).pathname.split('/').pop();
         const url = new URL(link.href);
         const embed = url.pathname;
         const embedSplit = embed.split('/');
