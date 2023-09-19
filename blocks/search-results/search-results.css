@@ -1,14 +1,12 @@
 .block.search-results {
   min-height: 100vh;
+  display: none;
 }
-
-.block.search-results .card.block {
- display: none;
-}
-
-.block.search-results .card.block[data-block-status = 'loaded'] {
-  display: block;
- }
+ 
+ .block.search-results[data-block-status = 'loaded'] {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  }
 
 div.search-page-heading {
   background: #f8f8f8;

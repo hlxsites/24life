@@ -97,6 +97,9 @@ async function displayNextEntries(iterator, loadMoreContainer, resultsDiv) {
     if (searchItem.section) {
       newBlock.classList.add(toClassName(searchItem.section));
     }
+    if (i === 0) {
+      newBlock.querySelector('img').loading = 'eager';
+    }
     resultsDiv.append(wrapper);
     // eslint-disable-next-line no-await-in-loop
     await loadBlock(newBlock);
