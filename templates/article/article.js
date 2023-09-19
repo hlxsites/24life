@@ -28,22 +28,27 @@ export default async function decorate(doc) {
   newSection.append(newSectionWrapper);
   firstSection.parentElement.append(newSection);
 
-  // add a thin gray line to break this up from the previous section
-  const line = document.createElement('hr');
-  line.classList.add('article-end-line');
-  newSectionWrapper.append(line);
+  if (!getMetadata('issue')) {
+    // add a thin gray line to break this up from the previous section
+    const line = document.createElement('hr');
+    line.classList.add('article-end-line');
+    newSectionWrapper.append(line);
+    newSectionWrapper.append(createSocialMediaButtons());
+  }
 
-  newSectionWrapper.append(createSocialMediaButtons());
   getMetadata('authors').split(',').forEach((author) => {
     newSectionWrapper.append(createAuthorBlock(author));
   });
+
   if (getMetadata('issue')) {
+    const magSummary = createNewSection();
+    firstSection.parentElement.append(magSummary);
+    magSummary.replaceWith((await createMagazineFooter()));
+  } else {
     // add a thin gray line to break this up from the previous section
     const grayLine = document.createElement('hr');
     grayLine.classList.add('article-end-line');
     newSectionWrapper.append(grayLine);
-    firstSection.parentElement.append(await createMagazineFooter());
-  } else {
     newSectionWrapper.append(createArticleCarousel());
   }
 
@@ -139,7 +144,7 @@ function createSocialMediaButtons() {
 
 async function createMagazineFooter() {
   const issue = getMetadata('issue').toLowerCase();
-  const summary = await fetch(`/fragments/magazine-footers/${issue}.plain.html`);
+  const summary = await fetch(`/navigation/magazine-summary/${issue}.plain.html`);
   const fragment = document.createElement('div');
   if (summary.ok) {
     fragment.innerHTML = await summary.text();

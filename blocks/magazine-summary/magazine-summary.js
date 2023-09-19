@@ -10,8 +10,7 @@ import {
  */
 export default async function decorate(block) {
   const config = readBlockConfig(block);
-  config.isSubNav = block.classList.contains('navigation');
-  config.isFooter = block.classList.contains('footer');
+  config.isSubNav = block.closest('header');
   config.labels = block.querySelectorAll('div > div:nth-child(2) > p:first-child');
   config.links = [...block.querySelectorAll('div > div:nth-child(2) > p:not(:first-child) > a')];
   block.innerText = '';
@@ -46,9 +45,9 @@ function createCoverColumn(config) {
   titleH6.classList.add('red');
   if (!config.isSubNav) {
     // page
-    const title = config.isFooter ? config.title.toUpperCase() : getMetadata('og:title').toUpperCase();
-    const location = config.isFooter ? config.link : new URL(document.location).pathname;
-    const coverPic = config.isFooter ? config.image : getMetadata('og:image');
+    const title = config.title ?? getMetadata('og:title');
+    const location = config.link ?? new URL(document.location).pathname;
+    const coverPic = config.image ?? getMetadata('og:image');
     titleH4.textContent = `In This Issue - ${title}`;
     titleH6.textContent = location.split('/').pop().replaceAll(/-/g, ' ').toUpperCase();
     textCol.append(titleH4);
@@ -79,7 +78,7 @@ function createListColumn(config, index) {
   const sectionTitle = document.createElement('div');
   sectionTitle.classList.add('section-title', `${section}`);
   sectionTitle.style.setProperty('color', `var(--color-${section}-text)`);
-  if (!config.isSubNav && !config.isFooter) {
+  if (!config.links.length) {
     sectionTitle.textContent = config[section];
     links = document.querySelectorAll(`.card-container .card-wrapper .card.${section} h2 > a`);
   } else {
