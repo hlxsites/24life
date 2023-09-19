@@ -151,7 +151,7 @@ p, dl, ol, ul, pre, blockquote {
 
 }
 
-p, h1, h2, h3, h4, h5, h6{
+div, p, h1, h2, h3, h4, h5, h6{
   /* when scrolling to an element, make sure it's visible despise the
    header nav being there. */
   scroll-margin: calc(var(--nav-height) + 1em);
