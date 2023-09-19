@@ -1,12 +1,14 @@
 .block.search-results {
   min-height: 100vh;
+}
+
+.block.search-results .card.block {
   display: none;
 }
- 
- .block.search-results[data-block-status = 'loaded'] {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  }
+
+.block.search-results .card.block[data-block-status='loaded'] {
+  display: block;
+}
 
 div.search-page-heading {
   background: #f8f8f8;
@@ -18,7 +20,6 @@ div.search-page-heading {
 .search-page-heading.section h1 {
   margin-left: 5rem;
 }
-
 .search-results-wrapper .article-load-more-container {
   margin: auto;
   text-align: center;
