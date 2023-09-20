@@ -1,5 +1,5 @@
 /* global WebImporter */
-/* eslint-disable no-console, class-methods-use-this, no-restricted-syntax, no-unused-vars */
+/* eslint-disable no-console, class-methods-use-this, no-restricted-syntax, no-unused-vars, no-await-in-loop, prefer-destructuring */
 
 export default {
   preprocess: ({
@@ -70,7 +70,6 @@ const createMetadata = (main, document) => {
 
 const createMagazineSummary = async (main, document, params) => {
   const magazineHero = {};
-  const [year] = document.querySelector('meta[property="article:modified_time"').content.split('-');
   const ogURL = `https://main--24life--hlxsites.hlx.page${document.querySelector('meta[property="og:url"]').content.replace(/\/$/, '')}`;
   magazineHero.Link = link(ogURL, ogURL);
   magazineHero.Title = document.querySelector('meta[property="og:title"]').content.split(/-/)[0];
@@ -87,7 +86,6 @@ const createMagazineSummary = async (main, document, params) => {
         const labelDiv = document.createElement('div');
         labelDiv.innerHTML = label;
         grpArray.push(labelDiv);
-        
         for (const a of links) {
           const aYear = await getArticleYear(a.href);
           let sectionDiv = document.createElement('div');
@@ -102,7 +100,7 @@ const createMagazineSummary = async (main, document, params) => {
     magazineHero.Image.push(createImg(element));
     main.append(generateBlock(document, magazineHero, 'Magazine Summary'));
   }
-}
+};
 
 async function getArticleYear(url) {
   try {
@@ -122,9 +120,9 @@ function replacePillar(label) {
   const words = label.split(/ /);
   const wordReplacements = {
     'Mindset-': 'Focus -',
-    'Movement': 'Fitness',
-    'Nourishment': 'Fuel',
-    'Regeneration': 'Recover',
+    Movement: 'Fitness',
+    Nourishment: 'Fuel',
+    Regeneration: 'Recover',
   };
   const firstWord = words[0];
   const replacement = wordReplacements[firstWord];
