@@ -17,6 +17,7 @@ header.header-wrapper {
   border-bottom: 6px solid var(--accent-color);
   font-family: var(--body-font-family);
   background-color: var(--background-color);
+  height: var(--nav-height);
 }
 
 header .header.block {
