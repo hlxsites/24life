@@ -1,7 +1,4 @@
 import {
-  sampleRUM,
-  loadHeader,
-  loadFooter,
   decorateBlocks,
   decorateIcons,
   decorateSections,
@@ -9,8 +6,11 @@ import {
   getMetadata,
   loadBlocks,
   loadCSS,
-  waitForLCP,
+  loadFooter,
+  loadHeader,
   loadScript,
+  sampleRUM,
+  waitForLCP,
 } from './lib-franklin.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
@@ -97,6 +97,16 @@ async function loadFonts() {
   }
 }
 
+export function getYoutubeVideoId(url) {
+  if (url.includes('youtube.com/watch?v=')) {
+    return new URL(url).searchParams.get('v');
+  }
+  if (url.includes('youtube.com/embed/') || url.includes('youtu.be/')) {
+    return new URL(url).pathname.split('/').pop();
+  }
+  return null;
+}
+
 function decorateVideoLinks(main) {
   [...main.querySelectorAll('a')]
     .filter(({ href }) => !!href)
@@ -105,34 +115,15 @@ function decorateVideoLinks(main) {
   // don't decorate if already in a block.
     .filter((a) => !a.closest('div.block'))
     .forEach((link) => {
-      let youtubeVideoId = '';
-      if (link.href.includes('youtube.com/watch?v=') || link.href.includes('youtube.com/embed/') || link.href.includes('youtu.be/')) {
-        youtubeVideoId = new URL(link.href).searchParams.get('v');
-        const url = new URL(link.href);
-        const embed = url.pathname;
-        const embedSplit = embed.split('/');
-        const usp = new URLSearchParams(url.search);
-        let suffix = '';
-        const autoplayParam = usp.get('autoplay');
-        const mutedParam = usp.get('muted');
-        if (autoplayParam && mutedParam) {
-          suffix += `&autoplay=${autoplayParam}&muted=${mutedParam}`;
-        } else if (autoplayParam) {
-          suffix += `&autoplay=${autoplayParam}&muted=1`;
-        } else if (mutedParam) {
-          suffix += `&muted=${mutedParam}`;
-        }
-        const vid = youtubeVideoId;
-        let embedHTML = '';
-        embedHTML = `
-      <lite-youtube videoid=${vid || embedSplit[embedSplit.length - 1]}>
-        <a href="https://www.youtube.com${vid ? `/embed/${vid}?rel=0&v=${vid}${suffix}` : embed}" class="lty-playbtn" title="Play Video">
-      </a>
-      </lite-youtube>`;
+      const youtubeVideoId = getYoutubeVideoId(link.href);
+
+      if (youtubeVideoId) {
         loadCSS(`${window.hlx.codeBasePath}/blocks/embed/lite-yt-embed.css`);
         loadScript(`${window.hlx.codeBasePath}/blocks/embed/lite-yt-embed.js`);
-        // link.replaceWith(embedHTML);
-        link.parentNode.innerHTML = embedHTML;
+        const ltYoutube = document.createElement('lite-youtube');
+        ltYoutube.setAttribute('videoid', youtubeVideoId);
+        ltYoutube.innerHTML = `<a href="https://www.youtube-nocookie.com/embed/${youtubeVideoId}?rel=0" class="lty-playbtn" title="Play Video"> `;
+        link.replaceWith(ltYoutube);
       }
     });
 }

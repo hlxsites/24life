@@ -1,4 +1,5 @@
 import { getMetadata, readBlockConfig } from '../../scripts/lib-franklin.js';
+import { getYoutubeVideoId } from '../../scripts/scripts.js';
 
 export default function decorate(block) {
   const data = readBlockConfig(block);
@@ -137,16 +138,6 @@ function buildIframe(url) {
   iframe.allowfullscreen = true;
   iframe.frameborder = '0';
   return iframe;
-}
-
-function getYoutubeVideoId(url) {
-  let youtubeVideoId = '';
-  if (url.includes('youtube.com/watch?v=')) {
-    youtubeVideoId = new URL(url).searchParams.get('v');
-  } else if (url.includes('youtube.com/embed/') || url.includes('youtu.be/')) {
-    youtubeVideoId = new URL(url).pathname.split('/').pop();
-  }
-  return youtubeVideoId;
 }
 
 /**
