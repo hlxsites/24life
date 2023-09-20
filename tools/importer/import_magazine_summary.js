@@ -70,11 +70,8 @@ const createMetadata = (main, document) => {
 
 const createMagazineSummary = async (main, document, params) => {
   const magazineHero = {};
-  const ogURL = `https://main--24life--hlxsites.hlx.page${document.querySelector('meta[property="og:url"]').content.replace(/\/$/, '')}`;
-  magazineHero.Link = link(ogURL, ogURL);
-  magazineHero.Title = document.querySelector('meta[property="og:title"]').content.split(/-/)[0];
   const pillars = document.querySelectorAll('.tfl-magazine-current-issue-footer .tfl-pt80-special .wpb_wrapper .wpb_wrapper');
-
+  // process the 4 pillar links
   if (pillars.length > 0) {
     for (const section of pillars) {
       const labelTag = section.querySelector('h5.tfl-anm');
@@ -87,6 +84,7 @@ const createMagazineSummary = async (main, document, params) => {
         labelDiv.innerHTML = label;
         grpArray.push(labelDiv);
         for (const a of links) {
+          // get the year of the article
           const aYear = await getArticleYear(a.href);
           let sectionDiv = document.createElement('div');
           sectionDiv = link(a.innerHTML, a.href, group.toLowerCase(), aYear);
@@ -95,9 +93,16 @@ const createMagazineSummary = async (main, document, params) => {
         magazineHero[group] = grpArray;
       }
     }
+
+    const ogURL = `https://main--24life--hlxsites.hlx.page${document.querySelector('meta[property="og:url"]').content.replace(/\/$/, '')}`;
+    magazineHero.Link = link(ogURL, ogURL);
+
+    magazineHero.Title = document.querySelector('meta[property="og:title"]').content.split(/-/)[0];
+
     magazineHero.Image = [];
     const element = document.querySelector('meta[property="og:image"]').content;
     magazineHero.Image.push(createImg(element));
+
     main.append(generateBlock(document, magazineHero, 'Magazine Summary'));
   }
 };
