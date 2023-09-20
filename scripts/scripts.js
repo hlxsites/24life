@@ -110,10 +110,11 @@ function decorateVideoLinks(main) {
       if (youtubeVideoId) {
         loadCSS(`${window.hlx.codeBasePath}/blocks/embed/lite-yt-embed.css`);
         loadScript(`${window.hlx.codeBasePath}/blocks/embed/lite-yt-embed.js`);
-        const ltYoutube = document.createElement('lite-youtube');
-        ltYoutube.setAttribute('videoid', youtubeVideoId);
-        ltYoutube.setAttribute('params', 'rel=0');
-        link.replaceWith(ltYoutube);
+        const video = document.createElement('lite-youtube');
+        video.setAttribute('videoid', youtubeVideoId);
+        video.setAttribute('params', 'rel=0');
+        video.classList.add('youtube-video');
+        link.replaceWith(video);
       }
     });
 }
