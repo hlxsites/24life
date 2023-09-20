@@ -60,7 +60,7 @@ export default function decorate(block) {
   section.classList.add('article-hero-video-section');
   const sectionName = getMetadata('section');
   section.href = `/${sectionName?.toLowerCase()}`;
-  section.append(`${sectionName?.toUpperCase()}`);
+  section.append(`${sectionName}`);
 
   const title = document.createElement('h1');
   title.classList.add('article-hero-video-title');
