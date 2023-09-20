@@ -47,12 +47,14 @@ div.article-hero-video-wrapper {
   letter-spacing: 1px;
 }
 
-.article-hero-video h4.article-hero-video-section {
+.article-hero-video a.article-hero-video-section {
   font-size: 14px;
   line-height: 18px;
   font-weight: 100;
   margin-bottom: 0;
   text-transform: uppercase;
+  position: relative;
+  z-index: 10;
 }
 
 .article-hero-video h6.authors {

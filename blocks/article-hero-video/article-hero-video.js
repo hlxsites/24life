@@ -21,7 +21,7 @@ export default function decorate(block) {
 
   function buildVideo() {
     if (isYoutubeVideo(data.video)) {
-      videoContainer.append(buildIframe(data.video, block));
+      videoContainer.append(buildIframe(data.video));
     } else {
       // mp4 video
       videoContainer.append(buildVideoTag(data.video));
@@ -57,10 +57,11 @@ export default function decorate(block) {
   const titleContainer = document.createElement('div');
   titleContainer.classList.add('title-container');
 
-  const section = document.createElement('h4');
+  const section = document.createElement('a');
   section.classList.add('article-hero-video-section');
-  // get section from metadata
-  section.innerText = getMetadata('section');
+  const sectionName = getMetadata('section');
+  section.href = `/${sectionName?.toLowerCase()}`;
+  section.append(`${sectionName}`);
 
   const title = document.createElement('h1');
   title.classList.add('article-hero-video-title');
