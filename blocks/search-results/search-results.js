@@ -1,4 +1,5 @@
 import { createCardBlock } from '../card/card.js';
+import { loadBlock, toClassName } from '../../scripts/lib-franklin.js';
 
 export default async function decorate(block) {
   block.innerHTML = '';
@@ -9,15 +10,12 @@ export default async function decorate(block) {
     const textNode = document.createElement('h1');
     textNode.textContent = searchTerm;
     elementHeading.append(textNode);
-    const mainDiv = document.createElement('div');
-    mainDiv.innerHTML = '<div class="results-loading-spinner"><div>';
-    const resultsDiv = document.createElement('div');
-    resultsDiv.classList.add('results-div');
-    mainDiv.append(resultsDiv);
-    block.append(mainDiv);
+    const spinnerDiv = document.createElement('div');
+    spinnerDiv.classList.add('results-loading-spinner');
+    block.append(spinnerDiv);
     const tokenizedSearchWords = searchItems(searchTerm);
     // noinspection ES6MissingAwait
-    loadResults(tokenizedSearchWords, resultsDiv);
+    loadResults(tokenizedSearchWords, block);
   } else {
     window.location.href = '/';
   }
@@ -37,7 +35,7 @@ async function loadResults(tokenizedSearchWords, resultsDiv) {
   if (matches.length === 0) {
     noResults(resultsDiv);
   } else {
-    createCards(matches, resultsDiv);
+    await createCards(matches, resultsDiv);
   }
 }
 
@@ -61,6 +59,42 @@ function filterMatches(tokenizedSearchWords, jsonData) {
   return [...new Set(allMatches)];
 }
 
+async function createCards(finalArray, resultsDiv) {
+  const iterator = finalArray.values();
+  const loadMoreContainer = document.createElement('div');
+  loadMoreContainer.classList.add('article-load-more-container');
+  loadMoreContainer.innerHTML = '<button class="article-list-load-more-button">Load more</button>';
+  await displayNextEntries(iterator, loadMoreContainer, resultsDiv);
+  loadMoreContainer.querySelector('button').addEventListener('click', async () => {
+    await displayNextEntries(iterator, loadMoreContainer, resultsDiv);
+  });
+}
+
+async function displayNextEntries(iterator, loadMoreContainer, resultsDiv) {
+  const numInitialLoadedArticles = 15;
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i <= numInitialLoadedArticles; i++) {
+    if (i === numInitialLoadedArticles) { resultsDiv.after(loadMoreContainer); }
+    const next = iterator.next();
+    if (next.done) {
+      loadMoreContainer.remove();
+    }
+    const searchItem = next.value;
+    if (!searchItem) break;
+    const wrapper = document.createElement('div');
+    const newBlock = createCardBlock(searchItem, wrapper);
+    if (searchItem.section) {
+      newBlock.classList.add(toClassName(searchItem.section));
+    }
+    if (i === 0) {
+      newBlock.querySelector('img').loading = 'eager';
+    }
+    resultsDiv.append(wrapper);
+    // eslint-disable-next-line no-await-in-loop
+    await loadBlock(newBlock);
+  }
+}
+
 function noResults(resultsDiv) {
   const sorryDiv = document.createElement('div');
   sorryDiv.innerHTML = '<p>Sorry, no results were found, search again ?<p>';
@@ -80,32 +114,4 @@ function noResults(resultsDiv) {
    </div>
  `;
   resultsDiv.parentNode.querySelector('.block.search-results.card-container.three-columns .results-div').classList.add('no-results-div');
-}
-
-function displayNextEntries(iterator, numInitialLoadedArticles, loadMoreContainer, resultsDiv) {
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i <= numInitialLoadedArticles; i++) {
-    if (i === numInitialLoadedArticles) { resultsDiv.after(loadMoreContainer); }
-    const next = iterator.next();
-    if (next.done) {
-      loadMoreContainer.remove();
-    }
-    const searchItem = next.value;
-    if (!searchItem) break;
-    const wrapper = document.createElement('div');
-    createCardBlock(searchItem, wrapper);
-    resultsDiv.append(wrapper);
-  }
-}
-
-function createCards(finalArray, resultsDiv) {
-  const numInitialLoadedArticles = 23;
-  const iterator = finalArray.values();
-  const loadMoreContainer = document.createElement('div');
-  loadMoreContainer.classList.add('article-load-more-container');
-  loadMoreContainer.innerHTML = '<button class="article-list-load-more-button">Load more</button>';
-  displayNextEntries(iterator, numInitialLoadedArticles, loadMoreContainer, resultsDiv);
-  loadMoreContainer.querySelector('button').addEventListener('click', () => {
-    displayNextEntries(iterator, numInitialLoadedArticles, loadMoreContainer, resultsDiv);
-  });
 }

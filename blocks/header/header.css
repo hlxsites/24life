@@ -36,11 +36,11 @@ header nav {
 }
 
 header nav .brand {
-  flex: 1;
   display: flex;
   align-items: center;
   padding-left: 15px;
   margin-left: 15px;
+  width: 20vw;
 }
 
 header nav .brand .logo {
@@ -153,6 +153,7 @@ header nav .tools ul {
   margin: 0;
   padding: 0;
   flex: 1;
+  justify-content: flex-end;
 }
 
 header nav .tools ul li {
@@ -238,10 +239,6 @@ header nav .tools .hamburger-close img {
     justify-content: space-between;
   }
 
-  header nav .brand {
-    flex: unset;
-  }
-
   header nav a.search-toggle {
     display: flex;
     align-items: center;
@@ -281,6 +278,7 @@ header nav .tools .hamburger-close img {
     background-color: transparent;
     align-items: center;
     margin: 0 12px 0 24px;
+    width: 25vw;
   }
 
   header nav .search {
@@ -294,6 +292,7 @@ header nav .tools .hamburger-close img {
   header nav .sections {
     display: grid;
     padding: 0;
+    width: 50vw;
   }
 
   header nav .sections .sections-list {

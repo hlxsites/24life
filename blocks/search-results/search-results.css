@@ -1,3 +1,15 @@
+.block.search-results {
+  min-height: 100vh;
+}
+
+.block.search-results .card.block {
+  display: none;
+}
+
+.block.search-results .card.block[data-block-status='loaded'] {
+  display: block;
+}
+
 div.search-page-heading {
   background: #f8f8f8;
   letter-spacing: 2px;
@@ -38,6 +50,7 @@ div.search-page-heading {
 .block.search-results .no-results {
   position: relative;
   text-align: left;
+  grid-column: 1/4;
 }
 
 .block.search-results .no-results>p {
@@ -58,20 +71,3 @@ div.search-page-heading {
   border-radius: 0;
 }
 
-.block.search-results.card-container.three-columns .results-div {
-  gap: 2em;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.block.search-results.card-container.three-columns .no-results-div {
-  display: block;
-}
-
-.block.search-results.card-container.three-columns .card-wrapper {
-  /* make sure all the cards have the same width */
-  flex-grow: 1;
-  flex-basis: 0;
-  margin: 0;
-  max-width: unset;
-}
