@@ -1,6 +1,7 @@
 /* add global styles that can be loaded post LCP here */
 
 main .youtube-video {
+  max-width: unset;
   width: 100%;
   height: auto;
   aspect-ratio: 9/5;
