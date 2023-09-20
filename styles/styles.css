@@ -151,7 +151,7 @@ p, dl, ol, ul, pre, blockquote {
 
 }
 
-p, h1, h2, h3, h4, h5, h6{
+div, p, h1, h2, h3, h4, h5, h6{
   /* when scrolling to an element, make sure it's visible despise the
    header nav being there. */
   scroll-margin: calc(var(--nav-height) + 1em);
@@ -205,12 +205,12 @@ a.button:any-link, button {
   box-sizing: border-box;
   text-decoration: none;
   border: 2px solid transparent;
-  padding: 5px 30px;
+  padding: 10px 30px;
   text-align: center;
   font-style: normal;
   font-weight: 600;
   cursor: pointer;
-  color: var(--background-color);
+  color: var(--text-color-on-black-background);
   background-color: var(--current-link-color);
   margin: 16px 0;
   white-space: nowrap;
@@ -218,20 +218,28 @@ a.button:any-link, button {
   text-overflow: ellipsis;
 }
 
-a.button:hover, a.button:focus, button:hover, button:focus {
-  background-color: var(--link-hover-color);
-  cursor: pointer;
-}
-
-button:disabled, button:disabled:hover {
-  background-color: var(--overlay-background-color);
-  cursor: unset;
+.button-container {
+    text-align: center;
 }
 
 a.button.secondary, button.secondary {
   background-color: unset;
   border: 2px solid currentcolor;
   color: var(--text-color)
+}
+
+a.button:hover, a.button:focus, button:hover, button:focus {
+    background-color: var(--link-hover-color);
+    cursor: pointer;
+}
+
+a.button.secondary:hover, button.secondary:hover {
+  color: var(--text-color-on-black-background);
+}
+
+button:disabled, button:disabled:hover {
+  background-color: var(--overlay-background-color);
+  cursor: unset;
 }
 
 main input {
@@ -350,25 +358,14 @@ main .section.no-gap + .section {
   padding-top: 0;
 }
 
-main .section.small-images img {
+main .section.small-images .default-content-wrapper img {
   width: 22%;
 }
 
-main .section.medium-images img {
+main .section.medium-images .default-content-wrapper img {
   width: 30%;
 }
 
-main .section.float-images-left img,
-main .section.float-images-alternate img.float-left{
-    float: left;
-    margin: 0 30px 30px 0;
-}
-
-main .section.float-images-right img,
-main .section.float-images-alternate img.float-right{
-    float: right;
-    margin: 0 30px 30px 0;
-}
 
 div.experts-page-heading {
   background: #f8f8f8;

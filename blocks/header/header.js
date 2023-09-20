@@ -33,7 +33,7 @@ async function buildSectionMenuContent(header, section) {
 
   CREATED[section] = true;
   try {
-    const menu = await fetch(`/fragments/menu-${section}.plain.html`);
+    const menu = await fetch(`/navigation/menu-${section}.plain.html`);
     if (menu.ok) {
       const fragment = document.createElement('div');
       fragment.classList.add('nav-fragment', section);
@@ -106,7 +106,11 @@ export default async function decorate(block) {
         </div>
         <div class="search-container">
           <div class="search-wrapper">
-            <input type="text" class="search-input" placeholder="TYPE HERE">
+            <div class='search-form'>
+              <form action='/search' method='get'>
+                <input type='search' name='q' class='search-input' placeholder="TYPE HERE"/>
+              </form>
+            </div>
           </div>
         </div>
       </div>

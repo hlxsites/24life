@@ -56,13 +56,11 @@ function createLeftOverlay(overlay, config) {
   return leftSide;
 }
 
-function scrollToFirstParagraph() {
-  for (const p of document.querySelectorAll('.default-content-wrapper p')) {
-    if (!p.querySelector('iframe')) {
-      p.scrollIntoView({ behavior: 'smooth' });
-      break;
-    }
-  }
+function scrollToNext(event) {
+  const block = event.target.closest('.magazine-hero.block');
+  const element = block?.closest('.magazine-hero-wrapper')?.nextElementSibling
+    || block?.closest('.section')?.nextElementSibling;
+  element?.scrollIntoView({ behavior: 'smooth' });
 }
 
 function createRightOverlay(overlay, config, linkTexts) {
@@ -77,7 +75,7 @@ function createRightOverlay(overlay, config, linkTexts) {
   const downButton = document.createElement('button');
   downButton.classList.add('down-button');
   downButton.innerHTML = 'Explore This Issue <span class="icon icon-arrow-down-solid"></span>';
-  downButton.addEventListener('click', scrollToFirstParagraph);
+  downButton.addEventListener('click', scrollToNext);
 
   rightSide.append(downButton);
 
@@ -137,7 +135,7 @@ function createBackgroundSlideshow(block, images) {
   });
   block.append(backgroundImages);
   block.append(slideshowButtons);
-  autoplaySlides(goToNextSlide);
+  autoplaySlides();
 
   /** detect swipe gestures on touch screens to advance slides */
   function gestureStart(event) {

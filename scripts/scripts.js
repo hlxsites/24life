@@ -15,20 +15,6 @@ import {
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
 
-export function decorateFloatImages(container) {
-  for (const section of container.querySelectorAll('.section.float-images-alternate')) {
-    let isOdd = true;
-    for (const img of section.querySelectorAll('img')) {
-      if (img.closest('div.block')) {
-        // don't link if already in a block.
-        // eslint-disable-next-line no-continue
-        continue;
-      }
-      img.classList.add(isOdd ? 'float-left' : 'float-right');
-      isOdd = !isOdd;
-    }
-  }
-}
 export function linkSmallImagesToFullImages(container) {
   for (const picture of container.querySelectorAll('.section.small-images picture')) {
     if (picture.closest('div.block') || picture.closest('a')) {
@@ -112,8 +98,12 @@ function decorateVideoLinks(main) {
     .filter(({ href }) => !!href)
   // only convert plain links
     .filter((a) => a.textContent?.trim()?.toLowerCase().startsWith('http'))
-  // don't decorate if already in a block.
-    .filter((a) => !a.closest('div.block'))
+  // don't decorate if already in a block. unless it's `columns`.
+    .filter((a) => {
+      const block = a.closest('div.block');
+      if (!block) return true;
+      return block.classList.contains('columns');
+    })
     .forEach((link) => {
       const youtubeVideoId = getYoutubeVideoId(link.href);
 
@@ -166,7 +156,7 @@ function buildAutoBlocks(main) {
  */
 // eslint-disable-next-line import/prefer-default-export
 export function decorateMain(main) {
-  // 24life does not use buttons
+  // 24life only uses buttons in article template, so we call this from there instead
   // decorateButtons(main);
 
   decorateIcons(main);
@@ -176,7 +166,6 @@ export function decorateMain(main) {
   decorateVideoLinks(main);
   decorateSpotifyLinks(main);
   linkSmallImagesToFullImages(main);
-  decorateFloatImages(main);
 }
 
 /**

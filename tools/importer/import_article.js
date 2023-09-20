@@ -9,18 +9,19 @@ export default {
   },
 
   /**
-     * Apply DOM operations to the provided document and return
-     * the root element to be then transformed to Markdown.
-     * @param {HTMLDocument} document The document
-     * @param {string} url The url of the page imported
-     * @param {string} html The raw html (the document is cleaned up during preprocessing)
-     * @param {object} params Object containing some parameters given by the import process.
-     * @returns {HTMLElement} The root element to be transformed
-     */
+   * Apply DOM operations to the provided document and return
+   * the root element to be then transformed to Markdown.
+   * @param {HTMLDocument} document The document
+   * @param {string} url The url of the page imported
+   * @param {string} html The raw html (the document is cleaned up during preprocessing)
+   * @param {object} params Object containing some parameters given by the import process.
+   * @returns {HTMLElement} The root element to be transformed
+   */
   transform: async ({
     document, url, html, params,
   }) => {
     const main = document.body;
+    params.pdfsToDownload = [];
 
     // use helper method to remove header, footer, etc.
     WebImporter.DOMUtils.remove(main, [
@@ -33,27 +34,54 @@ export default {
       '.tfl-author-image',
       '#disqus_thread',
       'blockquote.wp-embedded-content',
+      '.tfl-constant-contact-wrapper',
+      '.tfl-magazine-current-issue-footer',
+      '.fbx-modal',
+      'iframe[title="Twitter settings iframe"]',
     ]);
-
-    // currently not supporting magazine articles, TODO: handle
-    if (document.querySelector('.mb_YTPlayer')) {
-      throw new Error('Magazine article not supported');
+    main.querySelector('ul.social-list.list-inline')?.parentElement?.remove();
+    main.querySelector('form.js-cm-form')?.closest('section').remove();
+    for (const h5 of main.querySelectorAll('h5')) {
+      // e.g. https://www.24life.com/a-day-in-the-life-of-a-u-s-olympian/
+      if (h5.textContent.trim() === 'More to Explore') {
+        h5.closest('section').remove();
+      }
     }
-    if (!document.querySelector('.tfl-page-title-wrap')) {
-      throw new Error('only normal articles are supported');
-    }
 
-    // start with h1, then image
-    const h1 = main.querySelector('h1');
-    main.prepend(h1);
-    let img = main.querySelector('img');
-    if (!img) {
-      img = document.createElement('img');
-      img.src = 'http://localhost:3001/dummy-article-hero-image/media_127d7667d1e27556e2e4570b95d44f0dfc591529a.png?host=https%3A%2F%2Fmain--24life--hlxsites.hlx.page';
-    }
-    h1.after(img);
+    // detect magazine
+    const magazineSection = main.querySelector('.row.fullscreen .vid-bg,.row .fullscreen.vid-bg, .cover.fullscreen');
+    params.isMagazine = !!magazineSection;
 
+    // Metadata table
     const metadataTable = createMetadata(main, document, params);
+    const filename = new URL(url).pathname
+      .replace(/\/$/, '')
+    // eslint-disable-next-line prefer-regex-literals
+      .replace(new RegExp('^/'), '');
+    const { section, year } = params;
+    if (!section || !year) {
+      throw new Error(`missing params section or year. ${JSON.stringify(params)}`);
+    }
+    const newPath = WebImporter.FileUtils.sanitizePath(`${toClassName(section)}/${toClassName(year)}/${filename}`);
+    params.newPath = newPath;
+
+    if (magazineSection) {
+      // magazine article e.g. https://www.24life.com/make-2019-the-year-you-dont-get-hurt/
+      await detectMagazineHero(params, magazineSection, main, document);
+    } else {
+      // currently we only import magazine articles.
+      // If something else is detected, that is an error.
+      throw new Error('not a magazine article');
+      // start with h1, then image
+      // const h1 = main.querySelector('h1');
+      // main.prepend(h1);
+      // let img = main.querySelector('img');
+      // if (!img) {
+      //   img = document.createElement('img');
+      //   img.src = 'http://localhost:3001/dummy-article-hero-image/media_127d7667d1e27556e2e4570b95d44f0dfc591529a.png?host=https%3A%2F%2Fmain--24life--hlxsites.hlx.page';
+      // }
+      // h1.after(img);
+    }
 
     // after getting the metadata, remove extra elements
     WebImporter.DOMUtils.remove(main, [
@@ -72,36 +100,37 @@ export default {
 
     // adjust content specific to 24life
     useHighresImagesAndRemoveLinks(main, document);
-    moveFloatingImagesToSeparateLine(main, document, metadataTable);
+    detectPdfLinks(main, document, params);
+    handleFloatingImages(main, document, metadataTable);
     makeCaptionTextItalics(main, document);
+    removeFullWidthColumns(main, document);
     detectColumns(main, document, url);
+    detectCarousel(main, document, url);
     detectRulers(main, document, url);
     detectYoutube(main, document);
     await articleEmbeds(main, document);
     detectQuotes(main, document);
     fixInvalidLists(main, document);
+    magazineLinkMakeBoldAndItalic(main, document);
 
-    const filename = new URL(url).pathname
-      .replace(/\/$/, '')
-    // eslint-disable-next-line prefer-regex-literals
-      .replace(new RegExp('^/'), '');
-    const { section, year } = params;
-    if (!section || !year) {
-      throw new Error(`missing params section or year. ${JSON.stringify(params)}`);
-    }
-    const newPath = WebImporter.FileUtils.sanitizePath(`${toClassName(section)}/${toClassName(year)}/${filename}`);
-    return {
+    const transformationResult = [{
       element: main,
       path: newPath,
       report: {
         previewUrl: `https://main--24life--hlxsites.hlx.page${newPath}`,
       },
-    };
+    }];
+    if (params.videoToDownload) {
+      transformationResult.push(params.videoToDownload);
+    }
+    transformationResult.push(...params.pdfsToDownload);
+    return transformationResult;
   },
 };
 
 const createMetadata = (main, document, params) => {
   const { ldJSON } = params;
+  const keywords = ldJSON['@graph'].find((item) => item['@type'] === 'Article').keywords.join(', ');
 
   const meta = {};
 
@@ -109,6 +138,14 @@ const createMetadata = (main, document, params) => {
     .content
     .replace(/^- /, '');
   meta.Description = removeOldSectionNamesFromDescriptin(meta.Description);
+
+  if (params.isMagazine) {
+    meta.Issue = keywords
+      .split(',')
+      .filter((keyword) => keyword.toLowerCase().trim().startsWith('volume') && keyword.toLowerCase().includes('issue'))
+      .map((keyword) => toClassName(keyword.trim()))
+      .pop();
+  }
 
   meta.Collections = [...document.querySelectorAll('.tfl-page-title-wrap .tfl-the-tags a.tfl-tag')]
     .map((tag) => tag.textContent.trim())
@@ -121,10 +158,11 @@ const createMetadata = (main, document, params) => {
   meta.Categories = getAdditionalCategoriesFromArticleSection(ldJSON['@graph'].find((item) => item['@type'] === 'Article').articleSection);
 
   meta.Authors = ldJSON['@graph'].filter((item) => item['@type'] === 'Person')
-    .map((item) => item.name)
+    // e.g. https://www.24life.com/this-well-spiced-stew-feeds-a-crowd/
+    .map((item) => item.name.replaceAll(', Ph.D.', '').replaceAll(', MPH RD', ''))
     .join(', ');
 
-  meta.Keywords = ldJSON['@graph'].find((item) => item['@type'] === 'Article').keywords.join(', ');
+  meta.Keywords = keywords;
 
   meta['Publication Date'] = ldJSON['@graph'].find((item) => item['@type'] === 'Article').datePublished;
 
@@ -135,6 +173,86 @@ const createMetadata = (main, document, params) => {
   params.year = meta['Publication Date'].split('-')[0];
   return block;
 };
+
+async function previewAndGetMediaUrlForFile(videoPath) {
+  try {
+    const postResp = await fetch(
+      `https://admin.hlx.page/preview/hlxsites/24life/main/${videoPath}`,
+      { method: 'POST' },
+    );
+    const status = await postResp.json();
+    return status.preview.redirectLocation;
+  } catch (e) {
+    console.log('could not get media url for ', videoPath, e);
+    console.log("run with 'save to files', then try again");
+    return null;
+  }
+}
+async function publishAndGetMediaUrlForFile(videoPath) {
+  try {
+    const postResp = await fetch(
+      `https://admin.hlx.page/publish/hlxsites/24life/main/${videoPath}`,
+      { method: 'POST' },
+    );
+    const status = await postResp.json();
+    return status.live.redirectLocation;
+  } catch (e) {
+    console.log('could not get media url for ', videoPath, e);
+    console.log("run with 'save to files', then try again");
+    return null;
+  }
+}
+
+async function detectMagazineHero(params, magazineSection, main, document) {
+  let h1 = magazineSection.querySelector('h1');
+  if (!h1) {
+    // e.g. https://www.24life.com/saralyn-ward-helps-moms-feel-even-better-after-baby-than-before/
+    h1 = magazineSection.querySelector('h2');
+  }
+  const img = main.querySelector('img');
+  let videoLink;
+  const video = magazineSection.querySelector('video source[src^="http"]');
+  if (video) {
+    const extension = video.src.split('.').pop();
+
+    // check if the mp4 variant is ready
+    const helixMediaUrl = await previewAndGetMediaUrlForFile(`${params.newPath}.mp4`);
+    await publishAndGetMediaUrlForFile(`${params.newPath}.mp4`);
+    if (helixMediaUrl) {
+      videoLink = document.createElement('a');
+      videoLink.href = `https://main--24life--hlxsites.hlx.page${helixMediaUrl}`;
+      videoLink.textContent = videoLink.href;
+    } else {
+      // only download the original if the mp4 variant in Helix is not ready
+      params.videoToDownload = {
+        path: `${params.newPath}.${extension}`,
+        from: video.src,
+      };
+
+      if (extension === 'mp4') {
+        videoLink = document.createTextNode('TODO: add video link');
+      } else {
+        videoLink = document.createTextNode(`TODO: add video link (not mp4: ${params.newPath}.${extension})`);
+      }
+    }
+  } else {
+    const youtube = magazineSection.querySelector('div.player[data-video-id]');
+    if (youtube) {
+      videoLink = document.createElement('a');
+      videoLink.href = youtube.dataset.videoId;
+      videoLink.textContent = youtube.dataset.videoId;
+    } else {
+      videoLink = document.createTextNode('');
+    }
+  }
+
+  magazineSection.replaceWith(WebImporter.DOMUtils.createTable([
+    ['Article Hero Video'],
+    ['Title', h1],
+    ['Video', videoLink],
+    ['Image', img],
+  ], document));
+}
 
 /** There are a bunch of issues with hlx importer around bold text, which adds ** to the
  * final document. This is to prevent these issues. */
@@ -240,6 +358,7 @@ function cleanupForImportCompatibility(main, document) {
       strong.remove();
     });
   }
+
   function ignoredItalicSpecialChars() {
     // e.g. https://www.24life.com/the-art-of-focus/
     for (const em of main.querySelectorAll('em, i')) {
@@ -259,6 +378,16 @@ function cleanupForImportCompatibility(main, document) {
   fixUnderscoreInLinks(main, document);
   fixBoldedLinks(main, document);
   ignoredItalicSpecialChars(main, document);
+}
+
+function magazineLinkMakeBoldAndItalic(main, document) {
+  [...main.querySelectorAll('a.btn')]
+    .filter((a) => a.textContent.trim() === 'Next' || a.classList.contains('bg-dark'))
+    .forEach((a) => {
+      const em = document.createElement('em');
+      em.innerHTML = a.outerHTML;
+      a.replaceWith(em);
+    });
 }
 
 export function toClassName(name) {
@@ -282,10 +411,10 @@ function getMainSectionFromArticleSection(articleSections) {
     articleSection = articleSection.toLowerCase();
 
     if (articleSection === 'mindset'
-            || articleSection === 'lifestyle'
-            || articleSection === 'discover'
-            || articleSection === 'flexibility'
-            || articleSection === 'motivate') {
+      || articleSection === 'lifestyle'
+      || articleSection === 'discover'
+      || articleSection === 'flexibility'
+      || articleSection === 'motivate') {
       return 'focus';
     }
     if (articleSection === 'nourishment') {
@@ -306,9 +435,9 @@ function getAdditionalCategoriesFromArticleSection(articleSections) {
   return articleSections.filter((section) => {
     const lowercaseSection = section.toLowerCase();
     return lowercaseSection !== 'mindset'
-            && lowercaseSection !== 'movement'
-            && lowercaseSection !== 'nourishment'
-            && lowercaseSection !== 'regeneration';
+      && lowercaseSection !== 'movement'
+      && lowercaseSection !== 'nourishment'
+      && lowercaseSection !== 'regeneration';
   });
 }
 
@@ -339,65 +468,107 @@ function useHighresImagesAndRemoveLinks(main) {
   }
 }
 
-function moveFloatingImagesToSeparateLine(main, document, metadataTable) {
-  let hasFloatingLeftImages = false;
-  let hasFloatingRightImages = false;
+function collectContentUntil(img, stopCriteria, document) {
+  const content = document.createElement('div');
+  let next = img.nextSibling || img.parentNode.nextSibling;
+  while (next) {
+    const nextNext = next.nextSibling;
+    const parent = next.parentNode;
 
+    if (next.nodeType === Node.ELEMENT_NODE && stopCriteria(next)) {
+      break;
+    }
+    const newNext = next.nextSibling || next.parentNode.nextSibling;
+    content.append(next);
+    next = newNext;
+  }
+  return content;
+}
+
+function handleFloatingImages(main, document, metadataTable) {
   // e.g. https://www.24life.com/pack-your-bag/ has images that are part of the h3.
   // when imported, we want the image to be after the heading, not before.
   for (const img of main.querySelectorAll('h3 img.alignleft, h3 img.alignright')) {
-    if (!img.classList.contains('size-full')) {
-      if (img.classList.contains('alignleft')) {
-        hasFloatingLeftImages = true;
-      }
-      if (img.classList.contains('alignright')) {
-        hasFloatingRightImages = true;
-      }
-    }
     const h3 = img.closest('h3');
-    const p = document.createElement('p');
-    p.appendChild(img);
-    h3.after(p);
+    const para = document.createElement('p');
+    para.appendChild(img);
+    h3.after(para);
   }
 
   // e.g. https://www.24life.com/with-hard-knocks-brett-kicks-things-up-a-notch/
   // move images to their own paragraph
   for (const img of main.querySelectorAll('p img.alignleft, p img.alignright')) {
-    if (!img.classList.contains('size-full')) {
-      if (img.classList.contains('alignleft')) {
-        hasFloatingLeftImages = true;
-      }
-      if (img.classList.contains('alignright')) {
-        hasFloatingRightImages = true;
-      }
+    if (img.classList.contains('attachment-full')) {
+      // eslint-disable-next-line no-continue
+      continue;
     }
-    const parent = img.closest('p');
-    console.log('parent.childNodeCount', parent.childNodes.length);
-    if (parent.childNodes.length > 1 && parent.firstChild === img) {
-      const p = document.createElement('p');
-      p.appendChild(img);
-      parent.before(p);
+    // put everything in a Columns block until the next header or `.vc_column-inner`
+    const imageLeft = img.classList.contains('alignleft');
+
+    const sideText = collectContentUntil(
+      img,
+      (el) => el.tagName.toLowerCase().match('h[1-6]')
+        || el.classList.contains('vc_column-inner')
+        || el.tagName.toLowerCase() === 'table',
+      document,
+    );
+
+    const tableData = [
+      ['Columns'],
+    ];
+    if (imageLeft) {
+      tableData.push([img.cloneNode(true), sideText]);
+    } else {
+      tableData.push([sideText, img.cloneNode(true)]);
+    }
+    const columns = WebImporter.DOMUtils.createTable(tableData, document);
+    const columnsWrapper = document.createElement('div');
+    columnsWrapper.append(columns);
+    // if this is already inside a table, open a new table below
+    if (img.closest('table')) {
+      // e.g. https://www.24life.com/koya-webb-from-self-care-will-come-answers-and-purpose/
+      img.closest('table').after(columnsWrapper);
+      img.remove();
+    } else {
+      img.replaceWith(columnsWrapper);
     }
   }
+}
 
-  // add section metadata for floats
-  if (hasFloatingLeftImages || hasFloatingRightImages) {
-    let style;
-    if (hasFloatingLeftImages && hasFloatingRightImages) {
-      style = 'float-images-alternate';
-    } else {
-      style = hasFloatingLeftImages ? 'float-images-left' : 'float-images-right';
+async function detectPdfLinks(main, document, params) {
+  for (const a of main.querySelectorAll('a[href$=".pdf"]')) {
+    if (a.href.includes('twentyfourlife.wpenginepowered.com')) {
+      const pdfName = a.href.split('/').pop();
+      const hlxPdfPath = WebImporter.FileUtils.sanitizePath(`${params.newPath}/${pdfName}`);
+      params.pdfsToDownload.push(
+        {
+          from: a.href,
+          path: hlxPdfPath,
+        },
+      );
+      a.href = hlxPdfPath;
+      // eslint-disable-next-line no-await-in-loop
+      await previewAndGetMediaUrlForFile(hlxPdfPath);
+      // eslint-disable-next-line no-await-in-loop
+      await publishAndGetMediaUrlForFile(hlxPdfPath);
     }
-    metadataTable.before(WebImporter.DOMUtils.createTable([
-      ['Section Metadata'],
-      ['Style', `${style}, small-images`],
-    ], document));
   }
 }
 
 function makeCaptionTextItalics(main, document) {
   for (const caption of main.querySelectorAll('.wp-caption-text')) {
     caption.innerHTML = `<em>${caption.innerHTML}</em>`;
+  }
+}
+
+function removeFullWidthColumns(main, document) {
+  // e.g. https://www.24life.com/four-experts-share-daily-rituals-for-a-season-and-life-of-success/
+  for (const col of main.querySelectorAll('.row .col-md-12, .row .col-sm-12, .row .col-lg-12, .row .col-12')) {
+    const row = col.closest('.row');
+    if (row && row.childElementCount === 1) {
+      row.before(...col.childNodes);
+      row.remove();
+    }
   }
 }
 
@@ -412,15 +583,45 @@ function detectRulers(main, document, url) {
   }
 }
 
+function detectCarousel(main, document, url) {
+  // e.g. https://www.24life.com/koya-webb-from-self-care-will-come-answers-and-purpose/
+  for (const slideShow of main.querySelectorAll('.wpb_gallery_slides')) {
+    const tableData = [
+      ['Carousel'],
+    ];
+    const images = [...slideShow.querySelectorAll('img.attachment-full')].map((img) => img.src);
+    const uniqueImages = [...new Set(images)];
+    for (const src of uniqueImages) {
+      const image = document.createElement('img');
+      image.src = src;
+      tableData.push([image]);
+    }
+    slideShow.replaceWith(WebImporter.DOMUtils.createTable(tableData, document));
+  }
+  // e.g. https://www.24life.com/how-to-keep-your-feet-on-the-ground-and-head-in-the-stars/
+  for (const slideShow of main.querySelectorAll('.ts-pagawa-slideshow-container')) {
+    const tableData = [
+      ['Carousel'],
+    ];
+    for (const image of slideShow.querySelectorAll('.ps-current ul li img')) {
+      const imageAndCaption = document.createElement('div');
+      imageAndCaption.append(p(image, document));
+      imageAndCaption.append(p(image.alt, document));
+      tableData.push([imageAndCaption]);
+    }
+    slideShow.replaceWith(WebImporter.DOMUtils.createTable(tableData, document));
+  }
+}
+
 function detectColumns(main, document, url) {
-  const rows = [...main.querySelectorAll('.row :is([class^="col-"], [class*=" col-"])')]
-  // note: we ignore large columns like col-sm-12, col-md-10, etc.
+  const rows = [...main.querySelectorAll(':is([class^="col-"], [class*=" col-"])')]
+    // note: we ignore large columns like col-sm-12, col-md-10, etc.
     .filter((col) => {
       const width = [...col.classList].find((c) => c.includes('col-'))
         .split('-')[2];
       return width < 10;
     })
-    .map((col) => col.closest('.row'));
+    .map((col) => col.parentElement);
   const uniqueRows = [...new Set(rows)];
 
   let variant = '';
@@ -432,6 +633,10 @@ function detectColumns(main, document, url) {
     // convert row to columns block
     const columns = Array.from(row.querySelectorAll('[class^="col-"], [class*=" col-"]'));
     if (columns.length) {
+      if (columns.length === 2 && columns[0].classList.contains('col-md-push-6')) {
+        // swap columns, e.g. https://www.24life.com/four-experts-share-daily-rituals-for-a-season-and-life-of-success/
+        columns.reverse();
+      }
       row.textContent = '';
       row.append(WebImporter.DOMUtils.createTable([
         [`Columns ${variant}`],
@@ -540,4 +745,10 @@ function fixInvalidLists(main, document) {
     ul.before(...ul.childNodes);
     ul.remove();
   }
+}
+
+function p(content, document) {
+  const result = document.createElement('p');
+  result.append(content);
+  return result;
 }
