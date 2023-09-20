@@ -383,15 +383,15 @@ header nav .tools .hamburger-close img {
   header .nav-fragment[aria-expanded='true'],
   header .nav-fragment.expand {
     display: grid;
-    position: relative;
-    top: 8px;
+    position: absolute;
+    top: var(--nav-height);
   }
 
   header .nav-fragment.magazine[aria-expanded='true'],
   header .nav-fragment.magazine.expand {
     display: unset;
-    position: relative;
-    top: 8px;
+    position: absolute;
+    top: var(--nav-height);
   }
 
   header .nav-fragment .leftcolumn {
