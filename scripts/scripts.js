@@ -122,7 +122,7 @@ function decorateVideoLinks(main) {
         loadScript(`${window.hlx.codeBasePath}/blocks/embed/lite-yt-embed.js`);
         const ltYoutube = document.createElement('lite-youtube');
         ltYoutube.setAttribute('videoid', youtubeVideoId);
-        ltYoutube.innerHTML = `<a href="https://www.youtube-nocookie.com/embed/${youtubeVideoId}?rel=0" class="lty-playbtn" title="Play Video"> `;
+        ltYoutube.setAttribute('params', 'rel=0');
         link.replaceWith(ltYoutube);
       }
     });
