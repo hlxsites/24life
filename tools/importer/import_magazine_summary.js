@@ -57,7 +57,7 @@ export default {
       },
     };
   },
-}
+};
 
 const createMetadata = (main, document) => {
   const meta = {};
@@ -66,18 +66,18 @@ const createMetadata = (main, document) => {
   const block = generateBlock(document, meta, 'Metadata');
   main.append(block);
   return meta;
-}
+};
 
 const createMagazineSummary = async (main, document, params) => {
   const magazineHero = {};
-  const year = document.querySelector('meta[property="article:modified_time"').content.split('-')[0];
+  const [year] = document.querySelector('meta[property="article:modified_time"').content.split('-');
   const ogURL = `https://main--24life--hlxsites.hlx.page${document.querySelector('meta[property="og:url"]').content.replace(/\/$/, '')}`;
   magazineHero.Link = link(ogURL, ogURL);
-  magazineHero.Title = document.querySelector('meta[property="og:title"]').content.split(' ')[0];
+  magazineHero.Title = document.querySelector('meta[property="og:title"]').content.split(/-/)[0];
   const pillars = document.querySelectorAll('.tfl-magazine-current-issue-footer .tfl-pt80-special .wpb_wrapper .wpb_wrapper');
-  
+
   if (pillars.length > 0) {
-    pillars.forEach((section) => {
+    for (const section of pillars) {
       const labelTag = section.querySelector('h5.tfl-anm');
       if (labelTag) {
         const label = replacePillar(labelTag.innerHTML);
@@ -87,48 +87,64 @@ const createMagazineSummary = async (main, document, params) => {
         const labelDiv = document.createElement('div');
         labelDiv.innerHTML = label;
         grpArray.push(labelDiv);
-        links.forEach((a) => {
+        
+        for (const a of links) {
+          const aYear = await getArticleYear(a.href);
           let sectionDiv = document.createElement('div');
-          sectionDiv = link(a.innerHTML, a.href, group.toLowerCase(), year);
+          sectionDiv = link(a.innerHTML, a.href, group.toLowerCase(), aYear);
           grpArray.push(sectionDiv);
-        });
+        }
         magazineHero[group] = grpArray;
       }
-    });
+    }
     magazineHero.Image = [];
     const element = document.querySelector('meta[property="og:image"]').content;
     magazineHero.Image.push(createImg(element));
     main.append(generateBlock(document, magazineHero, 'Magazine Summary'));
   }
-};
+}
+
+
+async function getArticleYear(url) {
+  try {
+    const response = await fetch(url);
+    const html = await response.text();
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const dateMetaTag = doc.querySelector('meta[property="article:modified_time"') || doc.querySelector('meta[property="article:published_time"');
+    const publicationDate = dateMetaTag?.getAttribute('content');
+    return new Date(publicationDate).getFullYear();
+  } catch (error) {
+    console.error(`Error fetching or parsing the web page: ${error.message}`);
+    return null;
+  }
+}
 
 function replacePillar(label) {
   const words = label.split(/ /);
   const wordReplacements = {
-    "Mindset-": "Focus -",
-    "Movement": "Fitness",
-    "Nourishment": "Fuel",
-    "Regeneration": "Recover",
+    'Mindset-': 'Focus -',
+    'Movement': 'Fitness',
+    'Nourishment': 'Fuel',
+    'Regeneration': 'Recover',
   };
   const firstWord = words[0];
   const replacement = wordReplacements[firstWord];
-  
+
   if (replacement) {
     words[0] = replacement;
     return words.join(' ');
-  } else {
-    return label;
   }
+  return label;
 }
 
 function link(text, url, group = null, year = null) {
   const article = document.createElement('a');
   console.log(`url: ${text} - ${url}`);
   let newUrl = '';
-  if(group && year) {
-    newUrl = new URL(`https://main--24life--hlxsites.hlx.page/${group}/${year}/${url}`);
+  if (group && year) {
+    newUrl = new URL(`https://main--24life--hlxsites.hlx.page/${group}/${year}${url.replace(/\/$/, '')}`);
   } else {
-    newUrl = new URL(`https://main--24life--hlxsites.hlx.page/${url}`);
+    newUrl = new URL(url);
   }
   article.href = newUrl.href;
   article.textContent = text;
