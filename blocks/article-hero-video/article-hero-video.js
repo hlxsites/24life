@@ -1,4 +1,4 @@
-import { getMetadata, readBlockConfig } from '../../scripts/lib-franklin.js';
+import { getMetadata, readBlockConfig, toClassName } from '../../scripts/lib-franklin.js';
 import { getYoutubeVideoId } from '../../scripts/scripts.js';
 
 export default function decorate(block) {
