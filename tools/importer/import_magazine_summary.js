@@ -104,7 +104,6 @@ const createMagazineSummary = async (main, document, params) => {
   }
 }
 
-
 async function getArticleYear(url) {
   try {
     const response = await fetch(url);
