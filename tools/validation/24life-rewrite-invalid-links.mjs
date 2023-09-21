@@ -247,8 +247,6 @@ async function findLinksToChange() {
         .filter((file) => file.endsWith(".html"))
         .map((file) => dir + "/" + file)
 
-    htmlFiles = ["./24life/fitness/2019/the-universal-warm-up-and-cool-down.html"];
-
     await Promise.all(htmlFiles.map(async (file) => {
         const key = file.replace("./24life/", "/").replace(".html", "");
         const links = await getAllLinks(file);
