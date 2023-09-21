@@ -40,6 +40,13 @@ function linkMapping(url) {
         }
         return redirectFullUrl;
     }
+    if(url.includes('24life--hlxsites.hlx')){
+        const isValidHelixPage = Object.values(redirects).includes(new URL(url).pathname);
+        const redirect = getRedirectFullUrl(url);
+        if(!isValidHelixPage && redirect){
+            return redirect;
+        }
+    }
 }
 
 function validateLink(url) {
