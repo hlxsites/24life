@@ -17,6 +17,7 @@ header.header-wrapper {
   border-bottom: 6px solid var(--accent-color);
   font-family: var(--body-font-family);
   background-color: var(--background-color);
+  height: var(--nav-height);
 }
 
 header .header.block {
@@ -382,11 +383,15 @@ header nav .tools .hamburger-close img {
   header .nav-fragment[aria-expanded='true'],
   header .nav-fragment.expand {
     display: grid;
+    position: absolute;
+    top: var(--nav-height);
   }
 
   header .nav-fragment.magazine[aria-expanded='true'],
   header .nav-fragment.magazine.expand {
     display: unset;
+    position: absolute;
+    top: var(--nav-height);
   }
 
   header .nav-fragment .leftcolumn {

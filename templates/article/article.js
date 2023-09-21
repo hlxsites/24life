@@ -151,5 +151,5 @@ async function createMagazineFooter() {
     decorateMain(fragment);
     await loadBlocks(fragment);
   }
-  return fragment;
+  return fragment.firstElementChild;
 }

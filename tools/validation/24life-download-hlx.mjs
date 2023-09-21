@@ -49,6 +49,12 @@ async function loadUrl(url) {
 
     try {
         const [folderPath, filename] = getFolderPathAndFilename(url);
+
+        if(fs.existsSync(`${folderPath}/${filename}`)) {
+            console.log('already downloaded: ', url);
+            return;
+        }
+
         const response = await fetch(url, {redirect: 'error'});
         if (response.ok) {
 
