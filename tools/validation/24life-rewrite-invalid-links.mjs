@@ -20,7 +20,16 @@ const redirects = await loadRedirects();
  * @returns {string|undefined} return the url to change to, or null if no change is required
  */
 function linkMapping(url) {
-    if(url.startsWith("https://www.24life.com/?s=")) {
+    if (url.includes("//magazine.24life.com/")) {
+        // e.g. http://magazine.24life.com/vol3iss6/play-full-out--summer-fresh-anywhere-26V6-883JI.html
+        // http://magazine.24life.com/vol3iss11
+        const volume = url.match(/vol([0-9]+)iss[0-9]+/)[1];
+        const issue = url.match(/vol[0-9]+iss([0-9]+)/)[1];
+        if (!volume || !issue) throw new Error("volume or issue not found");
+        return `https://main--24life--hlxsites.hlx.page/magazine/volume-${volume}-issue-${issue}`
+    }
+
+    if (url.includes("//www.24life.com/?s=")) {
         return "https://main--24life--hlxsites.hlx.page/search?s=" + new URL(url).searchParams.get("s");
     }
     if (url.startsWith("http") && url.includes("24life.com/")) {
@@ -34,14 +43,11 @@ function linkMapping(url) {
 }
 
 function validateLink(url) {
-    if(url.startsWith("http://magazine.24life.com/")){
-        return "magazine.24life.com link"
-    }
-
-    if (url.includes("?") && (url.includes("24life.com") || url.includes(".hlx."))) {
+    if (!url.includes("//www.24life.com/?s=")
+        && url.includes("?") && !url.endsWith("?") && (url.includes("24life.com") || url.includes(".hlx."))) {
         return "url includes ?";
     }
-    if(url.endsWith("'")) {
+    if (url.endsWith("'")) {
         return "url ends with '"
     }
     if (url.includes("twentyfourlife.wpenginepowered")) {
@@ -105,6 +111,9 @@ async function main() {
 async function rewriteDocx(file, outputDir, changes) {
     const filePath = path.join(mountDirectory, file + ".docx");
     const targetFilePath = path.join(outputDir, file + ".docx");
+    function escapeRegex(string) {
+        return string.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
+    }
 
     // copy file to target, so it can be modified multiple times
     const parentDir = targetFilePath.substring(0, targetFilePath.lastIndexOf("/"));
@@ -113,8 +122,8 @@ async function rewriteDocx(file, outputDir, changes) {
     for (const link of changes) {
         if (link.newurl) {
             await fs.copyFile(targetFilePath, `${targetFilePath}.tmp.docx`);
-            const command = `docxtools "${targetFilePath}.tmp.docx" replace-links "${link.link}" "${link.newurl}" "${targetFilePath}"`;
-            // console.debug(command)
+            const command = `docxtools '${targetFilePath}.tmp.docx' replace-links '^${escapeRegex(link.link)}$' '${(link.newurl)}' '${targetFilePath}'`;
+            console.debug(command)
             console.log(await execShellCommand(command))
             await fs.unlink(`${targetFilePath}.tmp.docx`);
         } else {
@@ -145,7 +154,7 @@ async function validateLinks(links, key, allLinkChanges, allLinkWarnings) {
             linkWarnings.push({link: link.href, text: link.textContent, warning});
         }
 
-        if(!warning) {
+        if (!warning) {
             // only change links if there is no warning
             const newurl = linkMapping(link.href);
             if (newurl) {
