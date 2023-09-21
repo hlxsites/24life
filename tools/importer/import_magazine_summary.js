@@ -1,5 +1,6 @@
 /* global WebImporter */
-/* eslint-disable no-console, class-methods-use-this, no-restricted-syntax, no-unused-vars, no-await-in-loop, prefer-destructuring */
+/* eslint-disable no-console, class-methods-use-this, no-restricted-syntax,
+ no-unused-vars, no-await-in-loop, prefer-destructuring */
 
 export default {
   preprocess: ({
