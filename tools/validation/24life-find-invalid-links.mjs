@@ -1,9 +1,12 @@
 /*  looks for bad links in the final franklin output.
  */
 import {JSDOM} from "jsdom";
-
 import fs from 'fs/promises'
 import {readdir} from "node:fs/promises";
+import readline from "readline";
+import path from "path";
+
+import {exec} from "child_process";
 
 const [major, minor, patch] = process.versions.node.split('.').map(Number)
 if (major < 20) {
@@ -11,6 +14,8 @@ if (major < 20) {
     process.exit(1)
 }
 
+const mountDirectory = `/Users/wingeier/Library/CloudStorage/OneDrive-Adobe/24life`;
+const outputDir = `./24life-rewritten`;
 
 const redirects = await loadRedirects();
 const allIssues = {}
@@ -19,26 +24,90 @@ const dir = `./24life`;
 let htmlFiles = (await readdir(dir, {recursive: true}))
     .filter((file) => file.endsWith(".html"))
     .map((file) => dir + "/" + file)
-// htmlFiles = htmlFiles.slice(0, 400)
+htmlFiles = htmlFiles.slice(0, 300)// TODO: remove
 
 await Promise.all(htmlFiles.map(async (file) => validateFile(file)));
 
 // print result
+if (!Object.keys(allIssues).length) {
+    console.log("no issues found");
+    process.exit(0);
+}
+
 Object.keys(allIssues).forEach((key) => {
     console.log("https://main--24life--hlxsites.hlx.page" + key);
     console.log(allIssues[key]);
 });
+console.log("total issues:", Object.keys(allIssues).length);
+Object.values(allIssues).flatMap((issues) => issues).forEach((issue) => {
+    console.log(issue.link, "→", issue.redirect);
+});
 
+
+// ask user for confirmation
+const answer = await new Promise(resolve => {
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+    rl.question(`Do you want to rewrite the urls for ${Object.keys(allIssues).length} issues? (y/N)`, resolve)
+})
+if (answer !== "y") {
+    console.log("aborting")
+    process.exit(0);
+}
+
+// create output directory
+await fs.mkdir(outputDir, {recursive: true});
+
+
+// rewrite urls
+for (const file of Object.keys(allIssues)) {
+    await rewriteDocx(file);
+}
+console.log("rewriting changed files in ", outputDir)
+
+console.log("urls: ", Object.keys(allIssues).map((key) => "https://main--24life--hlxsites.hlx.page" + key).join("\n"));
+console.log("files: ", Object.keys(allIssues).map((key) => "24life" + key + ".html").join(" "));
+
+process.exit(0);
+
+
+async function rewriteDocx(file) {
+    const filePath = path.join(mountDirectory, file + ".docx");
+    const targetFilePath = path.join(outputDir, file + ".docx");
+
+    // copy file to target, so it can be modified multiple times without overwriting the original
+    const parentDir = targetFilePath.substring(0, targetFilePath.lastIndexOf("/"));
+    await fs.mkdir(parentDir, {recursive: true});
+    await fs.copyFile(filePath, targetFilePath);
+
+    for (const link of allIssues[file]) {
+        if (link.redirect) {
+            await fs.copyFile(targetFilePath, `${targetFilePath}.tmp.docx`);
+            const command = `docxtools "${targetFilePath}.tmp.docx" replace-links "${link.link}" "${link.redirect}" "${targetFilePath}"`;
+            // console.debug(command)
+            console.log(await execShellCommand(command))
+            await fs.unlink(`${targetFilePath}.tmp.docx`);
+        } else {
+            console.log("--")
+            console.log(file)
+            console.log("skipping", link.link, "because no redirect found")
+        }
+    }
+}
 
 function hasRedirect(url) {
     return !!getRedirect(url);
 }
+
 function getRedirect(url) {
-    return redirects[new URL(url).pathname];
+    return redirects[new URL(url).pathname] || redirects[new URL(url).pathname + "/"];
 }
+
 function getRedirectFullUrl(url) {
     const result = getRedirect(url);
-    if(result) {
+    if (result) {
         return "https://main--24life--hlxsites.hlx.page" + result;
     }
 }
@@ -51,7 +120,7 @@ async function validateFile(filePath) {
     const links = dom.window.document.querySelectorAll('a[href]');
     for (let link of links) {
         // console.log(link.href, link.textContent)
-        if (link.href.startsWith("https://www.24life.com")) {
+        if (link.href.startsWith("http") && link.href.includes("24life.com/")) {
             issues.push({link: link.href, text: link.textContent, redirect: getRedirectFullUrl(link.href)})
         }
         if (link.href.includes("twentyfourlife.wpenginepowered")) {
@@ -80,3 +149,21 @@ async function loadRedirects() {
     return redirects;
 }
 
+
+/**
+ * Executes a shell command and return it as a Promise.
+ * @param cmd {string}
+ * @return {Promise<string>}
+ */
+function execShellCommand(cmd) {
+
+    return new Promise((resolve, reject) => {
+        exec(cmd, (error, stdout, stderr) => {
+            if (error) {
+                console.warn(error);
+                reject(error);
+            }
+            resolve(stdout ? stdout : stderr);
+        });
+    });
+}
