@@ -5,26 +5,20 @@ import fs from 'fs/promises'
 import {readdir} from "node:fs/promises";
 import readline from "readline";
 import path from "path";
-
 import {exec} from "child_process";
-
-const [major, minor, patch] = process.versions.node.split('.').map(Number)
-if (major < 20) {
-    console.error("node version 20 or higher required")
-    process.exit(1)
-}
 
 const mountDirectory = `/Users/wingeier/Library/CloudStorage/OneDrive-Adobe/24life`;
 const outputDir = `./24life-rewritten`;
+const dir = `./24life`;
+
+requireNode20();
 
 const redirects = await loadRedirects();
 const allIssues = {}
 
-const dir = `./24life`;
 let htmlFiles = (await readdir(dir, {recursive: true}))
     .filter((file) => file.endsWith(".html"))
     .map((file) => dir + "/" + file)
-htmlFiles = htmlFiles.slice(0, 300)// TODO: remove
 
 await Promise.all(htmlFiles.map(async (file) => validateFile(file)));
 
@@ -68,7 +62,7 @@ for (const file of Object.keys(allIssues)) {
 console.log("rewriting changed files in ", outputDir)
 
 console.log("urls: ", Object.keys(allIssues).map((key) => "https://main--24life--hlxsites.hlx.page" + key).join("\n"));
-console.log("files: ", Object.keys(allIssues).map((key) => "24life" + key + ".html").join(" "));
+console.log("files: ", Object.keys(allIssues).map((key) => "./24life" + key + ".html").join(" "));
 
 process.exit(0);
 
@@ -81,19 +75,23 @@ async function rewriteDocx(file) {
     const parentDir = targetFilePath.substring(0, targetFilePath.lastIndexOf("/"));
     await fs.mkdir(parentDir, {recursive: true});
     await fs.copyFile(filePath, targetFilePath);
-
+    let anyChanges = false;
     for (const link of allIssues[file]) {
         if (link.redirect) {
             await fs.copyFile(targetFilePath, `${targetFilePath}.tmp.docx`);
             const command = `docxtools "${targetFilePath}.tmp.docx" replace-links "${link.link}" "${link.redirect}" "${targetFilePath}"`;
-            // console.debug(command)
+            console.debug(command)
             console.log(await execShellCommand(command))
             await fs.unlink(`${targetFilePath}.tmp.docx`);
+            anyChanges = true;
         } else {
             console.log("--")
             console.log(file)
             console.log("skipping", link.link, "because no redirect found")
         }
+    }
+    if (!anyChanges) {
+        await fs.unlink(targetFilePath);
     }
 }
 
@@ -121,7 +119,12 @@ async function validateFile(filePath) {
     for (let link of links) {
         // console.log(link.href, link.textContent)
         if (link.href.startsWith("http") && link.href.includes("24life.com/")) {
-            issues.push({link: link.href, text: link.textContent, redirect: getRedirectFullUrl(link.href)})
+            const redirectFullUrl = getRedirectFullUrl(link.href);
+            if (!redirectFullUrl) {
+                // assume the same pathname still exists
+                return "https://main--24life--hlxsites.hlx.page" + new URL(link.href).pathname
+            }
+            issues.push({link: link.href, text: link.textContent, redirect: redirectFullUrl})
         }
         if (link.href.includes("twentyfourlife.wpenginepowered")) {
             issues.push({link: link.href, text: link.textContent})
@@ -156,7 +159,6 @@ async function loadRedirects() {
  * @return {Promise<string>}
  */
 function execShellCommand(cmd) {
-
     return new Promise((resolve, reject) => {
         exec(cmd, (error, stdout, stderr) => {
             if (error) {
@@ -166,4 +168,12 @@ function execShellCommand(cmd) {
             resolve(stdout ? stdout : stderr);
         });
     });
+}
+
+function requireNode20() {
+    const [major, minor, patch] = process.versions.node.split('.').map(Number)
+    if (major < 20) {
+        console.error("node version 20 or higher required")
+        process.exit(1)
+    }
 }
