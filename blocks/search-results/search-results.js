@@ -3,7 +3,7 @@ import { loadBlock, toClassName } from '../../scripts/lib-franklin.js';
 
 export default async function decorate(block) {
   block.innerHTML = '';
-  const searchTerm = new URLSearchParams(window.location.search).get('q');
+  const searchTerm = new URLSearchParams(window.location.search).get('s');
   block.classList.add('card-container', 'three-columns');
   if (searchTerm) {
     const elementHeading = block.parentNode.parentNode.parentNode.querySelector('.section.search-page-heading');
