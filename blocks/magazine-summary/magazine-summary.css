@@ -50,7 +50,7 @@ main .section.magazine-summary-container {
   .magazine-summary {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    gap: 30px;
     max-width: 1174px;
   }
 
@@ -63,32 +63,30 @@ main .section.magazine-summary-container {
     width: 350px;
   }
 
-  .magazine-summary.navigation .col1 {
+  .nav-fragment .magazine-summary .col1 {
     text-align: right;
     padding-bottom: 30px;
   }
 
-  .magazine-summary.navigation .col1 h4 {
+  .magazine-summary .col1 h4 {
     margin: 0;
-    padding-bottom: 20px;
   }
 
-  .magazine-summary.navigation .col2,
-  .magazine-summary.navigation .col3 {
+  .magazine-summary .col2,
+  .magazine-summary .col3 {
     padding-top: 30px;
-    width: 300px;
+    width: 95%;
   }
 
-  .magazine-summary.navigation picture {
+  .magazine-summary picture {
     height: 275px;
-    padding-top: 50px;
   }
 
-  .magazine-summary.navigation img {
+  .magazine-summary img {
     height: 250px;
   }
 
-  .magazine-summary.navigation a.button {
+  .magazine-summary a.button {
     border: 2px solid #000;
     padding: 10px 15px;
     background-color: transparent;
@@ -97,7 +95,7 @@ main .section.magazine-summary-container {
     line-height: unset;
   }
 
-  .magazine-summary.navigation a.button:hover {
+  .magazine-summary a.button:hover {
     background-color: var(--current-link-color);
     color: var(--text-color-on-black-background);
   }
