@@ -123,7 +123,7 @@ async function rewriteDocx(file, outputDir, changes) {
         if (link.newurl) {
             await fs.copyFile(targetFilePath, `${targetFilePath}.tmp.docx`);
             const command = `docxtools '${targetFilePath}.tmp.docx' replace-links '^${escapeRegex(link.link)}$' '${(link.newurl)}' '${targetFilePath}'`;
-            console.debug(command)
+            // console.debug(command)
             console.log(await execShellCommand(command))
             await fs.unlink(`${targetFilePath}.tmp.docx`);
         } else {
