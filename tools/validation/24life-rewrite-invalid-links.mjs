@@ -20,6 +20,9 @@ const redirects = await loadRedirects();
  * @returns {string|undefined} return the url to change to, or null if no change is required
  */
 function linkMapping(url) {
+    if(url.startsWith("https://www.24life.com/?s=")) {
+        return "https://main--24life--hlxsites.hlx.page/search?s=" + new URL(url).searchParams.get("s");
+    }
     if (url.startsWith("http") && url.includes("24life.com/")) {
         let redirectFullUrl = getRedirectFullUrl(url);
         if (!redirectFullUrl && !url.endsWith("/")) {
@@ -31,15 +34,12 @@ function linkMapping(url) {
 }
 
 function validateLink(url) {
-    if(url.includes("24life.com/?s=")){
-        return "search result link"
-    }
     if(url.startsWith("http://magazine.24life.com/")){
         return "magazine.24life.com link"
     }
 
-    if(url.includes("?")){
-        return "url includes ?"
+    if (url.includes("?") && (url.includes("24life.com") || url.includes(".hlx."))) {
+        return "url includes ?";
     }
     if(url.endsWith("'")) {
         return "url ends with '"
@@ -68,16 +68,18 @@ async function main() {
         process.exit(0);
     }
 
-    for (const key of Object.keys(allLinkChanges)) {
-        console.log("https://main--24life--hlxsites.hlx.page" + key);
-        console.log(allLinkChanges[key]);
-    }
     console.log("----")
     console.log("Warnings:")
-
     for (const key of Object.keys(allLinkWarnings)) {
         console.log("https://main--24life--hlxsites.hlx.page" + key);
         console.log(allLinkWarnings[key]);
+    }
+
+    console.log("----")
+    console.log("Changes:")
+    for (const key of Object.keys(allLinkChanges)) {
+        console.log("https://main--24life--hlxsites.hlx.page" + key);
+        console.log(allLinkChanges[key]);
     }
 
     console.log("----")
