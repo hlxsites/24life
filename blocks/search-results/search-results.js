@@ -17,7 +17,7 @@ export default async function decorate(block) {
     // noinspection ES6MissingAwait
     loadResults(tokenizedSearchWords, block);
   } else {
-    window.location.href = '/';
+    noResults(block);
   }
 }
 
