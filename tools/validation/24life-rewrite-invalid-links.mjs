@@ -40,8 +40,11 @@ function linkMapping(url) {
         }
         return redirectFullUrl;
     }
-    if(url.includes('24life--hlxsites.hlx')){
-        const isValidHelixPage = Object.values(redirects).includes(new URL(url).pathname);
+    if(url.includes('24life--hlxsites.hlx') || url.startsWith('/')) {
+        // internal link
+        const urlObj = new URL(url, "https://main--24life--hlxsites.hlx.page/");
+        const pathname = urlObj.pathname;
+        const isValidHelixPage = Object.values(redirects).includes(pathname);
         const redirect = getRedirectFullUrl(url);
         if(!isValidHelixPage && redirect){
             return redirect;
@@ -140,9 +143,14 @@ async function rewriteDocx(file, outputDir, changes) {
 }
 
 function getRedirectFullUrl(url) {
-    const redirect = redirects[new URL(url).pathname] || redirects[new URL(url).pathname + "/"];
+    const origUrl = new URL(url, "https://main--24life--hlxsites.hlx.page");
+    const pathname =  origUrl.pathname;
+    const redirect = redirects[pathname] || redirects[pathname + "/"];
     if (redirect) {
-        return "https://main--24life--hlxsites.hlx.page" + redirect;
+        const newUrl = new URL("https://main--24life--hlxsites.hlx.page" + redirect);
+        newUrl.search = origUrl.search;
+        newUrl.hash = origUrl.hash;
+        return newUrl.toString();
     }
 }
 
@@ -156,6 +164,7 @@ async function validateLinks(links, key, allLinkChanges, allLinkWarnings) {
     const linkChanges = []
     const linkWarnings = []
     for (let link of links) {
+
         const warning = validateLink(link.href);
         if (warning) {
             linkWarnings.push({link: link.href, text: link.textContent, warning});
@@ -237,6 +246,8 @@ async function findLinksToChange() {
     let htmlFiles = (await readdir(dir, {recursive: true}))
         .filter((file) => file.endsWith(".html"))
         .map((file) => dir + "/" + file)
+
+    htmlFiles = ["./24life/fitness/2019/the-universal-warm-up-and-cool-down.html"];
 
     await Promise.all(htmlFiles.map(async (file) => {
         const key = file.replace("./24life/", "/").replace(".html", "");
