@@ -86,11 +86,17 @@
 
 .article-slides .slide .text .title {
   margin: 0;
-  font-size: 2.5em;
+  font-size: 1.5em;
+  line-height: 1.2;
   font-weight: bold;
-  line-height: 1;
 }
 
+@media screen and (min-width: 600px) {
+  .article-slides .slide .text .title {
+    font-size: 2.5em;
+    line-height: 1;
+  }
+}
 
 .article-slides .slide .text .author {
   text-transform: uppercase;
