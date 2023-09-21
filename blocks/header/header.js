@@ -98,22 +98,12 @@ export default async function decorate(block) {
       <a href="#" class="hamburger-toggle" role="button" title="open menu" aria-expanded="false" aria-controls="main-nav-sections,main-menu-tools">
         <span class="icon icon-hamburger"></span>
       </a>
-
-      <div class="search">
-        <div class="search-label">
+       <div class="search">
+        <a href="/search" class="search-label">
           <span class="icon icon-search"></span>
           <div class="title">Search Site</div>
+        </a>
         </div>
-        <div class="search-container">
-          <div class="search-wrapper">
-            <div class='search-form'>
-              <form action='/search' method='get'>
-                <input type='search' name='q' class='search-input' placeholder="TYPE HERE"/>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
     `;
 
     // fill in the content from nav doc
@@ -165,19 +155,6 @@ export default async function decorate(block) {
       } else {
         e.currentTarget.setAttribute('aria-expanded', 'true');
         document.querySelector('header nav').setAttribute('aria-expanded', 'true');
-      }
-    });
-
-    // for the search toggle icon
-    nav.querySelector('.search-label').addEventListener('click', (e) => {
-      e.preventDefault();
-      const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true';
-      if (isExpanded) {
-        e.currentTarget.setAttribute('aria-expanded', 'false');
-        document.querySelector('header nav .search .search-container').setAttribute('aria-expanded', 'false');
-      } else {
-        e.currentTarget.setAttribute('aria-expanded', 'true');
-        document.querySelector('header nav .search .search-container').setAttribute('aria-expanded', 'true');
       }
     });
 
