@@ -2,5 +2,8 @@
   "extends": "stylelint-config-standard",
   "rules": {
     "declaration-no-important": true
-  }
+  },
+  "ignoreFiles": [
+    "pagefind/**"
+  ]
 }
