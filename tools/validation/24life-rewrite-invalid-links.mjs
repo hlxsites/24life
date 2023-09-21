@@ -31,6 +31,16 @@ function linkMapping(url) {
 }
 
 function validateLink(url) {
+    if(url.includes("24life.com/?s=")){
+        return "search result link"
+    }
+    if(url.startsWith("http://magazine.24life.com/")){
+        return "magazine.24life.com link"
+    }
+
+    if(url.includes("?")){
+        return "url includes ?"
+    }
     if(url.endsWith("'")) {
         return "url ends with '"
     }
@@ -128,13 +138,17 @@ async function validateLinks(links, key, allLinkChanges, allLinkWarnings) {
     const linkChanges = []
     const linkWarnings = []
     for (let link of links) {
-        const newurl = linkMapping(link.href);
-        if (newurl) {
-            linkChanges.push({link: link.href, text: link.textContent, newurl});
-        }
         const warning = validateLink(link.href);
         if (warning) {
             linkWarnings.push({link: link.href, text: link.textContent, warning});
+        }
+
+        if(!warning) {
+            // only change links if there is no warning
+            const newurl = linkMapping(link.href);
+            if (newurl) {
+                linkChanges.push({link: link.href, text: link.textContent, newurl});
+            }
         }
     }
 
