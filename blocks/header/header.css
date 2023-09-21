@@ -1,3 +1,7 @@
+header {
+  height: var(--nav-height);
+}
+
 /* Below 992px */
 header nav a:any-link {
   color: currentcolor;
@@ -378,7 +382,7 @@ header nav .tools .hamburger-close img {
   header .nav-fragment[aria-expanded='false'] {
     display: none;
   }
-  
+
   header .nav-fragment[aria-expanded='true'],
   header .nav-fragment.expand {
     display: grid;
