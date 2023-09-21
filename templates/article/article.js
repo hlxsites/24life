@@ -55,7 +55,9 @@ export default async function decorate(doc) {
     newSectionWrapper.append(createArticleCarousel());
   }
 
-  decorateButtons(doc);
+  for (const el of doc.querySelectorAll('.default-content-wrapper')) {
+    decorateButtons(el);
+  }
 }
 
 function createNewSection() {
