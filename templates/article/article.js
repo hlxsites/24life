@@ -46,7 +46,7 @@ export default async function decorate(doc) {
   if (getMetadata('issue')) {
     const magSummary = createNewSection();
     firstSection.parentElement.append(magSummary);
-    magSummary.append((await createMagazineFooter()));
+    await createMagazineFooter(magSummary);
   } else {
     // add a thin gray line to break this up from the previous section
     const grayLine = document.createElement('hr');
@@ -146,18 +146,14 @@ function createSocialMediaButtons() {
   return socialMediaButtons;
 }
 
-async function createMagazineFooter() {
+async function createMagazineFooter(section) {
   const issue = getMetadata('issue').toLowerCase();
   const summary = await fetch(`/navigation/magazine-summary/${issue}.plain.html`);
-  const fragment = document.createElement('div');
   if (summary.ok) {
-    fragment.innerHTML = await summary.text();
-    const wrapper = fragment.firstElementChild;
+    section.innerHTML = await summary.text();
+    const wrapper = section.firstElementChild;
     decorateBlock(wrapper.firstElementChild);
-    return wrapper;
   }
-
   // eslint-disable-next-line no-console
   console.error(`issue summary ${issue} cannot be loaded`);
-  return null;
 }
