@@ -10,5 +10,6 @@ export default async function decorate(block) {
   searchFormDiv.id = 'search-form';
   block.append(searchFormDiv);
 
+  // eslint-disable-next-line no-undef,no-new
   new PagefindUI({ element: '#search-form', showSubResults: true });
 }
