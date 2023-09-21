@@ -31,6 +31,9 @@ function linkMapping(url) {
 }
 
 function validateLink(url) {
+    if(url.endsWith("'")) {
+        return "url ends with '"
+    }
     if (url.includes("twentyfourlife.wpenginepowered")) {
         return "url includes twentyfourlife.wpenginepowered"
     }
