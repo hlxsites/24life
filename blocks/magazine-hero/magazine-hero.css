@@ -58,7 +58,7 @@
 }
 
 .magazine-hero .text-overlay .left-side h1 {
-  font-size: 53px;
+  font-size: 23px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.15em;
@@ -265,5 +265,11 @@
   100% {
     transform:translateX(0);
     opacity: 1;
+  }
+}
+
+@media screen and (min-width: 600px) {
+  .magazine-hero .text-overlay .left-side h1 {
+    font-size: 53px;
   }
 }
