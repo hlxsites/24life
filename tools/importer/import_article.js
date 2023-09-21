@@ -20,6 +20,9 @@ export default {
   transform: async ({
     document, url, html, params,
   }) => {
+    // eslint-disable-next-line no-constant-condition,no-self-compare
+    if (1 === 1) throw new Error('Import process is complete. Do not run this script again, as it might override manually changed pages.');
+
     const main = document.body;
     params.pdfsToDownload = [];
 
