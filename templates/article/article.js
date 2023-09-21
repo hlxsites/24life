@@ -1,7 +1,6 @@
 import {
-  buildBlock, decorateBlock, decorateButtons, decorateIcons, getMetadata, toClassName, loadBlocks,
+  buildBlock, decorateBlock, decorateButtons, decorateIcons, getMetadata, loadBlock, toClassName,
 } from '../../scripts/lib-franklin.js';
-import { decorateMain } from '../../scripts/scripts.js';
 
 export default async function decorate(doc) {
   if (getMetadata('section')) {
@@ -15,8 +14,11 @@ export default async function decorate(doc) {
     doc.querySelector('main .section h1').remove();
     doc.querySelector('main .section img').remove();
 
-    firstSection.before(createSectionWithHeroBlock());
+    firstSection.before(await createSectionWithHeroBlock());
   }
+
+  // eager-load the hero block, so the correct LCP will be found.
+  await loadBlock(doc.querySelector('div.block'));
 
   const firstContent = doc.querySelector('main .section .default-content-wrapper');
   firstContent.before(createSocialMediaButtons());
@@ -44,7 +46,7 @@ export default async function decorate(doc) {
   if (getMetadata('issue')) {
     const magSummary = createNewSection();
     firstSection.parentElement.append(magSummary);
-    magSummary.replaceWith((await createMagazineFooter()));
+    magSummary.append((await createMagazineFooter()));
   } else {
     // add a thin gray line to break this up from the previous section
     const grayLine = document.createElement('hr');
@@ -121,8 +123,8 @@ function updateSocialLink(e) {
 
 function createSocialMediaButtons() {
   const socialMediaButtons = document.createElement('div');
+  socialMediaButtons.classList.add('article-social-media-buttons');
   socialMediaButtons.innerHTML = `
-  <div class="article-social-media-buttons">
           <a aria-label="share this page on twitter" href="https://twitter.com/share?url=">
               <span class="icon icon-twitter-alt"></span>
           </a>
@@ -133,8 +135,7 @@ function createSocialMediaButtons() {
       
           <a aria-label="share this page on pinterest" href="http://pinterest.com/pin/create/button/?url=">
               <span class="icon icon-pinterest"></span>
-          </a>
-  </div>`;
+          </a> `;
   socialMediaButtons.querySelectorAll('a').forEach((a) => {
     a.onclick = updateSocialLink;
   });
@@ -149,8 +150,12 @@ async function createMagazineFooter() {
   const fragment = document.createElement('div');
   if (summary.ok) {
     fragment.innerHTML = await summary.text();
-    decorateMain(fragment);
-    await loadBlocks(fragment);
+    const wrapper = fragment.firstElementChild;
+    decorateBlock(wrapper.firstElementChild);
+    return wrapper;
   }
-  return fragment.firstElementChild;
+
+  // eslint-disable-next-line no-console
+  console.error(`issue summary ${issue} cannot be loaded`);
+  return null;
 }
