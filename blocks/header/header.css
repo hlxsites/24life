@@ -20,6 +20,10 @@ header.header-wrapper {
   height: var(--nav-height);
 }
 
+header .nav-fragment {
+  display: none;
+}
+
 header .header.block {
   width: 100%;
   height: 100%;
