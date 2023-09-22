@@ -20,6 +20,10 @@ header.header-wrapper {
   height: var(--nav-height);
 }
 
+header .nav-fragment {
+  display: none;
+}
+
 header .header.block {
   width: 100%;
   height: 100%;
@@ -379,7 +383,7 @@ header nav .tools .hamburger-close img {
   header .nav-fragment[aria-expanded='false'] {
     display: none;
   }
-  
+
   header .nav-fragment[aria-expanded='true'],
   header .nav-fragment.expand {
     display: grid;

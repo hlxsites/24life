@@ -35,7 +35,8 @@ export default function decorate(block) {
     if (resp.ok) {
       const json = await resp.json();
       const authorInfo = json.data
-        .find((author) => author.name.toLowerCase() === authorString.toLowerCase());
+        .find((author) => author.name.toLowerCase() === authorString.toLowerCase()
+          || author.name.toLowerCase().startsWith(authorString.toLowerCase()));
       if (authorInfo) {
         authorDescription.innerText = authorInfo.description;
         if (authorInfo.image) {
