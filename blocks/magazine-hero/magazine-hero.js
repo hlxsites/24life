@@ -16,6 +16,9 @@ export default async function decorate(block) {
 
   const overlay = document.createElement('div');
   overlay.classList.add('text-overlay');
+  if (config.titlecolor) {
+    overlay.style.setProperty('color', '#3d3d3d');
+  }
   overlay.append(createLeftOverlay(overlay, config));
   overlay.append(createRightOverlay(overlay, config, linkTexts));
 
@@ -41,6 +44,9 @@ function createLeftOverlay(overlay, config) {
 
   const issue = document.createElement('p');
   issue.classList.add('issue', 'animate-slide-from-left');
+  if (config.titlecolor) {
+    issue.style.setProperty('color', '#61605f');
+  }
   issue.append(config.issue);
   leftSide.append(issue);
 
