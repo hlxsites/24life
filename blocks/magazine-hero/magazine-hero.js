@@ -16,6 +16,9 @@ export default async function decorate(block) {
 
   const overlay = document.createElement('div');
   overlay.classList.add('text-overlay');
+  if (config['title-color']?.trim().toLowerCase() === 'dark') {
+    overlay.style.setProperty('color', 'var(--text-color)');
+  }
   overlay.append(createLeftOverlay(overlay, config));
   overlay.append(createRightOverlay(overlay, config, linkTexts));
 
@@ -42,6 +45,9 @@ function createLeftOverlay(overlay, config) {
   const issue = document.createElement('p');
   issue.classList.add('issue', 'animate-slide-from-left');
   issue.append(config.issue);
+  if (config['title-color']?.trim()?.toLowerCase() === 'dark') {
+    issue.style.setProperty('color', 'var(--text-color)');
+  }
   leftSide.append(issue);
 
   const h1 = document.createElement('h1');
