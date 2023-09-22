@@ -181,14 +181,11 @@ export default async function decorate(block) {
       }
     });
 
-    // force hamburger close when in destop size
-    MQ.addEventListener('change', () => {
-      document.querySelector('header nav .hamburger-toggle').setAttribute('aria-expanded', 'false');
-
-      // remove hard styled heights (from animations)
-      document.querySelectorAll('header nav .sections ul').forEach((ul) => {
-        ul.style.height = null;
-      });
+    // force nav close when on window resize
+    MQ.addEventListener('change', (e) => {
+      if (e.matches) {
+        document.querySelector('header nav').setAttribute('aria-expanded', 'false');
+      }
     });
 
     decorateIcons(nav);
