@@ -20,9 +20,13 @@ export default async function decorate(block) {
     slide.href = article.path;
 
     const imageSizes = [
+      // 600px and larger screens have an image that is 66% wide. So we can load a slightly smaller
+      // image than the screen width. .This component is used on the homepage, so we optimize this a
+      // little more than usually.
       { media: '(min-width: 1200px)', width: '2000' },
-      { media: '(min-width: 900px)', width: '1200' },
-      { media: '(min-width: 500px)', width: '750' },
+      { media: '(min-width: 900px)', width: '900' },
+      { media: '(min-width: 600px)', width: '600' },
+      // tablet and mobile sizes:
       { media: '(min-width: 400px)', width: '500' },
       { width: '400' },
     ];
