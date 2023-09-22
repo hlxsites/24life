@@ -65,6 +65,11 @@ div.column-collections-parent {
     gap: 32px;
   }
 
+  .columns.align-top > div {
+    align-items: start;
+  }
+
+  /* stylelint-disable-next-line */
   .columns > div > div {
     flex: 1;
     order: unset;

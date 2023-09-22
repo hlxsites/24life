@@ -3,13 +3,10 @@ import { loadBlock, toClassName } from '../../scripts/lib-franklin.js';
 
 export default async function decorate(block) {
   block.innerHTML = '';
-  const searchTerm = new URLSearchParams(window.location.search).get('q');
+  const searchTerm = new URLSearchParams(window.location.search).get('s');
   block.classList.add('card-container', 'three-columns');
   if (searchTerm) {
-    const elementHeading = block.parentNode.parentNode.parentNode.querySelector('.section.search-page-heading');
-    const textNode = document.createElement('h1');
-    textNode.textContent = searchTerm;
-    elementHeading.append(textNode);
+    updateH1(block, searchTerm);
     const spinnerDiv = document.createElement('div');
     spinnerDiv.classList.add('results-loading-spinner');
     block.append(spinnerDiv);
@@ -17,7 +14,8 @@ export default async function decorate(block) {
     // noinspection ES6MissingAwait
     loadResults(tokenizedSearchWords, block);
   } else {
-    window.location.href = '/';
+    updateH1(block, 'Search');
+    noResults(block);
   }
 }
 
@@ -114,4 +112,11 @@ function noResults(resultsDiv) {
    </div>
  `;
   resultsDiv.parentNode.querySelector('.block.search-results.card-container.three-columns .results-div').classList.add('no-results-div');
+}
+
+function updateH1(block, title) {
+  const elementHeading = block.parentNode.parentNode.parentNode.querySelector('.section.search-page-heading');
+  const textNode = document.createElement('h1');
+  textNode.textContent = title;
+  elementHeading.append(textNode);
 }

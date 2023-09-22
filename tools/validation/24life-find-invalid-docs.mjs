@@ -23,9 +23,6 @@ async function main() {
     await checkForString("Columns</th>");
     await checkForString("By 24Life ");
     await checkForString("null ");
-
-    // TODO: reimport articles with 'float-images' metadata
-    // TODO: check for invalid internal links
 }
 
 async function searchFilesInDirectoryAsync(dir, searchText) {

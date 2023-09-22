@@ -29,7 +29,6 @@ export default async function decorate(doc) {
   newSectionWrapper.classList.add('default-content-wrapper');
   newSection.append(newSectionWrapper);
   firstSection.parentElement.append(newSection);
-  newSectionWrapper.append(createSocialMediaButtons());
 
   // add a thin gray line to break this up from the previous section
   const line = document.createElement('hr');
@@ -144,7 +143,7 @@ function createSocialMediaButtons() {
 }
 
 async function createMagazineFooter(section) {
-  const issue = getMetadata('issue').toLowerCase();
+  const issue = toClassName(getMetadata('issue'));
   const summary = await fetch(`/navigation/magazine-summary/${issue}.plain.html`);
   if (summary.ok) {
     section.innerHTML = await summary.text();
