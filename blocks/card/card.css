@@ -49,6 +49,11 @@
 /* stylelint-disable-next-line no-descending-specificity */
 .card .card-title a {
   font-size: var(--body-font-size-card-header);
+
+    /* From PageSpeed Insights: Interactive elements like buttons and links should be large enough (48x48px),
+    or have enough space around them, to be easy enough to tap without overlapping onto other elements.
+    */
+    padding: 10px 0;
 }
 
 .card .card-title a:hover {
@@ -58,6 +63,14 @@
 .card .card-author {
   margin-top: 0.8em;
   font-size: var(--body-font-size-author);
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.card .card-author a {
+    /* From PageSpeed Insights: Interactive elements like buttons and links should be large enough (48x48px),
+    or have enough space around them, to be easy enough to tap without overlapping onto other elements.
+    */
+    padding: 10px 3px;
 }
 
 .card-container {
