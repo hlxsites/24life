@@ -4,11 +4,6 @@ import { decorateMain } from '../../scripts/scripts.js';
 // media query match that indicates mobile/desktop switch
 const MQ = window.matchMedia('(min-width: 992px)');
 
-// prevent concurrent creation of the div while the nav content is being loaded
-const CREATED = {
-  focus: false, fitness: false, fuel: false, recover: false, magazine: false,
-};
-
 function toggleMenu(header, sectionToOpen) {
   const openSection = header.querySelector('header [aria-expanded="true"]');
   if (openSection === sectionToOpen) {
@@ -29,22 +24,26 @@ function closeMenuSection(event) {
 }
 
 async function buildSectionMenuContent(header, section) {
-  if (CREATED[section]) return;
+  let fragment = header.querySelector(`:scope > .nav-fragment.${section}`);
+  if (fragment) {
+    return; // already created
+  }
 
-  CREATED[section] = true;
+  fragment = document.createElement('div');
+  fragment.classList.add('nav-fragment', section, 'hidden');
+  header.append(fragment);
+
   try {
     const menu = await fetch(`/navigation/menu-${section}.plain.html`);
     if (menu.ok) {
-      const fragment = document.createElement('div');
-      fragment.classList.add('nav-fragment', section);
       fragment.innerHTML = await menu.text();
       fragment.setAttribute('aria-expanded', 'false');
       decorateMain(fragment);
       await loadBlocks(fragment);
-      header.append(fragment);
+      fragment.classList.remove('hidden');
     }
   } catch (e) {
-    CREATED[section] = false;
+    fragment.remove();
     throw e;
   }
 }
@@ -55,9 +54,7 @@ async function mouseOverMenu(a, header) {
     return; // only on desktop
   }
   const section = a.textContent.toLowerCase();
-  if (!CREATED[section]) {
-    await buildSectionMenuContent(header, section);
-  }
+  await buildSectionMenuContent(header, section);
   const sectionToOpen = header.querySelector(`:scope > .nav-fragment.${section}`);
   toggleMenu(header, sectionToOpen);
 }
@@ -195,8 +192,10 @@ export default async function decorate(block) {
   // load the content nav in the background with a small delay (only on desktop)
   if (MQ.matches) {
     setTimeout(() => {
+      // prefetch the content and blocks, but don't add them yet to the DOM to reduce DOM size.
+      const dummy = document.createElement('div');
       for (const section of ['focus', 'fitness', 'fuel', 'recover', 'magazine']) {
-        buildSectionMenuContent(block.parentNode, section);
+        buildSectionMenuContent(dummy, section);
       }
     }, 500);
   }
