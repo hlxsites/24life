@@ -1,5 +1,7 @@
 import { createOptimizedPicture, decorateIcons, readBlockConfig } from '../../scripts/lib-franklin.js';
 
+const darkColor = '#3d3d3d';
+const shadeOfDark = '#61605f';
 /**
  * Generic carousel block, which can be used for any content or blocks.
  * Each row is a slide.
@@ -16,8 +18,8 @@ export default async function decorate(block) {
 
   const overlay = document.createElement('div');
   overlay.classList.add('text-overlay');
-  if (config.titlecolor) {
-    overlay.style.setProperty('color', '#3d3d3d');
+  if (config['title-color']?.trim().toLowerCase() === 'dark') {
+    overlay.style.setProperty('color', darkColor);
   }
   overlay.append(createLeftOverlay(overlay, config));
   overlay.append(createRightOverlay(overlay, config, linkTexts));
@@ -44,10 +46,10 @@ function createLeftOverlay(overlay, config) {
 
   const issue = document.createElement('p');
   issue.classList.add('issue', 'animate-slide-from-left');
-  if (config.titlecolor) {
-    issue.style.setProperty('color', '#61605f');
-  }
   issue.append(config.issue);
+  if (config['title-color']?.trim()?.toLowerCase() === 'dark') {
+    issue.style.setProperty('color', shadeOfDark);
+  }
   leftSide.append(issue);
 
   const h1 = document.createElement('h1');
