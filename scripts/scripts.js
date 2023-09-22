@@ -182,6 +182,10 @@ async function loadEager(doc) {
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
+    const templateName = getMetadata('template');
+    if (templateName) {
+      await loadTemplate(doc, templateName.toLowerCase());
+    }
     document.body.classList.add('appear');
     await waitForLCP(LCP_BLOCKS);
   }
@@ -201,11 +205,6 @@ async function loadEager(doc) {
  * @param {Element} doc The container element
  */
 async function loadLazy(doc) {
-  const templateName = getMetadata('template');
-  if (templateName) {
-    await loadTemplate(doc, templateName.toLowerCase());
-  }
-
   const main = doc.querySelector('main');
   await loadBlocks(main);
 
