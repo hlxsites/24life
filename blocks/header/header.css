@@ -1,7 +1,3 @@
-header {
-  height: var(--nav-height);
-}
-
 /* Below 992px */
 header nav a:any-link {
   color: currentcolor;
