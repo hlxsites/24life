@@ -95,7 +95,7 @@ function setupSlideControls(block) {
     block.addEventListener('touchend', gestureEnd, { once: true });
   }
 
-  block.addEventListener('touchstart', gestureStart, false);
+  block.addEventListener('touchstart', gestureStart, { passive: true });
 
   autoplaySlides();
   return { goToSlide };
