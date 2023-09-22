@@ -9,6 +9,7 @@ div.article-hero-video {
   animation-timing-function: linear;
   margin: 0 0 5rem;
   background-color: var(--footer-background-color);
+  position: relative;
 
   --current-link-color: var(--text-color-on-black-background);
 }
