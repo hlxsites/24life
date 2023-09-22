@@ -11,6 +11,7 @@ const shell = (cmd) => execSync(cmd, {encoding: 'utf8'});
 const sourceDirectory = `/Users/wingeier/Library/CloudStorage/OneDrive-Adobe/24life`;
 const outputDir = `./24life-rewritten`;
 const redirects = await loadRedirects("main--24life--hlxsites.hlx.page");
+const baseUrlForRelativePaths = "https://main--24life--hlxsites.hlx.page/";
 const limitConcurrency = pLimit(5);
 
 requireNodeVersion(20);
@@ -32,14 +33,14 @@ await Promise.all(files.map(async (file) => {
 
         const links = await getAllLinks(sourceFilePath);
         for (let link of links) {
-            const url = new URL(link, "https://main--24life--hlxsites.hlx.page/");
+            const url = new URL(link, baseUrlForRelativePaths);
             // rewrite some of the links
 
             // fetch redirects.json and apply them.
             const siteHostnames = ["www.24life.com", "main--24life--hlxsites.hlx.page", "main--24life--hlxsites.hlx.live"];
             if (siteHostnames.includes(url.hostname)
                 && redirects[url.pathname]) {
-                const newLink = new URL(link, "https://main--24life--hlxsites.hlx.page/");
+                const newLink = new URL(link, baseUrlForRelativePaths);
                 newLink.pathname = redirects[url.pathname];
                 newLink.hostname = "main--24life--hlxsites.hlx.page";
                 newLink.protocol = "https";
