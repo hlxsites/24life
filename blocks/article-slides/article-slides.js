@@ -19,8 +19,15 @@ export default async function decorate(block) {
     slide.classList.add('slide');
     slide.href = article.path;
 
+    const imageSizes = [
+      { media: '(min-width: 1200px)', width: '2000' },
+      { media: '(min-width: 900px)', width: '1200' },
+      { media: '(min-width: 500px)', width: '750' },
+      { media: '(min-width: 400px)', width: '500' },
+      { width: '400' },
+    ];
     slide.innerHTML = `
-      <div class="image">${createOptimizedPicture(article.image, article.title, index === 0).outerHTML}</div>
+      <div class="image">${createOptimizedPicture(article.image, article.title, index === 0, imageSizes).outerHTML}</div>
       <div class="text">
           <p class="subtitle">${plainText(article.section)}</p>
           <p class="title">${plainText(article.title)}</p>
