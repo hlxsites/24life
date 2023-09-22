@@ -11,6 +11,8 @@ const shell = (cmd) => execSync(cmd, {encoding: 'utf8'});
 // `brew install pandoc` (https://pandoc.org/installing.html)
 // https://github.com/coderthoughts/docxtools
 
+// Then mount the Sharepoint folder using OneDrive and set the sourceDirectory variable below.
+
 // ### configuration ###
 const sourceDirectory = `/Users/wingeier/Library/CloudStorage/OneDrive-Adobe/24life`;
 const outputDir = `./24life-rewritten`;
