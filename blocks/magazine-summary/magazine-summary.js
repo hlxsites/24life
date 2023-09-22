@@ -10,7 +10,7 @@ import {
  */
 export default async function decorate(block) {
   const config = readBlockConfig(block);
-  config.isSubNav = block.closest('header');
+  config.isSubNav = block.closest('.nav-fragment');
   config.labels = block.querySelectorAll('div > div:nth-child(2) > p:first-child');
   config.links = [...block.querySelectorAll('div > div:nth-child(2) > p:not(:first-child) > a')];
   block.innerText = '';
@@ -45,9 +45,9 @@ function createCoverColumn(config) {
   titleH6.classList.add('red');
   if (!config.isSubNav) {
     // page
-    const title = config.title ?? getMetadata('og:title');
-    const location = config.link ?? new URL(document.location).pathname;
-    const coverPic = config.image ?? getMetadata('og:image');
+    const title = config.title || getMetadata('og:title');
+    const location = config.link || new URL(document.location).pathname;
+    const coverPic = config.image || getMetadata('og:image');
     titleH4.textContent = `In This Issue - ${title}`;
     titleH6.textContent = location.split('/').pop().replaceAll(/-/g, ' ').toUpperCase();
     textCol.append(titleH4);
