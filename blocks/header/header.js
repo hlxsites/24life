@@ -108,7 +108,7 @@ export default async function decorate(block) {
           <div class="search-wrapper">
             <div class='search-form'>
               <form action='/search' method='get'>
-                <input type='search' name='q' class='search-input' placeholder="TYPE HERE"/>
+                <input type='search' name='s' class='search-input' placeholder="TYPE HERE"/>
               </form>
             </div>
           </div>
