@@ -14,7 +14,7 @@
 @font-face {
   font-family: "din-2014";
   src: url("../fonts/din-2014-700.woff2") format("woff2"), url("https://use.typekit.net/af/1fe1ce/00000000000000007735aff6/30/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3") format("woff"), url("https://use.typekit.net/af/1fe1ce/00000000000000007735aff6/30/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3") format("opentype");
-  font-display: auto;
+  font-display: swap;
   font-style: normal;
   font-weight: 700;
   font-stretch: normal;
@@ -23,7 +23,7 @@
 @font-face {
   font-family: "din-2014";
   src: url("../fonts/din-2014-700-italic.woff2") format("woff2");
-  font-display: auto;
+  font-display: swap;
   font-style: italic;
   font-weight: 700;
   font-stretch: normal;
@@ -37,6 +37,7 @@
   font-weight: 300 800;
   font-stretch: 75% 125%;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -45,4 +46,5 @@
   font-weight: 125 950;
   font-stretch: 75% 125%;
   font-style: italic;
+  font-display: swap;
 }
