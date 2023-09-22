@@ -14,12 +14,20 @@ const dir = `./24life`;
 requireNode20();
 
 const redirects = await loadRedirects();
+const validPaths = Object.values(redirects);
 
 /**
  * @param url
  * @returns {string|undefined} return the url to change to, or null if no change is required
  */
 function linkMapping(url) {
+    if(url.endsWith("%20")){
+        return url.replace(/%20$/, "");
+    }
+
+    const urlObj = new URL(url, "https://main--24life--hlxsites.hlx.page");
+    const pathname = urlObj.pathname;
+
     if (url.includes("//magazine.24life.com/")) {
         // e.g. http://magazine.24life.com/vol3iss6/play-full-out--summer-fresh-anywhere-26V6-883JI.html
         // http://magazine.24life.com/vol3iss11
@@ -29,14 +37,17 @@ function linkMapping(url) {
         return `https://main--24life--hlxsites.hlx.page/magazine/volume-${volume}-issue-${issue}`
     }
 
-    if (url.includes("//www.24life.com/?s=")) {
-        return "https://main--24life--hlxsites.hlx.page/search?s=" + new URL(url).searchParams.get("s");
+    if (url.includes("//www.24life.com/?s=") || urlObj.toString().includes("https://main--24life--hlxsites.hlx.page/?s=")) {
+        return "https://main--24life--hlxsites.hlx.page/search?s=" + urlObj.searchParams.get("s");
     }
     if (url.startsWith("http") && url.includes("24life.com/")) {
         let redirectFullUrl = getRedirectFullUrl(url);
-        if (!redirectFullUrl && !url.endsWith("/")) {
-            // assume the same pathname also exists on the new site
-            redirectFullUrl = "https://main--24life--hlxsites.hlx.page" + new URL(url).pathname
+        const withoutTrailingSlash = pathname.replace(/\/$/, '');
+        if(redirectFullUrl) {
+            return redirectFullUrl;
+        }
+        if (!url.endsWith("/") ) {
+            throw new Error("no redirect found for " + url);
         }
         return redirectFullUrl;
     }
@@ -44,35 +55,48 @@ function linkMapping(url) {
         // internal link
         const urlObj = new URL(url, "https://main--24life--hlxsites.hlx.page/");
         const pathname = urlObj.pathname;
-        const isValidHelixPage = Object.values(redirects).includes(pathname);
-        const redirect = getRedirectFullUrl(url);
-        if(!isValidHelixPage && redirect){
-            return redirect;
+        const isValidHelixPage = validPaths.includes(pathname);
+        const strictRedirect = getRedirectFullUrl(url, true);
+        if(!isValidHelixPage && !strictRedirect){
+            return getRedirectFullUrl(url, false);
         }
     }
 }
 
 function validateLink(url) {
-    if (!url.includes("//www.24life.com/?s=")
-        && url.includes("?") && !url.endsWith("?") && (url.includes("24life.com") || url.includes(".hlx."))) {
-        return "url includes ?";
-    }
-    if (url.endsWith("'")) {
-        return "url ends with '"
-    }
-    if (url.includes("twentyfourlife.wpenginepowered")) {
-        return "url includes twentyfourlife.wpenginepowered"
-    }
-    if (url.includes(".hlx.")) {
-        if (url.matches(new RegExp("/(focus|fitness|fuel|recover)[/][0-9]{4}[/].+"))) {
-            // correct links
-        } else {
-            if (getRedirectFullUrl(url)) {
-                // if there is a redirect, we will rely on that. We are not changing all the links at this moment.
+    try {
+        if(url.endsWith("%20")){
+            url = url.replace(/%20$/, "");
+        }
+
+        const urlObj = new URL(url, "https://main--24life--hlxsites.hlx.page");
+        const pathname = urlObj.pathname;
+
+        if (!url.includes("//www.24life.com/?s=")
+            && url.includes("?") && !url.endsWith("?") && (url.includes("24life.com") || url.includes(".hlx."))) {
+            return "url includes ?";
+        }
+        if (url.endsWith("'")) {
+            return "url ends with '"
+        }
+        if (url.includes("twentyfourlife.wpenginepowered")) {
+            return "url includes twentyfourlife.wpenginepowered"
+        }
+        if (url.includes('24life--hlxsites.hlx')) {
+            const isValidHelixPage = validPaths.includes(pathname);
+
+            if (isValidHelixPage || url.match(new RegExp("/(focus|fitness|fuel|recover)[/][0-9]{4}[/].+"))) {
+                // correct links
             } else {
-                return "no redirect found for hlx link";
+                if (getRedirectFullUrl(url)) {
+                    // if there is a redirect, we will rely on that. We are not changing all the links at this moment.
+                } else {
+                    return "no redirect found for hlx link";
+                }
             }
         }
+    } catch (e) {
+        return `cannot parse url ${url} ${e.message}`;
     }
 }
 
@@ -121,6 +145,7 @@ async function main() {
 async function rewriteDocx(file, outputDir, changes) {
     const filePath = path.join(mountDirectory, file + ".docx");
     const targetFilePath = path.join(outputDir, file + ".docx");
+
     function escapeRegex(string) {
         return string.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
     }
@@ -142,10 +167,13 @@ async function rewriteDocx(file, outputDir, changes) {
     }
 }
 
-function getRedirectFullUrl(url) {
+function getRedirectFullUrl(url, exact = false) {
     const origUrl = new URL(url, "https://main--24life--hlxsites.hlx.page");
-    const pathname =  origUrl.pathname;
-    const redirect = redirects[pathname] || redirects[pathname + "/"];
+    const pathname = origUrl.pathname;
+    let redirect = redirects[pathname];
+    if (!redirect && !exact) {
+        redirect = redirects[pathname + "/"]
+    }
     if (redirect) {
         const newUrl = new URL("https://main--24life--hlxsites.hlx.page" + redirect);
         newUrl.search = origUrl.search;
