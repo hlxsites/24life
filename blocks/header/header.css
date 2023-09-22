@@ -313,12 +313,12 @@ header nav .tools .hamburger-close img {
   }
 
   header nav .sections .icon-arrow-down {
-    position:initial;
+    position: initial;
     padding-left: 4px;
   }
 
   header nav .search .search-container {
-    position:fixed;
+    position: fixed;
     top: 55px;
     right: 0;
     width: 200px;
