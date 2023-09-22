@@ -59,7 +59,7 @@ main .section.magazine-summary-container {
     display: flex;
     flex-direction: column;
     align-self: flex-start;
-    padding-top: 100px;
+    padding-top: 50px;
     width: 350px;
   }
 
@@ -72,9 +72,9 @@ main .section.magazine-summary-container {
     margin: 0;
   }
 
-  .magazine-summary .col2,
-  .magazine-summary .col3 {
-    padding-top: 30px;
+  .nav-fragment .magazine-summary .col2,
+  .nav-fragment .magazine-summary .col3 {
+    padding-top: 0;
     width: 95%;
   }
 
