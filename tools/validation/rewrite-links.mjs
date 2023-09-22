@@ -7,12 +7,17 @@ import {exec, execSync} from "child_process";
 import pLimit from 'p-limit';
 const shell = (cmd) => execSync(cmd, {encoding: 'utf8'});
 
-// configuration
+// make sure you have pandoc and docxtools installed.
+// `brew install pandoc` (https://pandoc.org/installing.html)
+// https://github.com/coderthoughts/docxtools
+
+// ### configuration ###
 const sourceDirectory = `/Users/wingeier/Library/CloudStorage/OneDrive-Adobe/24life`;
 const outputDir = `./24life-rewritten`;
 const redirects = await loadRedirects("main--24life--hlxsites.hlx.page");
 const baseUrlForRelativePaths = "https://main--24life--hlxsites.hlx.page/";
 const limitConcurrency = pLimit(5);
+// ###  end of configuration ###
 
 requireNodeVersion(20);
 checkToolsInstalled(['pandoc', 'docxtools']);
@@ -55,60 +60,6 @@ await Promise.all(files.map(async (file) => {
     }));
 }));
 
-function requireNodeVersion(version) {
-    const [major] = process.versions.node.split('.').map(Number)
-    if (major < version) {
-        console.error("node version 20 or higher required")
-        process.exit(1)
-    }
-}
-
-
-/**
- * Executes a shell command and return it as a Promise.
- * @param cmd {string}
- * @return {Promise<string>}
- */
-function execShellCommand(cmd) {
-    return new Promise((resolve, reject) => {
-        exec(cmd, (error, stdout, stderr) => {
-            if (error) {
-                console.warn(error);
-                reject(error);
-            }
-            resolve(stdout ? stdout : stderr);
-        });
-    });
-}
-
-
-async function getAllLinks(filePath) {
-    // read docx, transform to html, parse html dom
-    // Note: with https://github.com/coderthoughts/docxtools/issues/3 the pandoc step could be skipped.
-    const html = await execShellCommand(`pandoc ${filePath} -t html5`)
-    const dom = new JSDOM(html);
-    return [...dom.window.document.querySelectorAll('a[href]')]
-        .map((link) => link.href);
-}
-
-function checkToolsInstalled(executables) {
-    function executableIsAvailable(name) {
-        try {
-            shell(`which ${name}`);
-            return true
-        } catch (error) {
-            return false
-        }
-    }
-
-    for (let name of executables) {
-        if (!executableIsAvailable(name)) {
-            console.error(`Please install ${name} first.`);
-            process.exit(1);
-        }
-    }
-}
-
 async function changeLink(sourceFilePath, outputFilePath, link, newLink) {
     function escapeRegex(string) {
         return string.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
@@ -143,3 +94,57 @@ async function loadRedirects(domain) {
     }
     return redirects;
 }
+
+
+async function getAllLinks(filePath) {
+    // read docx, transform to html, parse html dom
+    // Note: with https://github.com/coderthoughts/docxtools/issues/3 the pandoc step could be skipped.
+    const html = await execShellCommand(`pandoc ${filePath} -t html5`)
+    const dom = new JSDOM(html);
+    return [...dom.window.document.querySelectorAll('a[href]')]
+        .map((link) => link.href);
+}
+
+function requireNodeVersion(version) {
+    const [major] = process.versions.node.split('.').map(Number)
+    if (major < version) {
+        console.error("node version 20 or higher required")
+        process.exit(1)
+    }
+}
+
+/**
+ * Executes a shell command and return it as a Promise.
+ * @param cmd {string}
+ * @return {Promise<string>}
+ */
+function execShellCommand(cmd) {
+    return new Promise((resolve, reject) => {
+        exec(cmd, (error, stdout, stderr) => {
+            if (error) {
+                console.warn(error);
+                reject(error);
+            }
+            resolve(stdout ? stdout : stderr);
+        });
+    });
+}
+
+function checkToolsInstalled(executables) {
+    function executableIsAvailable(name) {
+        try {
+            shell(`which ${name}`);
+            return true
+        } catch (error) {
+            return false
+        }
+    }
+
+    for (let name of executables) {
+        if (!executableIsAvailable(name)) {
+            console.error(`Please install ${name} first.`);
+            process.exit(1);
+        }
+    }
+}
+
