@@ -32,7 +32,6 @@ await Promise.all(files.map(async (file) => {
 
         const links = await getAllLinks(sourceFilePath);
         for (let link of links) {
-            console.log(file)
             const url = new URL(link, "https://main--24life--hlxsites.hlx.page/");
             // rewrite some of the links
 
