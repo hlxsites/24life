@@ -1,5 +1,4 @@
 import { createOptimizedPicture, readBlockConfig } from '../../scripts/lib-franklin.js';
-import ffetch from '../../scripts/ffetch.js';
 
 /**
  * Slideshow with recent articles. Supports swiping on touch screens.
@@ -54,10 +53,9 @@ export default async function decorate(block) {
 }
 
 async function fetchArticles(config) {
-  return ffetch('/articles.json')
-    .chunks(Number(config.limit || 9))
-    .limit(Number(config.limit || 9))
-    .all();
+  const resp = await fetch(`/articles.json?limit=${config.limit || 9}`);
+  // eslint-disable-next-line no-return-await
+  return (await resp.json()).data;
 }
 
 function setupSlideControls(block) {
