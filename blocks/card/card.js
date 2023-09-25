@@ -12,13 +12,16 @@ import {
  */
 export default function decorate(block) {
   const firstCell = block.firstElementChild.firstElementChild;
+
   // backward compatibility: also support headings
   const heading = firstCell.querySelector('h1, h2, h3, h4, h5, h6');
   if (heading) {
     const para = document.createElement('p');
+    para.classList.add('card-title');
     para.append(...heading.childNodes);
     heading.replaceWith(para);
   }
+
   firstCell.querySelector('a')?.parentElement.classList.add('card-title');
 
   // link the image
