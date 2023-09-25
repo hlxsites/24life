@@ -18,6 +18,7 @@ div.section-hero-container > div:first-child{
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: var(--accent-color);
 }
 
 .section-hero.block .left-container .image-container{
@@ -104,7 +105,6 @@ div.section-hero-container > div:first-child{
 @media screen and (min-width:1200px) {
   .section-hero.block{
     display: grid;
-    background-color: var(--accent-color);
     grid-template-columns: 65.66% 34.34%;
     justify-content: center;
     align-items: flex-start;
