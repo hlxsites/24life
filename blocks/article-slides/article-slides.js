@@ -7,7 +7,7 @@ import { createOptimizedPicture, readBlockConfig } from '../../scripts/lib-frank
  */
 export default async function decorate(block) {
   const config = readBlockConfig(block);
-  let articles = [];
+  let articles;
   if (config.limit) {
     // if the limit is defined, fetch the recent articles
     articles = await fetchArticles(config);
@@ -91,7 +91,6 @@ function setupSlideControls(block) {
   }
 
   let autoSlideInterval = null;
-
   function autoplaySlides() {
     clearInterval(autoSlideInterval);
     autoSlideInterval = setInterval(() => advanceSlides(+1), 6000);
