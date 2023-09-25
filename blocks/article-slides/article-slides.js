@@ -90,11 +90,11 @@ function setupSlideControls(block) {
     autoplaySlides();
   }
 
-  const autoSlideInterval = null;
+  let autoSlideInterval = null;
 
   function autoplaySlides() {
-    // clearInterval(autoSlideInterval);
-    // autoSlideInterval = setInterval(() => advanceSlides(+1), 6000);
+    clearInterval(autoSlideInterval);
+    autoSlideInterval = setInterval(() => advanceSlides(+1), 6000);
   }
 
   function advanceSlides(diff) {
