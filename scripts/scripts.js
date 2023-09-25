@@ -179,6 +179,13 @@ async function loadEager(doc) {
   if (!document.title.match(/- 24Life(\.com)?$/i)) {
     document.title += ' - 24Life';
   }
+  // set global accent color
+  const section = getMetadata('section')?.toLowerCase();
+  if (section) {
+    document.body.style.setProperty('--accent-color', `var(--color-${section})`);
+  } else {
+    document.body.style.setProperty('--accent-color', 'var(--color-default-card)');
+  }
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
@@ -221,14 +228,6 @@ async function loadLazy(doc) {
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
   sampleRUM.observe(main.querySelectorAll('picture > img'));
-
-  // set global accent color
-  const section = getMetadata('section')?.toLowerCase();
-  if (section) {
-    document.body.style.setProperty('--accent-color', `var(--color-${section})`);
-  } else {
-    document.body.style.setProperty('--accent-color', 'var(--color-default-card)');
-  }
 }
 
 /**

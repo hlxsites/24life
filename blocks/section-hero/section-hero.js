@@ -7,17 +7,6 @@ export default function decorate(block) {
   const link = block.querySelector('a');
   block.innerText = '';
 
-  // change the background color of the block based on the url
-  if (window.location.pathname === '/focus') {
-    block.style.setProperty('background-color', 'var(--color-focus)');
-  } else if (window.location.pathname === '/fitness') {
-    block.style.setProperty('background-color', 'var(--color-fitness)');
-  } else if (window.location.pathname === '/fuel') {
-    block.style.setProperty('background-color', 'var(--color-fuel)');
-  } else if (window.location.pathname === '/recover') {
-    block.style.setProperty('background-color', 'var(--color-recover)');
-  }
-
   // Section Hero
   const section = getMetadata('section');
   const title = data?.title.trim();
@@ -122,11 +111,11 @@ function createSocialMediaButtons() {
           <a aria-label="share this page on twitter" href="https://twitter.com/share?url=">
               <span class="icon icon-twitter-alt"></span>
           </a>
-      
+
           <a aria-label="share this page on facebook" href="http://www.facebook.com/share.php?u=">
               <span class="icon icon-facebook"></span>
           </a>
-      
+
           <a aria-label="share this page on pinterest" href="http://pinterest.com/pin/create/button/?url=">
               <span class="icon icon-pinterest"></span>
           </a>
