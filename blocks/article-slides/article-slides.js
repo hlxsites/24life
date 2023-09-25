@@ -17,7 +17,7 @@ export default async function decorate(block) {
       const rightColumn = row.children[1];
       return {
         path: rightColumn.querySelector('a').href,
-        image: row.querySelector('img').src,
+        picture: row.querySelector('picture'),
         title: rightColumn.querySelector('a').textContent,
         section: rightColumn.querySelector('p:nth-child(1)').textContent,
         authors: rightColumn.querySelector('p:nth-child(3)').textContent,
@@ -43,8 +43,14 @@ export default async function decorate(block) {
       { media: '(min-width: 400px)', height: '600' },
       { width: '400' },
     ];
+    const picture = article.picture || createOptimizedPicture(
+      article.image,
+      article.title,
+      index === 0,
+      imageSizes,
+    );
     slide.innerHTML = `
-      <div class="image">${createOptimizedPicture(article.image, article.title, index === 0, imageSizes).outerHTML}</div>
+      <div class="image">${picture.outerHTML}</div>
       <div class="text">
           <p class="subtitle">${plainText(article.section)}</p>
           <p class="title">${plainText(article.title)}</p>
@@ -85,6 +91,7 @@ function setupSlideControls(block) {
   }
 
   const autoSlideInterval = null;
+
   function autoplaySlides() {
     // clearInterval(autoSlideInterval);
     // autoSlideInterval = setInterval(() => advanceSlides(+1), 6000);
