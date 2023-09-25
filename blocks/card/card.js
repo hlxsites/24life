@@ -42,7 +42,7 @@ export default function decorate(block) {
   // often there is a collection like SUCCESS STORIES or GET STARTED. Multiple categories
   // can be comma separated.
   const collections = firstCell.querySelector('p:not([class])');
-  if (collections) {
+  if (collections.textContent.trim().length > 0) {
     collections.classList.add('card-collections');
     const links = collections.textContent.split(',')
       .map((collectionText) => {
