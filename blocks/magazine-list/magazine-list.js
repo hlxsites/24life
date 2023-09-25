@@ -28,7 +28,16 @@ function renderMagazines(magazines, currentIssue, otherIssues) {
 
     let issueImage;
     if (index === 0) {
-      issueImage = createOptimizedPicture(issue.image, issue.title, true);
+      const imageSizes = [
+        // when screen width is over 600px, image takes up 1/3 of the screen width.
+        { media: '(min-width: 1200px)', width: '500' },
+        { media: '(min-width: 900px)', width: '400' },
+        { media: '(min-width: 600px)', width: '300' },
+        // tablet and mobile sizes:
+        { media: '(min-width: 400px)', width: '500' },
+        { width: '400' },
+      ];
+      issueImage = createOptimizedPicture(issue.image, issue.title, true, imageSizes);
     } else {
       const imageSizes = [
         // when screen width is over 600px, image takes up 1/4 of the screen width.
