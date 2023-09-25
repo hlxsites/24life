@@ -1,4 +1,5 @@
 import { decorateLinkedPictures } from '../../scripts/scripts.js';
+import { decorateIcons } from '../../scripts/lib-franklin.js';
 
 export default function decorate(block) {
   const cols = [...block.firstElementChild.children];
@@ -18,6 +19,25 @@ export default function decorate(block) {
   });
   if (block.classList.contains('collections')) {
     columnCollectionsBlock(block);
+  }
+
+  if (block.classList.contains('old-magazine-header')) {
+    const imageDiv = block.querySelector('.columns-img-col');
+    imageDiv.append(createSocialMediaButtons());
+    block.closest('.columns-wrapper').classList.add('old-magazine-header-wrapper');
+
+    const magazineIssue = block.querySelector('.columns.old-magazine-header.block div > div:nth-child(2) > h5');
+    magazineIssue.classList.add('magazine-issue');
+
+    const magazineTitle = block.querySelector('.columns.old-magazine-header.block div > div:nth-child(2) > h1');
+    magazineTitle.classList.add('magazine-title');
+
+    const magazineDesc = block.querySelector('.columns.old-magazine-header.block div > div:nth-child(2) > h4');
+    magazineDesc.classList.add('magazine-desc');
+
+    const quote = block.querySelector('.columns.old-magazine-header.block div > div:nth-child(2) > p');
+    quote.classList.add('quote');
+    quote.nextElementSibling.classList.add('quote-signature');
   }
   decorateLinkedPictures(block);
 }
@@ -42,4 +62,41 @@ function columnCollectionsBlock(block) {
       }
     }
   }
+}
+
+function updateSocialLink(e) {
+  e.preventDefault();
+  const newUrl = `${e.currentTarget.href}${window.location.href}`;
+  const pin = newUrl.includes('pinterest.com');
+  let description = '';
+  let imageUrl = '';
+  if (pin) {
+    description = encodeURIComponent((document.querySelector('meta[property="og:description"]')?.getAttribute('content') || ''));
+    imageUrl = (document.querySelector('meta[property="og:image"]')?.getAttribute('content') || '');
+  }
+  const parameters = pin ? `&description=${description}&image=${imageUrl}` : '';
+  window.open(newUrl + parameters, 'sharer', 'toolbar=0,status=0,width=626,height=436');
+}
+
+function createSocialMediaButtons() {
+  const socialMediaButtons = document.createElement('div');
+  socialMediaButtons.classList.add('old-magazine-social-media-buttons');
+  socialMediaButtons.innerHTML = `
+          <a aria-label="share this page on twitter" href="https://twitter.com/share?url=">
+              <span class="icon icon-twitter-alt"></span>
+          </a>
+
+          <a aria-label="share this page on facebook" href="http://www.facebook.com/share.php?u=">
+              <span class="icon icon-facebook"></span>
+          </a>
+
+          <a aria-label="share this page on pinterest" href="http://pinterest.com/pin/create/button/?url=">
+              <span class="icon icon-pinterest"></span>
+          </a> `;
+  socialMediaButtons.querySelectorAll('a').forEach((a) => {
+    a.onclick = updateSocialLink;
+  });
+  // noinspection JSIgnoredPromiseFromCall
+  decorateIcons(socialMediaButtons);
+  return socialMediaButtons;
 }

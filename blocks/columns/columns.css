@@ -58,6 +58,71 @@ div.column-collections-parent {
   margin-bottom: 5px;
 }
 
+div.columns-wrapper.old-magazine-header-wrapper {
+  max-width: 80vw;
+}
+
+.columns.old-magazine-header.block .columns-img-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1em;
+  width: 360px;
+  height:400px;
+  flex: 0 0 30%;
+}
+
+.columns.old-magazine-header.block p.quote {
+  font-weight: 350;
+  font-style: italic;
+  margin-bottom: 4px;
+  font-size: 1.8em;
+  line-height: 1.9em;
+  margin-top: 0;
+}
+
+.columns.old-magazine-header.block p.quote-signature {
+  text-align: center;
+  font-size: 1.2em;
+}
+
+.columns.old-magazine-header.block .magazine-issue {
+  color: #ee3124;
+}
+
+.columns.old-magazine-header.block .magazine-title {
+  letter-spacing: 17px;
+  font-size: 56px;
+  line-height: 64px;
+  margin-top: 0;
+}
+
+.columns.old-magazine-header.block .magazine-desc {
+  font-weight: 300;
+  font-size: 1.5em;
+  line-height: 2em;
+  margin-bottom: 0;
+}
+
+
+.columns.old-magazine-header.block .old-magazine-social-media-buttons {
+  display: flex;
+  justify-content: center;
+  padding: 1em;
+  gap: 1em;
+}
+
+.columns.old-magazine-header.block .old-magazine-social-media-buttons svg {
+  fill: var(--link-color);
+  transition: all 0.3s ease;
+}
+
+.columns.old-magazine-header.block .old-magazine-social-media-buttons a:hover svg {
+  fill: white;
+  background-color: var(--link-color);
+}
+
 @media (min-width: 900px) {
   .columns > div {
     align-items: center;
