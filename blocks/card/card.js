@@ -12,7 +12,14 @@ import {
  */
 export default function decorate(block) {
   const firstCell = block.firstElementChild.firstElementChild;
-  firstCell.querySelector('h1, h2, h3, h4, h5, h6').classList.add('card-title');
+  // backward compatibility: also support headings
+  const heading = firstCell.querySelector('h1, h2, h3, h4, h5, h6');
+  if (heading) {
+    const para = document.createElement('p');
+    para.append(...heading.childNodes);
+    heading.replaceWith(para);
+  }
+  firstCell.querySelector('a')?.parentElement.classList.add('card-title');
 
   // link the image
   const pictureParagraph = firstCell.querySelector('img').closest('p');
@@ -42,8 +49,8 @@ export default function decorate(block) {
   // often there is a collection like SUCCESS STORIES or GET STARTED. Multiple categories
   // can be comma separated.
   const collections = firstCell.querySelector('p:not([class])');
-  if (collections.textContent.trim().length > 0) {
-    collections.classList.add('card-collections');
+  collections?.classList.add('card-collections');
+  if (collections?.textContent.trim().length > 0) {
     const links = collections.textContent.split(',')
       .map((collectionText) => {
         const a = document.createElement('a');
@@ -90,7 +97,7 @@ export function createCardBlock(articleInfo, parent) {
 
   const picture = createOptimizedPicture(articleInfo.image);
 
-  const heading = document.createElement('h3');
+  const heading = document.createElement('p');
   const link = document.createElement('a');
   link.href = articleInfo.path;
   link.textContent = articleInfo.title;
