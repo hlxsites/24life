@@ -26,7 +26,21 @@ function renderMagazines(magazines, currentIssue, otherIssues) {
     const issuePath = document.createElement('a');
     issuePath.href = issue.path;
 
-    const issueImage = createOptimizedPicture(issue.image, issue.title, true);
+    let issueImage;
+    if (index === 0) {
+      issueImage = createOptimizedPicture(issue.image, issue.title, true);
+    } else {
+      const imageSizes = [
+        // when screen width is over 600px, image takes up 1/4 of the screen width.
+        { media: '(min-width: 1200px)', width: '400' },
+        { media: '(min-width: 900px)', width: '300' },
+        { media: '(min-width: 600px)', width: '250' },
+        // tablet and mobile sizes:
+        { media: '(min-width: 400px)', width: '500' },
+        { width: '400' },
+      ];
+      issueImage = createOptimizedPicture(issue.image, issue.title, false, imageSizes);
+    }
     issueImage.className = 'issue-image';
 
     const titleDiv = document.createElement('div');
