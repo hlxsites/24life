@@ -30,7 +30,6 @@ export default async function decorate(block) {
   const slideshowButtons = document.createElement('div');
   slideshowButtons.classList.add('slideshow-buttons');
 
-  // fetch recent articles
   articles.forEach((article, index) => {
     const slide = document.createElement('a');
     slide.classList.add('slide');
