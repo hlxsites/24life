@@ -2,35 +2,54 @@ import { createOptimizedPicture, readBlockConfig } from '../../scripts/lib-frank
 
 /**
  * Slideshow with recent articles. Supports swiping on touch screens.
+ * Also supports manually adding content into the block.
  * @param block
  */
 export default async function decorate(block) {
   const config = readBlockConfig(block);
+  let articles;
+  if (config.limit) {
+    // if the limit is defined, fetch the recent articles
+    articles = await fetchArticles(config);
+  } else {
+    // or for optimized performance, use the articles inside the block
+    articles = [...block.children].map((row) => {
+      const rightColumn = row.children[1];
+      return {
+        path: rightColumn.querySelector('a').href,
+        picture: row.querySelector('picture'),
+        title: rightColumn.querySelector('a').textContent,
+        section: rightColumn.querySelector('p:nth-child(1)').textContent,
+        authors: rightColumn.querySelector('p:nth-child(3)').textContent,
+      };
+    });
+  }
   block.textContent = '';
   const { goToSlide } = setupSlideControls(block);
 
   const slideshowButtons = document.createElement('div');
   slideshowButtons.classList.add('slideshow-buttons');
 
-  const articles = await fetchArticles(config);
   articles.forEach((article, index) => {
     const slide = document.createElement('a');
     slide.classList.add('slide');
     slide.href = article.path;
 
     const imageSizes = [
-      // 600px and larger screens have an image that is 66% of the screen width. So we can
-      // load a slightly smaller image than the screen width. .This component is used on the
-      // homepage, so we optimize this a little more than usually.
-      { media: '(min-width: 1200px)', width: '2000' },
-      { media: '(min-width: 900px)', width: '900' },
-      { media: '(min-width: 600px)', width: '600' },
+      // desktop
+      { media: '(min-width: 600px)', height: '600' },
       // tablet and mobile sizes:
-      { media: '(min-width: 400px)', width: '500' },
+      { media: '(min-width: 400px)', height: '600' },
       { width: '400' },
     ];
+    const picture = article.picture || createOptimizedPicture(
+      article.image,
+      article.title,
+      index === 0,
+      imageSizes,
+    );
     slide.innerHTML = `
-      <div class="image">${createOptimizedPicture(article.image, article.title, index === 0, imageSizes).outerHTML}</div>
+      <div class="image">${picture.outerHTML}</div>
       <div class="text">
           <p class="subtitle">${plainText(article.section)}</p>
           <p class="title">${plainText(article.title)}</p>
