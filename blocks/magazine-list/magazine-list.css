@@ -69,6 +69,10 @@ main .section.magazine-list-container {
     max-width: unset;
   }
 
+  .magazine-list .current-issue .issue {
+    width: 33.333%;
+  }
+
   .magazine-list .other-issues {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -80,8 +84,3 @@ main .section.magazine-list-container {
   }
 }
 
-@media (min-width: 900px) {
-  .magazine-list .current-issue .issue {
-    width: 33.333%;
-  }
-}
