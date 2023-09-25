@@ -80,7 +80,7 @@ function createListColumn(config, index) {
   sectionTitle.style.setProperty('color', `var(--color-${section}-text)`);
   if (!config.links.length) {
     sectionTitle.textContent = config[section];
-    links = document.querySelectorAll(`.card-container .card-wrapper .card.${section} h2 > a`);
+    links = document.querySelectorAll(`.card-container .card-wrapper .card.${section} .card-title a`);
   } else {
     sectionTitle.textContent = config.labels[index].innerText;
     links = config.links.slice(index * 3, index * 3 + 3);
