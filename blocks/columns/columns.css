@@ -62,6 +62,25 @@ div.columns-wrapper.old-magazine-header-wrapper {
   max-width: 80vw;
 }
 
+.columns.old-magazine-header.block .header-content{
+  animation: slide-in-from-right 1s ease-out forwards;
+  transform:translateX(-300%);
+  opacity: 0;
+}
+
+
+@keyframes slide-in-from-right {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
 .columns.old-magazine-header.block .columns-img-col {
   display: flex;
   flex-direction: column;
@@ -71,6 +90,20 @@ div.columns-wrapper.old-magazine-header-wrapper {
   width: 360px;
   height:400px;
   flex: 0 0 30%;
+  animation: slide-in-from-left 1s ease-out forwards;
+  transform:translateX(-300%);
+  opacity: 0;
+}
+
+@keyframes slide-in-from-left {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    transform:translateX(0);
+    opacity: 1;
+  }
 }
 
 .columns.old-magazine-header.block p.quote {

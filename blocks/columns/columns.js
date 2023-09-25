@@ -22,22 +22,7 @@ export default function decorate(block) {
   }
 
   if (block.classList.contains('old-magazine-header')) {
-    const imageDiv = block.querySelector('.columns-img-col');
-    imageDiv.append(createSocialMediaButtons());
-    block.closest('.columns-wrapper').classList.add('old-magazine-header-wrapper');
-
-    const magazineIssue = block.querySelector('.columns.old-magazine-header.block div > div:nth-child(2) > h5');
-    magazineIssue.classList.add('magazine-issue');
-
-    const magazineTitle = block.querySelector('.columns.old-magazine-header.block div > div:nth-child(2) > h1');
-    magazineTitle.classList.add('magazine-title');
-
-    const magazineDesc = block.querySelector('.columns.old-magazine-header.block div > div:nth-child(2) > h4');
-    magazineDesc.classList.add('magazine-desc');
-
-    const quote = block.querySelector('.columns.old-magazine-header.block div > div:nth-child(2) > p');
-    quote.classList.add('quote');
-    quote.nextElementSibling.classList.add('quote-signature');
+    oldMagazineHeader(block);
   }
   decorateLinkedPictures(block);
 }
@@ -99,4 +84,26 @@ function createSocialMediaButtons() {
   // noinspection JSIgnoredPromiseFromCall
   decorateIcons(socialMediaButtons);
   return socialMediaButtons;
+}
+
+function oldMagazineHeader(block) {
+  const imageDiv = block.querySelector('.columns-img-col');
+  imageDiv.nextElementSibling.classList.add('header-content');
+
+  imageDiv.append(createSocialMediaButtons());
+  block.closest('.columns-wrapper').classList.add('old-magazine-header-wrapper');
+
+  const headerContent = block.querySelector('.columns.old-magazine-header.block .header-content');
+  const magazineIssue = headerContent.querySelector('h5');
+  magazineIssue.classList.add('magazine-issue');
+
+  const magazineTitle = block.querySelector('h1');
+  magazineTitle.classList.add('magazine-title');
+
+  const magazineDesc = block.querySelector('h4');
+  magazineDesc.classList.add('magazine-desc');
+
+  const quote = block.querySelector('p');
+  quote.classList.add('quote');
+  quote.nextElementSibling.classList.add('quote-signature');
 }
