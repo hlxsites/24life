@@ -35,6 +35,11 @@
   color: var(--category-text-color);
   margin-right: 1.1em;
   text-transform: uppercase;
+
+  /* From PageSpeed Insights: Interactive elements like buttons and links should be large enough (48x48px),
+  or have enough space around them, to be easy enough to tap without overlapping onto other elements.
+  */
+  padding: 10px 5px 10px 0;
 }
 
 .card .card-collections a:hover {
