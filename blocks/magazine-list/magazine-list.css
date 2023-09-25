@@ -21,6 +21,7 @@
   position: relative;
   overflow: hidden;
   aspect-ratio: 258/377;
+  width: 100%;
 }
 
 .magazine-list .issue-image > img {
