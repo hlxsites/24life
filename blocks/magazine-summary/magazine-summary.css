@@ -30,7 +30,7 @@ main .section.magazine-summary-container {
   letter-spacing: 0.02em;
 }
 
-.magazine-summary h6.red {
+.magazine-summary p.red {
   color: var(--color-fitness-text);
 }
 
@@ -68,7 +68,7 @@ main .section.magazine-summary-container {
     padding-bottom: 30px;
   }
 
-  .magazine-summary .col1 h4 {
+  .magazine-summary .col1 p {
     margin: 0;
   }
 

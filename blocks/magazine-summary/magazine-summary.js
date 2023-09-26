@@ -40,8 +40,8 @@ export default async function decorate(block) {
 
 function createCoverColumn(config) {
   const textCol = new DocumentFragment();
-  const titleH4 = document.createElement('h4');
-  const titleH6 = document.createElement('h6');
+  const titleH4 = document.createElement('p');
+  const titleH6 = document.createElement('p');
   titleH6.classList.add('red');
   if (!config.isSubNav) {
     // page
