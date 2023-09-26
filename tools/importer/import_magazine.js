@@ -42,8 +42,8 @@ export default {
     createCardBlocks(main, document);
     console.log('SingleCard created');
 
-    createSubscribeForm(main, document);
-    console.log('Subscribe form created');
+    /* createSubscribeForm(main, document);
+    console.log('Subscribe form created'); */
 
     createMagazineFooter(main, document);
     console.log('Magazine footer created');
@@ -203,7 +203,7 @@ function createMagazineFooter(main, document) {
   const fitness = ['Fitness', 'Fitness – Move Your Life'];
   const fuel = ['Fuel', 'Fuel – Feed Your Life'];
   const recover = ['Recover', 'Recover – Love Your Life'];
-  const rows = [['Magazine Footer '], focus, fitness, fuel, recover];
+  const rows = [['Magazine Summary'], focus, fitness, fuel, recover];
   main.append(WebImporter.DOMUtils.createTable(rows, document));
   main.innerHTML += '<p> --- </p>';
 }
@@ -212,6 +212,7 @@ const createMetadata = (main, document, params) => {
   const { ldJSON } = params;
   const meta = {};
   meta.Title = document.querySelector('title').textContent.replace(/-\s*24Life/gm, '');
+  meta['Description'] = ldJSON['@graph'].find((item) => item['@type'] === 'WebSite')?.description;
   meta['Publication Date'] = ldJSON['@graph'].find((item) => item['@type'] === 'WebPage')?.datePublished.replace(/T.*$/, '');
   meta.Image = createImg(document.querySelector('meta[property="og:image"]').content);
   const block = generateBlock(document, meta, 'Metadata');
@@ -266,7 +267,7 @@ function link(text, url) {
     newUrl.pathname = url;
   }
   article.href = newUrl.href;
-  article.textContent = text;
+  article.textContent = text.replace(/<[^>]*>/g, ' ');
   return article;
 }
 
