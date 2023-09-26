@@ -31,6 +31,7 @@ export default function decorate(block) {
   link.append(...pictureParagraph.childNodes);
   link.classList.add('card-image');
   link.ariaLabel = firstCell.querySelector('.card-title').textContent;
+  const linkPathname = new URL(link.href, document.location.origin).pathname;
   pictureParagraph.replaceWith(link);
 
   // reduce image size: on desktop the images are small, and on mobile they fill the screen width.
@@ -66,7 +67,8 @@ export default function decorate(block) {
   }
 
   const accentColor = ['focus', 'fitness', 'fuel', 'recover']
-    .find((sectionText) => block.classList.contains(sectionText));
+    .find((sectionText) => block.classList.contains(sectionText)
+      || linkPathname.startsWith(`/${sectionText}/`));
   if (accentColor) {
     block.style.setProperty('--accent-color', `var(--color-${accentColor})`);
     block.style.setProperty('--category-text-color', `var(--color-${accentColor}-text)`);
