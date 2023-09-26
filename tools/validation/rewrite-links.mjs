@@ -18,7 +18,7 @@ const sourceDirectory = `/Users/wingeier/Library/CloudStorage/OneDrive-Adobe/24l
 const outputDir = `./24life-rewritten`;
 const redirects = await loadRedirects("main--24life--hlxsites.hlx.page");
 const baseUrlForRelativePaths = "https://main--24life--hlxsites.hlx.page/";
-const limitConcurrency = pLimit(5);
+const limitConcurrency = pLimit(10);
 // ###  end of configuration ###
 
 requireNodeVersion(20);
@@ -26,6 +26,7 @@ checkToolsInstalled(['pandoc', 'docxtools']);
 
 let files = (await readdir(sourceDirectory, {recursive: true}))
     .filter((file) => file.endsWith(".docx"))
+    // .filter((file) => file.startsWith("magazine"))
 
 // processing files in parallel
 await Promise.all(files.map(async (file) => {
@@ -49,6 +50,16 @@ await Promise.all(files.map(async (file) => {
                 && redirects[url.pathname]) {
                 const newLink = new URL(link, baseUrlForRelativePaths);
                 newLink.pathname = redirects[url.pathname];
+                newLink.hostname = "main--24life--hlxsites.hlx.page";
+                newLink.protocol = "https";
+                await changeLink(sourceFilePath, outputFilePath, link, newLink.toString());
+                continue; // apply only one rewrite for each link
+            }
+            // same as above, but also try with a trailing slash
+            if (siteHostnames.includes(url.hostname)
+                && redirects[url.pathname + "/"] ) {
+                const newLink = new URL(link, baseUrlForRelativePaths);
+                newLink.pathname = redirects[url.pathname + "/"];
                 newLink.hostname = "main--24life--hlxsites.hlx.page";
                 newLink.protocol = "https";
                 await changeLink(sourceFilePath, outputFilePath, link, newLink.toString());
@@ -100,7 +111,7 @@ async function loadRedirects(domain) {
 
 async function getAllLinks(filePath) {
     // read docx, transform to html, parse html dom
-    // Note: with https://github.com/coderthoughts/docxtools/issues/3 the pandoc step could be skipped.
+    // Note: with https://github.com/coderthoughts/docxtools/issues/3 the pandoc and jsdom steps could be skipped.
     const html = await execShellCommand(`pandoc ${filePath} -t html5`)
     const dom = new JSDOM(html);
     return [...dom.window.document.querySelectorAll('a[href]')]
