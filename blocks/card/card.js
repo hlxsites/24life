@@ -66,7 +66,8 @@ export default function decorate(block) {
   }
 
   const accentColor = ['focus', 'fitness', 'fuel', 'recover']
-    .find((sectionText) => block.classList.contains(sectionText));
+    .find((sectionText) => block.classList.contains(sectionText)
+      || link.href.startsWith(`/${sectionText}/`));
   if (accentColor) {
     block.style.setProperty('--accent-color', `var(--color-${accentColor})`);
     block.style.setProperty('--category-text-color', `var(--color-${accentColor}-text)`);
