@@ -38,7 +38,7 @@ export default function decorate(block) {
   }
   block.append(videoContainer);
 
-  // add overlay div to avoid clicks on video
+  // add overlay div to avoid clicks on video. Safari does not respect the inert attribute.
   const overlay = document.createElement('div');
   overlay.classList.add('overlay-catch-clicks');
   block.append(overlay);
