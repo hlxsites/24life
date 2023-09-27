@@ -38,6 +38,11 @@ export default function decorate(block) {
   }
   block.append(videoContainer);
 
+  // add overlay div to avoid clicks on video
+  const overlay = document.createElement('div');
+  overlay.classList.add('overlay-catch-clicks');
+  block.append(overlay);
+
   // We don't want to load the video on smaller screens. Make sure to delete or add
   // the markup when the screen size changes
   over900px.addEventListener('change', (e) => {
