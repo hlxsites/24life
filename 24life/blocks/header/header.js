@@ -107,7 +107,7 @@ export default async function decorate(block) {
         <div class="search-container">
           <div class="search-wrapper">
             <div class='search-form'>
-              <form action='/search' method='get'>
+              <form action='${window.hlx.codeBasePath}/search' method='get'>
                 <input type='search' name='s' class='search-input' placeholder="TYPE HERE"/>
               </form>
             </div>

@@ -31,7 +31,7 @@ export default async function decorate(block) {
   col3.append(createListColumn(config, 3));
   if (config.isSubNav) {
     const pastIssuesLink = document.createElement('a');
-    pastIssuesLink.href = '/magazine';
+    pastIssuesLink.href = `${window.hlx.codeBasePath}/magazine`;
     pastIssuesLink.textContent = 'View Past Issues';
     pastIssuesLink.className = 'button';
     col3.append(pastIssuesLink);
