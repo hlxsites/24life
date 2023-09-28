@@ -126,11 +126,11 @@ function createSocialMediaButtons() {
           <a aria-label="share this page on twitter" href="https://twitter.com/share?url=">
               <span class="icon icon-twitter-alt"></span>
           </a>
-      
+
           <a aria-label="share this page on facebook" href="http://www.facebook.com/share.php?u=">
               <span class="icon icon-facebook"></span>
           </a>
-      
+
           <a aria-label="share this page on pinterest" href="http://pinterest.com/pin/create/button/?url=">
               <span class="icon icon-pinterest"></span>
           </a> `;
@@ -144,7 +144,7 @@ function createSocialMediaButtons() {
 
 async function createMagazineFooter(section) {
   const issue = toClassName(getMetadata('issue'));
-  const summary = await fetch(`/navigation/magazine-summary/${issue}.plain.html`);
+  const summary = await fetch(`${window.hlx.codeBasePath}/navigation/magazine-summary/${issue}.plain.html`);
   if (summary.ok) {
     section.innerHTML = await summary.text();
     const wrapper = section.firstElementChild;

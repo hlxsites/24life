@@ -33,7 +33,7 @@ async function buildSectionMenuContent(header, section) {
 
   CREATED[section] = true;
   try {
-    const menu = await fetch(`/navigation/menu-${section}.plain.html`);
+    const menu = await fetch(`${window.hlx.codeBasePath}/navigation/menu-${section}.plain.html`);
     if (menu.ok) {
       const fragment = document.createElement('div');
       fragment.classList.add('nav-fragment', section);
@@ -71,7 +71,7 @@ export default async function decorate(block) {
   block.textContent = '';
 
   // fetch nav content
-  const resp = await fetch('/nav.plain.html');
+  const resp = await fetch(`${window.hlx.codeBasePath}/nav.plain.html`);
 
   if (resp.ok) {
     // get the navigation text, turn it into html elements
