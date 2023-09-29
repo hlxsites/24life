@@ -20,7 +20,6 @@ const limitConcurrency = pLimit(15);
 // ###  end of configuration ###
 
 requireNodeVersion(20);
-checkToolsInstalled(['docxtools']);
 
 let files = (await readdir(sourceDirectory, {recursive: true}))
     .filter((file) => file.endsWith(".docx"))
@@ -140,22 +139,3 @@ function execShellCommand(cmd) {
         });
     });
 }
-
-function checkToolsInstalled(executables) {
-    function executableIsAvailable(name) {
-        try {
-            shell(`which ${name}`);
-            return true
-        } catch (error) {
-            return false
-        }
-    }
-
-    for (let name of executables) {
-        if (!executableIsAvailable(name)) {
-            console.error(`Please install ${name} first.`);
-            process.exit(1);
-        }
-    }
-}
-
