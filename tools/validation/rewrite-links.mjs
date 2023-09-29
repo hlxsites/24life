@@ -5,8 +5,6 @@ import path from "path";
 import {exec, execSync} from "child_process";
 import pLimit from 'p-limit';
 
-const shell = (cmd) => execSync(cmd, {encoding: 'utf8'});
-
 // make sure you have docxtools installed. https://github.com/coderthoughts/docxtools
 
 // Then mount the Sharepoint folder using OneDrive and set the sourceDirectory variable below.
