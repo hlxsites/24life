@@ -1,4 +1,5 @@
 {
-  "dependencies": {
+  "devDependencies": {
+    "p-limit": "^4.0.0"
   }
 }

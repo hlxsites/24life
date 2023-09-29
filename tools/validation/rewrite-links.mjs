@@ -2,7 +2,7 @@
 import fs from 'fs'
 import {readdir} from "node:fs/promises";
 import path from "path";
-import {exec, execSync} from "child_process";
+import {exec} from "child_process";
 import pLimit from 'p-limit';
 
 // make sure you have docxtools installed. https://github.com/coderthoughts/docxtools
