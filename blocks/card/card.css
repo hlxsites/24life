@@ -26,6 +26,7 @@
   margin-top: 0.5em;
   margin-bottom: 0;
   line-height: 1;
+  min-height: 0.5em;
 }
 
 .card .card-collections a:any-link {
@@ -34,6 +35,11 @@
   color: var(--category-text-color);
   margin-right: 1.1em;
   text-transform: uppercase;
+
+  /* From PageSpeed Insights: Interactive elements like buttons and links should be large enough (48x48px),
+  or have enough space around them, to be easy enough to tap without overlapping onto other elements.
+  */
+  padding: 10px 5px 10px 0;
 }
 
 .card .card-collections a:hover {
@@ -41,15 +47,16 @@
 }
 
 .card .card-title {
-  line-height: 0.75;
-  margin-top: 0.2em;
+  line-height: 1.2;
+  margin-top: 0.4em;
   margin-bottom: 0;
+  font-family: var(--heading-font-family);
+  font-weight: 600;
+  font-size: var(--body-font-size-card-header);
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
 .card .card-title a {
-  font-size: var(--body-font-size-card-header);
-
     /* From PageSpeed Insights: Interactive elements like buttons and links should be large enough (48x48px),
     or have enough space around them, to be easy enough to tap without overlapping onto other elements.
     */
@@ -61,7 +68,7 @@
 }
 
 .card .card-author {
-  margin-top: 0.8em;
+  margin-top: 0.4em;
   font-size: var(--body-font-size-author);
 }
 

@@ -30,23 +30,11 @@ export default {
     createMetadata(main, document, params);
     console.log('metadata created');
 
-    await createMagazineHero(main, document, params);
-    console.log('MagazineHero created');
-
-    createYoutubeLink(document, main);
-    console.log('youtubeLink created');
-
-    createQuoteBlock(main, document);
-    console.log('Quote created');
+    createMagazineHeader(main, document);
+    console.log('magazine header created');
 
     createCardBlocks(main, document);
     console.log('SingleCard created');
-
-    /* createSubscribeForm(main, document);
-    console.log('Subscribe form created'); */
-
-    createMagazineFooter(main, document);
-    console.log('Magazine footer created');
 
     WebImporter.DOMUtils.remove(main, [
       '.mpad.light-wrapper.normal-padding.vc_row.wpb_row.vc_row-fluid.mpad.light-wrapper.normal-padding',
@@ -55,6 +43,7 @@ export default {
       '.wpb_text_column.wpb_content_element .wpb_wrapper',
       '.embed-video-container iframe.embed-responsive-item',
       '.tfl-magazine-current-issue-footer',
+      '.social-list.list-inline',
     ]);
     const filename = new URL(url).pathname
       .replace(/\/$/, '')
@@ -72,36 +61,57 @@ export default {
   },
 };
 
-function createQuoteBlock(main, document) {
-  let quote = document.querySelector('.wpb_text_column.wpb_content_element .wpb_wrapper p.text-style-title-2').textContent;
-  let author = document.querySelector('.wpb_text_column.wpb_content_element .wpb_wrapper p.text-style-body-2').textContent;
-  // remove leading non word characters so – Rhonda Byrne becomes Rhonda Byrne
-  author = author.replace(/^\W+/, '');
-  quote = quote.replace(/“/g, '').replace(/”/g, '');
-  const row1 = ['Text', quote];
-  const row2 = ['Author', author];
-  const rows = [['Quote'], row1, row2];
-  main.append(WebImporter.DOMUtils.createTable(rows, document));
+function fixLinkHref(url) {
+  console.log(`url: ${url}`);
+  // if url doesnt have domain, add it or update it to main--24life--hlxsites.hlx.page
+  let newUrl = '';
+  try {
+    newUrl = new URL(url);
+  } catch (e) {
+    console.info(`url: ${url} is not a valid url cause new URL(url) failed`);
+    newUrl = new URL('https://main--24life--hlxsites.hlx.page');
+    newUrl.pathname = url;
+  }
+  if (newUrl.hostname) {
+    newUrl.hostname = 'main--24life--hlxsites.hlx.page';
+  }
+  return newUrl.toString();
+}
+
+function createMagazineHeader(main, document) {
+  const linkedImage = document.querySelectorAll('section.wpb-content-wrapper > section:nth-child(2) .row .wpb_single_image a')[0];
+  const imageOnly = document.querySelectorAll('section.wpb-content-wrapper > section:nth-child(2) .row .vc_single_image-img')[0];
+  if (linkedImage) {
+    linkedImage.href = fixLinkHref(linkedImage);
+  }
+  const image = linkedImage || imageOnly;
+  const imageDiv = document.createElement('div');
+  imageDiv.append(image);
+
+  const issue = document.querySelector('section.wpb-content-wrapper > section:nth-child(2) .row .wpb_text_column.wpb_content_element > div > h5');
+  const issueTitle = document.querySelector('section.wpb-content-wrapper > section:nth-child(2) .row .wpb_text_column.wpb_content_element > div > h1');
+  const issueDescription = document.querySelector('section.wpb-content-wrapper > section:nth-child(2) .row .wpb_text_column.wpb_content_element > div > h4');
+  const quote = document.querySelector('section.wpb-content-wrapper > section:nth-child(2) .row .wpb_text_column.wpb_content_element > div > p.tfl-quote');
+  const quoteSignature = document.querySelector('section.wpb-content-wrapper > section:nth-child(2) .row .wpb_text_column.wpb_content_element > div > p.tfl-quote-signature');
+
+  const contentElements = document.createElement('div');
+  contentElements.append(issue);
+  contentElements.append(issueTitle);
+  contentElements.append(issueDescription);
+  contentElements.append(quote);
+  contentElements.append(quoteSignature);
+
+  main.append(WebImporter.DOMUtils.createTable([['Columns(old-magazine-header)'], [imageDiv, contentElements]], document));
   main.innerHTML += '<p> --- </p>';
 }
 
-function createYoutubeLink(document, main) {
-  const youtubeLink = document.querySelector('.embed-video-container iframe.embed-responsive-item')?.src;
-  if (!youtubeLink) {
-    return;
-  }
-  main.append(youtubeLink);
-  main.innerHTML += `${youtubeLink} <p> --- </p>`;
-}
 /*
-
-* content structure: in first cell:
+ * content structure: in first cell:
  *  - p > image
  *  - p > COLLECTIONS (optional)
  *  - title as linked h1, h2, h3, h4, h5, or h6
  *  - p > author with link (optional)
-
-   */
+ */
 function createCardBlocks(main, document) {
   const articleCards = document.querySelectorAll('.vc_grid-item-mini.vc_clearfix');
   let pillar = '';
@@ -193,135 +203,13 @@ function createCardBlocks(main, document) {
   });
 }
 
-function createSubscribeForm(main, document) {
-  main.append(WebImporter.DOMUtils.createTable([['Subscribe Form']], document));
-  main.innerHTML += '<p> --- </p>';
-}
-
-function createMagazineFooter(main, document) {
-  const focus = ['Focus', 'Focus – Lead Your Life'];
-  const fitness = ['Fitness', 'Fitness – Move Your Life'];
-  const fuel = ['Fuel', 'Fuel – Feed Your Life'];
-  const recover = ['Recover', 'Recover – Love Your Life'];
-  const rows = [['Magazine Summary'], focus, fitness, fuel, recover];
-  main.append(WebImporter.DOMUtils.createTable(rows, document));
-  main.innerHTML += '<p> --- </p>';
-}
-
 const createMetadata = (main, document, params) => {
   const { ldJSON } = params;
   const meta = {};
   meta.Title = document.querySelector('title').textContent.replace(/-\s*24Life/gm, '');
   meta.Description = ldJSON['@graph'].find((item) => item['@type'] === 'WebSite')?.description;
   meta['Publication Date'] = ldJSON['@graph'].find((item) => item['@type'] === 'WebPage')?.datePublished.replace(/T.*$/, '');
-  meta.Image = createImg(document.querySelector('meta[property="og:image"]').content);
-  const block = generateBlock(document, meta, 'Metadata');
+  const block = WebImporter.Blocks.getMetadataBlock(document, meta);
   main.append(block);
   return meta;
 };
-
-const createMagazineHero = async (main, document, params) => {
-  const magazineHero = {};
-
-  const layers = document.querySelectorAll('.rs-layer-static.rs-layer');
-  magazineHero.Title = layers[layers.length - 2].textContent;
-  magazineHero.Issue = layers[layers.length - 3];
-  magazineHero.Description = layers[layers.length - 1].textContent;
-  const pillars = document.querySelectorAll('.tp-selecttoggle.rs-layer-static.rs-layer.rs-waction');
-
-  const focusDiv = document.createElement('div');
-  focusDiv.innerHTML = link(pillars[0].innerHTML, extractURL(pillars[0].outerHTML)).outerHTML;
-  magazineHero.Focus = focusDiv;
-
-  const fitnessDiv = document.createElement('div');
-  fitnessDiv.innerHTML = link(pillars[1].innerHTML, extractURL(pillars[1].outerHTML)).outerHTML;
-  magazineHero.Fitness = fitnessDiv;
-
-  const fuelDiv = document.createElement('div');
-  fuelDiv.innerHTML = link(pillars[2].innerHTML, extractURL(pillars[2].outerHTML)).outerHTML;
-  magazineHero.Fuel = fuelDiv;
-
-  const recoverDiv = document.createElement('div');
-  recoverDiv.innerHTML = link(pillars[3].innerHTML, extractURL(pillars[3].outerHTML)).outerHTML;
-  magazineHero.Recover = recoverDiv;
-
-  magazineHero.Images = [];
-  const elements = document.querySelectorAll('rs-slide rs-sbg-px rs-sbg-wrap rs-sbg');
-  elements.forEach((element) => {
-    const src = new DOMParser().parseFromString(element.outerHTML, 'text/html').body.firstChild.getAttribute('src');
-    magazineHero.Images.push(createImg(src));
-  });
-  main.append(generateBlock(document, magazineHero, 'magazine-hero'));
-};
-
-function link(text, url) {
-  const article = document.createElement('a');
-  console.log(`url: ${url}`);
-  // if url doesnt have domain, add it
-  let newUrl = '';
-  try {
-    newUrl = new URL(url);
-  } catch (e) {
-    console.info(`url: ${url} is not a valid url cause new URL(url) failed`);
-    newUrl = new URL('https://main--24life--hlxsites.hlx.page');
-    newUrl.pathname = url;
-  }
-  article.href = newUrl.href;
-  article.textContent = text.replace(/<[^>]*>/g, ' ');
-  return article;
-}
-
-function extractURL(html) {
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-  const elem = doc.querySelector('rs-layer');
-  if (elem) {
-    const match = elem.getAttribute('data-actions').match(/url:([^;]*)/);
-    return match ? match[1].trim() : null;
-  }
-  return null;
-}
-
-function createImg(src) {
-  const img = document.createElement('img');
-  img.title = 'magazine-hero-image';
-  if (src) {
-    img.setAttribute('src', src);
-    img.src = src;
-  }
-  return img;
-}
-
-function generateBlock(document, metadata, blockName) {
-  const table = document.createElement('table');
-
-  let row = document.createElement('tr');
-  table.append(row);
-
-  const hCell = document.createElement('th');
-  row.append(hCell);
-
-  hCell.innerHTML = blockName;
-  hCell.setAttribute('colspan', 2);
-
-  // eslint-disable-next-line no-restricted-syntax, guard-for-in
-  for (const key in metadata) {
-    row = document.createElement('tr');
-    table.append(row);
-    const keyCell = document.createElement('td');
-    row.append(keyCell);
-    keyCell.textContent = key;
-    const valueCell = document.createElement('td');
-    row.append(valueCell);
-    const value = metadata[key];
-    if (value) {
-      if (Array.isArray(value)) {
-        valueCell.innerHTML = value.map((v) => v.outerHTML).join('');
-      } else if (typeof value === 'string') {
-        valueCell.textContent = value;
-      } else {
-        valueCell.innerHTML = value.outerHTML;
-      }
-    }
-  }
-  return table;
-}

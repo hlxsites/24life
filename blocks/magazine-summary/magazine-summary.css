@@ -31,7 +31,7 @@ main .section.magazine-summary-container {
 }
 
 .magazine-summary h6.red {
-  color: #ee3124;
+  color: var(--color-fitness-text);
 }
 
 .magazine-summary picture {

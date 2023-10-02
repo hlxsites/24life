@@ -468,9 +468,9 @@ function useHighresImagesAndRemoveLinks(main) {
   }
 }
 
-function collectContentUntil(img, stopCriteria, document) {
+function collectContentUntil(startEl, stopCriteria, document) {
   const content = document.createElement('div');
-  let next = img.nextSibling || img.parentNode.nextSibling;
+  let next = startEl.nextSibling || startEl.parentNode.nextSibling;
   while (next) {
     const nextNext = next.nextSibling;
     const parent = next.parentNode;

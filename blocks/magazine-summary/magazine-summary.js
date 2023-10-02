@@ -13,6 +13,7 @@ export default async function decorate(block) {
   config.isSubNav = block.closest('.nav-fragment');
   config.labels = block.querySelectorAll('div > div:nth-child(2) > p:first-child');
   config.links = [...block.querySelectorAll('div > div:nth-child(2) > p:not(:first-child) > a')];
+  config.imageElement = block.querySelector('picture > img');
   block.innerText = '';
   const columns = ['col1', 'col2', 'col3'];
   // create the 3 columns
@@ -52,7 +53,7 @@ function createCoverColumn(config) {
     titleH6.textContent = location.split('/').pop().replaceAll(/-/g, ' ').toUpperCase();
     textCol.append(titleH4);
     textCol.append(titleH6);
-    const coverImage = createOptimizedPicture(coverPic, title, false, [{ width: '200' }]);
+    const coverImage = createOptimizedPicture(coverPic, title, false, [{ width: '200' }], config.imageElement);
     textCol.append(coverImage);
   } else {
     // navigation header
@@ -80,7 +81,12 @@ function createListColumn(config, index) {
   sectionTitle.style.setProperty('color', `var(--color-${section}-text)`);
   if (!config.links.length) {
     sectionTitle.textContent = config[section];
-    links = document.querySelectorAll(`.card-container .card-wrapper .card.${section} h2 > a`);
+    links = document.querySelectorAll(`.card-container .card-wrapper .card.${section} .card-title a`);
+    if (!links.length) {
+      // alternatively, check the path of the links
+      links = [...document.querySelectorAll('.card-container .card-wrapper .card .card-title a')]
+        .filter((a) => new URL(a.href, window.location.href).pathname.startsWith(`/${section}/`));
+    }
   } else {
     sectionTitle.textContent = config.labels[index].innerText;
     links = config.links.slice(index * 3, index * 3 + 3);

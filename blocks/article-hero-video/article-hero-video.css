@@ -9,6 +9,7 @@ div.article-hero-video {
   animation-timing-function: linear;
   margin: 0 0 5rem;
   background-color: var(--footer-background-color);
+  position: relative;
 
   --current-link-color: var(--text-color-on-black-background);
 }
@@ -57,7 +58,8 @@ div.article-hero-video-wrapper {
   z-index: 10;
 }
 
-.article-hero-video h6.authors {
+.article-hero-video p.authors {
+  font-family: var(--heading-font-family);
   font-size: 14px;
   line-height: 16px;
   font-weight: 300;
@@ -88,7 +90,7 @@ div.article-hero-video-wrapper {
 }
 
 @media screen and (min-width: 900px) {
-  .article-hero-video h6.authors {
+  .article-hero-video p.authors {
     font-size: 24px;
     line-height: 32px;
   }

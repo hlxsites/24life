@@ -12,7 +12,17 @@ import {
  */
 export default function decorate(block) {
   const firstCell = block.firstElementChild.firstElementChild;
-  firstCell.querySelector('h1, h2, h3, h4, h5, h6').classList.add('card-title');
+
+  // backward compatibility: also support headings
+  const heading = firstCell.querySelector('h1, h2, h3, h4, h5, h6');
+  if (heading) {
+    const para = document.createElement('p');
+    para.classList.add('card-title');
+    para.append(...heading.childNodes);
+    heading.replaceWith(para);
+  }
+
+  firstCell.querySelector('a')?.parentElement.classList.add('card-title');
 
   // link the image
   const pictureParagraph = firstCell.querySelector('img').closest('p');
@@ -21,6 +31,7 @@ export default function decorate(block) {
   link.append(...pictureParagraph.childNodes);
   link.classList.add('card-image');
   link.ariaLabel = firstCell.querySelector('.card-title').textContent;
+  const linkPathname = new URL(link.href, document.location.origin).pathname;
   pictureParagraph.replaceWith(link);
 
   // reduce image size: on desktop the images are small, and on mobile they fill the screen width.
@@ -42,8 +53,8 @@ export default function decorate(block) {
   // often there is a collection like SUCCESS STORIES or GET STARTED. Multiple categories
   // can be comma separated.
   const collections = firstCell.querySelector('p:not([class])');
-  if (collections) {
-    collections.classList.add('card-collections');
+  collections?.classList.add('card-collections');
+  if (collections?.textContent.trim().length > 0) {
     const links = collections.textContent.split(',')
       .map((collectionText) => {
         const a = document.createElement('a');
@@ -56,7 +67,8 @@ export default function decorate(block) {
   }
 
   const accentColor = ['focus', 'fitness', 'fuel', 'recover']
-    .find((sectionText) => block.classList.contains(sectionText));
+    .find((sectionText) => block.classList.contains(sectionText)
+      || linkPathname.startsWith(`/${sectionText}/`));
   if (accentColor) {
     block.style.setProperty('--accent-color', `var(--color-${accentColor})`);
     block.style.setProperty('--category-text-color', `var(--color-${accentColor}-text)`);
@@ -90,7 +102,7 @@ export function createCardBlock(articleInfo, parent) {
 
   const picture = createOptimizedPicture(articleInfo.image);
 
-  const heading = document.createElement('h3');
+  const heading = document.createElement('p');
   const link = document.createElement('a');
   link.href = articleInfo.path;
   link.textContent = articleInfo.title;
