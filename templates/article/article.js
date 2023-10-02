@@ -126,11 +126,11 @@ function createSocialMediaButtons() {
           <a aria-label="share this page on twitter" href="https://twitter.com/share?url=">
               <span class="icon icon-twitter-alt"></span>
           </a>
-      
+
           <a aria-label="share this page on facebook" href="http://www.facebook.com/share.php?u=">
               <span class="icon icon-facebook"></span>
           </a>
-      
+
           <a aria-label="share this page on pinterest" href="http://pinterest.com/pin/create/button/?url=">
               <span class="icon icon-pinterest"></span>
           </a> `;
@@ -149,7 +149,8 @@ async function createMagazineFooter(section) {
     section.innerHTML = await summary.text();
     const wrapper = section.firstElementChild;
     decorateBlock(wrapper.firstElementChild);
+  } else {
+    // eslint-disable-next-line no-console
+    console.error(`issue summary ${issue} cannot be loaded`);
   }
-  // eslint-disable-next-line no-console
-  console.error(`issue summary ${issue} cannot be loaded`);
 }
