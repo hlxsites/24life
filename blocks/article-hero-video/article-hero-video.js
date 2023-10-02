@@ -69,7 +69,7 @@ export default function decorate(block) {
   title.classList.add('article-hero-video-title');
   title.innerText = data?.title.trim();
 
-  const authorLinks = document.createElement('h6');
+  const authorLinks = document.createElement('p');
   authorLinks.classList.add('authors');
   authorLinks.append('By ');
   getMetadata('authors').trim().split(',').forEach((author, index) => {
