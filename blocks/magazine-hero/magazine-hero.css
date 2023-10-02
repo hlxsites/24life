@@ -105,6 +105,7 @@
     width: 30%;
     display: flex;
     align-self: start;
+    align-items: flex-start;
   }
 }
 
