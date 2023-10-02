@@ -13,13 +13,29 @@ div.section-hero-container > div:first-child{
   margin: 0;
 }
 
-.section-hero.block{
+.section-hero.block {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: var(--accent-color);
 }
+
+/* define bright and dark text colors: */
+.section-hero.block,
+.section-hero.block a,
+.section-hero.block .icon{
+  fill: #fff;
+  color: #fff;
+}
+
+.section-hero.block.dark-text,
+.section-hero.block.dark-text a,
+.section-hero.block.dark-text .icon {
+  color: #121212;
+  fill: #121212;
+}
+
 
 .section-hero.block .left-container .image-container{
   overflow: hidden;
@@ -41,13 +57,8 @@ div.section-hero-container > div:first-child{
   font-size: 32px;
 }
 
-.section-hero.block .left-container .article-container *{
-  color: #fff;
-}
-
 .section-hero.block .left-container .article-container .author *{
   font-size: 13px;
-  color: #fff;
 }
 
 .section-hero.block .left-container .article-container{
@@ -61,7 +72,6 @@ div.section-hero-container > div:first-child{
   text-align: center;
   letter-spacing: 17px;
   margin-bottom: 24px;
-  color: #fff;
 }
 
 .section-hero.block .right-container p.title {
@@ -69,14 +79,12 @@ div.section-hero-container > div:first-child{
   text-transform: uppercase;
   text-align: center;
   letter-spacing: 2px;
-  color: #fff;
 }
 
 .section-hero.block .right-container p.description {
   font-size: 14px;
   text-align: center;
   margin-bottom: 24px;
-  color: #fff;
 }
 
 .section-hero.block .right-container .social-media-buttons {
@@ -85,11 +93,11 @@ div.section-hero-container > div:first-child{
 }
 
 .section-hero.block .right-container .social-media-buttons .icon{
-  fill: #fff;
   width: 24px;
   height: 24px;
   margin: 0 8px;
 }
+
 
 @media screen and (min-width:900px) {
   .section-hero.block{
