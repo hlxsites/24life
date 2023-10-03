@@ -81,7 +81,7 @@ for (let testPath of process.env.TEST_PATHS.split(/\s+/g)) {
       await writeFile(getScreenshotPath(testPath, 'diff'), result.diff);
 
       // print markdown summary to console
-      const markdownSummary = ` - **${testPath}** ([main](${urlMain}) vs [branch](${urlBranch}))<br>${result.errorMessage}`;
+      const markdownSummary = ` - **${testPath}** ([main](${urlMain}) vs [branch](${urlBranch}))<br>`;
       console.log(markdownSummary);
       testInfo.attachments.push({
         name: getScreenshotPath(testPath, 'diff'),
