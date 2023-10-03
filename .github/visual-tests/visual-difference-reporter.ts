@@ -21,7 +21,7 @@ class MyReporter implements Reporter {
 
     let summary = ''
     if (failures.length > 0) {
-      summary += `### :small_orange_diamond: ${failures.length} This branch has ${failures.length} visual difference${failures.length > 1 ? 's' : ''} compared to main branch.\n`;
+      summary += `### :small_orange_diamond: This branch has ${failures.length} visual difference${failures.length > 1 ? 's' : ''} compared to the main branch.\n`;
       for (const [id, result] of failures) {
         const test: TestCase = this.testCases[id];
         if (result.status !== 'passed') {
