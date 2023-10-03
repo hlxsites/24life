@@ -104,6 +104,6 @@ function oldMagazineHeader(block) {
   magazineDesc.classList.add('magazine-desc');
 
   const quote = block.querySelector('p');
-  quote.classList.add('quote');
-  quote.nextElementSibling.classList.add('quote-signature');
+  quote?.classList.add('quote');
+  quote?.nextElementSibling?.classList.add('quote-signature');
 }

@@ -1,15 +1,11 @@
 // noinspection UnnecessaryContinueJS
-import {JSDOM} from "jsdom";
 import fs from 'fs'
 import {readdir} from "node:fs/promises";
 import path from "path";
-import {exec, execSync} from "child_process";
+import {exec} from "child_process";
 import pLimit from 'p-limit';
-const shell = (cmd) => execSync(cmd, {encoding: 'utf8'});
 
-// make sure you have pandoc and docxtools installed.
-// `brew install pandoc` (https://pandoc.org/installing.html)
-// https://github.com/coderthoughts/docxtools
+// make sure you have docxtools installed. https://github.com/coderthoughts/docxtools
 
 // Then mount the Sharepoint folder using OneDrive and set the sourceDirectory variable below.
 
@@ -18,14 +14,14 @@ const sourceDirectory = `/Users/wingeier/Library/CloudStorage/OneDrive-Adobe/24l
 const outputDir = `./24life-rewritten`;
 const redirects = await loadRedirects("main--24life--hlxsites.hlx.page");
 const baseUrlForRelativePaths = "https://main--24life--hlxsites.hlx.page/";
-const limitConcurrency = pLimit(5);
+const limitConcurrency = pLimit(15);
 // ###  end of configuration ###
 
 requireNodeVersion(20);
-checkToolsInstalled(['pandoc', 'docxtools']);
 
 let files = (await readdir(sourceDirectory, {recursive: true}))
     .filter((file) => file.endsWith(".docx"))
+    // .filter((file) => file.startsWith("magazine"))
 
 // processing files in parallel
 await Promise.all(files.map(async (file) => {
@@ -41,7 +37,7 @@ await Promise.all(files.map(async (file) => {
         const links = await getAllLinks(sourceFilePath);
         for (let link of links) {
             const url = new URL(link, baseUrlForRelativePaths);
-            // rewrite some of the links
+            // ### Add your transformations here ###
 
             // fetch redirects.json and apply them.
             const siteHostnames = ["www.24life.com", "main--24life--hlxsites.hlx.page", "main--24life--hlxsites.hlx.live"];
@@ -49,6 +45,16 @@ await Promise.all(files.map(async (file) => {
                 && redirects[url.pathname]) {
                 const newLink = new URL(link, baseUrlForRelativePaths);
                 newLink.pathname = redirects[url.pathname];
+                newLink.hostname = "main--24life--hlxsites.hlx.page";
+                newLink.protocol = "https";
+                await changeLink(sourceFilePath, outputFilePath, link, newLink.toString());
+                continue; // apply only one rewrite for each link
+            }
+            // same as above, but also try with a trailing slash
+            if (siteHostnames.includes(url.hostname)
+                && redirects[url.pathname + "/"] ) {
+                const newLink = new URL(link, baseUrlForRelativePaths);
+                newLink.pathname = redirects[url.pathname + "/"];
                 newLink.hostname = "main--24life--hlxsites.hlx.page";
                 newLink.protocol = "https";
                 await changeLink(sourceFilePath, outputFilePath, link, newLink.toString());
@@ -99,12 +105,12 @@ async function loadRedirects(domain) {
 
 
 async function getAllLinks(filePath) {
-    // read docx, transform to html, parse html dom
-    // Note: with https://github.com/coderthoughts/docxtools/issues/3 the pandoc step could be skipped.
-    const html = await execShellCommand(`pandoc ${filePath} -t html5`)
-    const dom = new JSDOM(html);
-    return [...dom.window.document.querySelectorAll('a[href]')]
-        .map((link) => link.href);
+  const output = await execShellCommand(`docxtools '${filePath}' links `);
+  return  output.split("\n")
+    .filter((line) => line.trim().length > 0)
+    .map((line) => {
+    return line.split(": ").pop()
+  });
 }
 
 function requireNodeVersion(version) {
@@ -131,22 +137,3 @@ function execShellCommand(cmd) {
         });
     });
 }
-
-function checkToolsInstalled(executables) {
-    function executableIsAvailable(name) {
-        try {
-            shell(`which ${name}`);
-            return true
-        } catch (error) {
-            return false
-        }
-    }
-
-    for (let name of executables) {
-        if (!executableIsAvailable(name)) {
-            console.error(`Please install ${name} first.`);
-            process.exit(1);
-        }
-    }
-}
-

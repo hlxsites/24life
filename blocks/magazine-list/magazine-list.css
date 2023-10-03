@@ -20,6 +20,8 @@
   justify-content: center;
   position: relative;
   overflow: hidden;
+  aspect-ratio: 258/377;
+  width: 100%;
 }
 
 .magazine-list .issue-image > img {
@@ -62,9 +64,13 @@ main .section.magazine-list-container {
   padding: 0;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 600px) {
   main .section .magazine-list-wrapper {
     max-width: unset;
+  }
+
+  .magazine-list .current-issue .issue {
+    width: 33.333%;
   }
 
   .magazine-list .other-issues {
@@ -78,8 +84,3 @@ main .section.magazine-list-container {
   }
 }
 
-@media (min-width: 992px) {
-  .magazine-list .current-issue .issue {
-    width: 33.333%;
-  }
-}

@@ -474,9 +474,10 @@ export async function loadBlocks(main) {
  * @param {string} [alt] The image alternative text
  * @param {boolean} [eager] Set loading attribute to eager
  * @param {Array} [breakpoints] Breakpoints and corresponding params (eg. width)
+ * @param {HTMLImageElement|undefined} originalElement if defined the height and width will be set
  * @returns {Element} The picture element
  */
-export function createOptimizedPicture(src, alt = '', eager = false, breakpoints = [{ media: '(min-width: 600px)', width: '2000' }, { width: '750' }]) {
+export function createOptimizedPicture(src, alt = '', eager = false, breakpoints = [{ media: '(min-width: 600px)', width: '2000' }, { width: '750' }], originalElement = null) {
   const url = new URL(src, window.location.href);
   const picture = document.createElement('picture');
   const { pathname } = url;
@@ -504,6 +505,10 @@ export function createOptimizedPicture(src, alt = '', eager = false, breakpoints
       img.setAttribute('alt', alt);
       picture.appendChild(img);
       img.setAttribute('src', `${pathname}?width=${br.width}&format=${ext}&optimize=medium`);
+      if (originalElement) {
+        img.height = originalElement.height;
+        img.width = originalElement.width;
+      }
     }
   });
 
