@@ -55,6 +55,7 @@
   font-weight: 400;
   margin-bottom: 0.5em;
   color: #ddd8d7;
+  text-transform: uppercase;
 }
 
 .magazine-hero .text-overlay .left-side h1 {
@@ -104,6 +105,7 @@
     width: 30%;
     display: flex;
     align-self: start;
+    align-items: flex-start;
   }
 }
 

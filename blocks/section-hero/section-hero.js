@@ -13,6 +13,10 @@ export default function decorate(block) {
   const description = data?.description.trim();
   const authors = data?.authors.trim();
 
+  if (section.toLowerCase() === 'focus' || section.toLowerCase() === 'fitness') {
+    block.classList.add('dark-text');
+  }
+
   // create left container
   const leftContainer = document.createElement('div');
   leftContainer.classList.add('left-container');

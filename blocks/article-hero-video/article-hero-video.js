@@ -18,6 +18,8 @@ export default function decorate(block) {
 
   const videoContainer = document.createElement('div');
   videoContainer.classList.add('video-container');
+  // makes the video non-interactive and hides it from assistive technologies
+  videoContainer.setAttribute('inert', 'true');
 
   function buildVideo() {
     if (isYoutubeVideo(data.video)) {
@@ -36,7 +38,7 @@ export default function decorate(block) {
   }
   block.append(videoContainer);
 
-  // add overlay div to avoid clicks on video
+  // add overlay div to avoid clicks on video. Safari does not respect the inert attribute.
   const overlay = document.createElement('div');
   overlay.classList.add('overlay-catch-clicks');
   block.append(overlay);
@@ -67,7 +69,7 @@ export default function decorate(block) {
   title.classList.add('article-hero-video-title');
   title.innerText = data?.title.trim();
 
-  const authorLinks = document.createElement('h6');
+  const authorLinks = document.createElement('p');
   authorLinks.classList.add('authors');
   authorLinks.append('By ');
   getMetadata('authors').trim().split(',').forEach((author, index) => {
