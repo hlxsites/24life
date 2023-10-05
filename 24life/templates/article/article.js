@@ -149,7 +149,8 @@ async function createMagazineFooter(section) {
     section.innerHTML = await summary.text();
     const wrapper = section.firstElementChild;
     decorateBlock(wrapper.firstElementChild);
+  } else {
+    // eslint-disable-next-line no-console
+    console.error(`issue summary ${issue} cannot be loaded`);
   }
-  // eslint-disable-next-line no-console
-  console.error(`issue summary ${issue} cannot be loaded`);
 }

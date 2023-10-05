@@ -212,7 +212,7 @@ const createMetadata = (main, document, params) => {
   const { ldJSON } = params;
   const meta = {};
   meta.Title = document.querySelector('title').textContent.replace(/-\s*24Life/gm, '');
-  meta['Description'] = ldJSON['@graph'].find((item) => item['@type'] === 'WebSite')?.description;
+  meta.Description = ldJSON['@graph'].find((item) => item['@type'] === 'WebSite')?.description;
   meta['Publication Date'] = ldJSON['@graph'].find((item) => item['@type'] === 'WebPage')?.datePublished.replace(/T.*$/, '');
   meta.Image = createImg(document.querySelector('meta[property="og:image"]').content);
   const block = generateBlock(document, meta, 'Metadata');

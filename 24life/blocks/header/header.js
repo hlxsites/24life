@@ -95,7 +95,7 @@ export default async function decorate(block) {
       <div id="main-menu-tools" class="tools">
       </div>
 
-      <a href="#" class="hamburger-toggle" role="button" title="open menu" aria-expanded="false" aria-controls="main-nav-sections,main-menu-tools">
+      <a href="#" class="hamburger-toggle" role="button" title="open menu" aria-expanded="false" aria-controls="main-nav-sections main-menu-tools">
         <span class="icon icon-hamburger"></span>
       </a>
 
