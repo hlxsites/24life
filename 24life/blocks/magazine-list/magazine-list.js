@@ -13,7 +13,7 @@ export default async function decorate(block) {
 }
 
 async function fetchMagazines() {
-  const response = await fetch('/magazines.json');
+  const response = await fetch(`${window.hlx.codeBasePath}/magazines.json`);
   const json = await response.json();
   return json.data;
 }

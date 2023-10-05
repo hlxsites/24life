@@ -104,7 +104,7 @@ function noResults(resultsDiv) {
    <div class="search-container">
     <div class="search-wrapper">
      <div class='search-form'>
-      <form action='/search' method='get'>
+      <form action='${window.hlx.codeBasePath}/search' method='get'>
         <input type='search' name='q' class='search-input' placeholder="TYPE HERE"/>
       </form>
      </div>

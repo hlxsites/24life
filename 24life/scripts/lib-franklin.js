@@ -639,7 +639,7 @@ export function loadFooter(footer) {
 export function setup() {
   window.hlx = window.hlx || {};
   window.hlx.RUM_MASK_URL = 'full';
-  window.hlx.codeBasePath = '';
+  window.hlx.codeBasePath = '/24life';
   window.hlx.lighthouse = new URLSearchParams(window.location.search).get('lighthouse') === 'on';
 
   const scriptEl = document.querySelector('script[src$="/scripts/scripts.js"]');

@@ -72,7 +72,7 @@ export default async function decorate(block) {
 }
 
 async function fetchArticles(config) {
-  const resp = await fetch(`/articles.json?limit=${config.limit || 9}`);
+  const resp = await fetch(`${window.hlx.codeBasePath}/articles.json?limit=${config.limit || 9}`);
   // eslint-disable-next-line no-return-await
   return (await resp.json()).data;
 }
