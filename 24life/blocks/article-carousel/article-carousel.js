@@ -13,7 +13,7 @@ export default async function decorate(block) {
 }
 
 async function fetchArticlesAndCreateCards(filters) {
-  return ffetch('/articles.json')
+  return ffetch(`${window.hlx.codeBasePath}/articles.json`)
     .sheet('section-carousel')
     // make sure all filters match
     .filter((article) => Object.keys(filters).every(

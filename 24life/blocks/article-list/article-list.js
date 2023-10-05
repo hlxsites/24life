@@ -65,7 +65,7 @@ async function displayNextEntries(iterator, block, loadMoreContainer) {
 }
 
 async function fetchArticlesAndAddCards(filters, block) {
-  const articles = await ffetchArticles('/articles.json').all();
+  const articles = await ffetchArticles(`${window.hlx.codeBasePath}/articles.json`).all();
   const matches = articles
     // make sure all filters match
     .filter((article) => Object.keys(filters).every(

@@ -31,7 +31,7 @@ export default function decorate(block) {
   // delay the loading of the author description, as it's usually after the fold
   // and not an integral part of the first paint
   setTimeout(async () => {
-    const resp = await fetch('/authors.json');
+    const resp = await fetch(`${window.hlx.codeBasePath}/authors.json`);
     if (resp.ok) {
       const json = await resp.json();
       const authorInfo = json.data

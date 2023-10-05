@@ -10,7 +10,7 @@ import { createOptimizedPicture, decorateIcons } from '../../scripts/lib-frankli
  * | Writer | Contributing     | Writers          |
  */
 export default async function decorate(block) {
-  const allAuthors = await ffetch('/authors.json').chunks(5000).all();
+  const allAuthors = await ffetch(`${window.hlx.codeBasePath}/authors.json`).chunks(5000).all();
   const roles = [...block.children].map((row) => {
     const cells = [...row.children];
     return ({
