@@ -22,16 +22,29 @@ main .section.magazine-summary-container {
   font-weight: 500;
 }
 
-.magazine-summary .col2 > *,
-.magazine-summary .col3 > * {
+.magazine-summary .col2 > a,
+.magazine-summary .col3 > a {
   display: block;
   padding: 6px 0;
-  line-height: 1.2em;
+  line-height: 18px;
   letter-spacing: 0.02em;
 }
 
-.magazine-summary h6.red {
+.magazine-summary .col2 > div,
+.magazine-summary .col3 > div {
+  letter-spacing: 2px;
+  line-height: 24px;
+}
+
+.magazine-summary .issue-number {
   color: var(--color-fitness-text);
+  font-size: var(--heading-font-size-h6);
+  letter-spacing: 2px;
+}
+
+.magazine-summary .issue-title {
+  font-size: var(--heading-font-size-h4);
+  font-weight: 400;
 }
 
 .magazine-summary picture {
@@ -68,8 +81,14 @@ main .section.magazine-summary-container {
     padding-bottom: 30px;
   }
 
-  .magazine-summary .col1 h4 {
+  .magazine-summary .col1 p {
     margin: 0;
+  }
+
+  .nav-fragment .issue-title {
+    text-transform: uppercase;
+    font-size: var(--heading-font-size-h5);
+    letter-spacing: 2px;
   }
 
   .nav-fragment .magazine-summary .col2,

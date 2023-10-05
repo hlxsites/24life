@@ -41,32 +41,33 @@ export default async function decorate(block) {
 
 function createCoverColumn(config) {
   const textCol = new DocumentFragment();
-  const titleH4 = document.createElement('h4');
-  const titleH6 = document.createElement('h6');
-  titleH6.classList.add('red');
+  const issueTitle = document.createElement('p');
+  issueTitle.classList.add('issue-title');
+  const issueNumber = document.createElement('p');
+  issueNumber.classList.add('issue-number');
   if (!config.isSubNav) {
     // page
     const title = config.title || getMetadata('og:title');
     const location = config.link || new URL(document.location).pathname;
     const coverPic = config.image || getMetadata('og:image');
-    titleH4.textContent = `In This Issue - ${title}`;
-    titleH6.textContent = location.split('/').pop().replaceAll(/-/g, ' ').toUpperCase();
-    textCol.append(titleH4);
-    textCol.append(titleH6);
+    issueTitle.textContent = `In This Issue - ${title.toUpperCase()}`;
+    issueNumber.textContent = location.split('/').pop().replaceAll(/-/g, ' ').toUpperCase();
+    textCol.append(issueTitle);
+    textCol.append(issueNumber);
     const coverImage = createOptimizedPicture(coverPic, title, false, [{ width: '200' }], config.imageElement);
     textCol.append(coverImage);
   } else {
     // navigation header
     const coverImage = createOptimizedPicture(config.image, config.title, false, [{ width: '200' }]);
-    titleH4.textContent = config.title;
-    titleH6.textContent = config.link.split('/').pop().replaceAll(/-/g, ' ').toUpperCase();
+    issueTitle.textContent = config.title;
+    issueNumber.textContent = config.link.split('/').pop().replaceAll(/-/g, ' ').toUpperCase();
     const thisIssueLink = document.createElement('a');
     thisIssueLink.href = config.link;
     thisIssueLink.textContent = 'Explore This Issue';
     thisIssueLink.className = 'button';
     textCol.append(coverImage);
-    textCol.append(titleH6);
-    textCol.append(titleH4);
+    textCol.append(issueNumber);
+    textCol.append(issueTitle);
     textCol.append(thisIssueLink);
   }
   return textCol;
