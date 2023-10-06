@@ -4,13 +4,19 @@ import { loadScript, sampleRUM } from './lib-franklin.js';
 sampleRUM('cwv');
 
 /**
- * Load the launch library applicable to the domain
+ * Load the launch library applicable to the domain dev, staging, or production.
  */
 async function loadAdobeLaunch() {
-  const isProd = window.location.hostname === 'www.24hourfitness.com';
-  const launchProd = 'https://assets.adobedtm.com/57921990a5e5/01b20556a634/launch-EN899f16b777754991924d45661d0c60bb.min.js';
-  const launchStaging = 'https://assets.adobedtm.com/57921990a5e5/01b20556a634/launch-EN1720538a14c5448383dbc3a400a4f55a-staging.min.js';
-  await loadScript(isProd ? launchProd : launchStaging, {
+  // Stage
+  let url = 'https://assets.adobedtm.com/57921990a5e5/01b20556a634/launch-EN1720538a14c5448383dbc3a400a4f55a-staging.min.js';
+  if (window.location.hostname === 'www.24hourfitness.com') {
+    // PROD
+    url = 'https://assets.adobedtm.com/57921990a5e5/01b20556a634/launch-EN899f16b777754991924d45661d0c60bb.min.js';
+  } else if (window.location.host.includes('localhost')) {
+    // DEV
+    url = 'https://assets.adobedtm.com/57921990a5e5/01b20556a634/launch-EN95eda61e2ae9436886ce63d7d3dcb671-development.min.js';
+  }
+  await loadScript(url, {
     type: 'text/javascript',
     charset: 'UTF-8',
     async: true,
