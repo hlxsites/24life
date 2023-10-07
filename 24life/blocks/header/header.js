@@ -83,7 +83,7 @@ export default async function decorate(block) {
     // add all the divs that will be part of the nav
     nav.innerHTML = `
       <div class="brand">
-        <a class="logo" title="Homepage" href="/">
+        <a class="logo" title="Homepage" href="/24life/">
         </a>
       </div>
 
