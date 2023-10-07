@@ -124,7 +124,7 @@ function createSocialMediaButtons() {
   socialMediaButtons.classList.add('article-social-media-buttons');
   socialMediaButtons.innerHTML = `
           <a aria-label="share this page on twitter" href="https://twitter.com/share?url=">
-              <span class="icon icon-twitter-alt"></span>
+              <span class="icon icon-twitter"></span>
           </a>
 
           <a aria-label="share this page on facebook" href="http://www.facebook.com/share.php?u=">
