@@ -62,7 +62,7 @@ export default function decorate(block) {
   const section = document.createElement('a');
   section.classList.add('article-hero-video-section');
   const sectionName = getMetadata('section');
-  section.href = `/${sectionName?.toLowerCase()}`;
+  section.href = `${window.hlx.codeBasePath}/${sectionName?.toLowerCase()}`;
   section.append(`${sectionName}`);
 
   const title = document.createElement('h1');
@@ -74,7 +74,7 @@ export default function decorate(block) {
   authorLinks.append('By ');
   getMetadata('authors').trim().split(',').forEach((author, index) => {
     const authorLink = document.createElement('a');
-    authorLink.href = `/author/${toClassName(author)}`;
+    authorLink.href = `${window.hlx.codeBasePath}/author/${toClassName(author)}`;
     authorLink.textContent = author;
     if (index > 0) {
       authorLinks.append(' and ');

@@ -84,7 +84,7 @@ function createAuthorLink(authors) {
   authorLinks.append('By ');
   authors.split(',').forEach((author, index) => {
     const authorLink = document.createElement('a');
-    authorLink.href = `/author/${toClassName(author)}`;
+    authorLink.href = `${window.hlx.codeBasePath}/author/${toClassName(author)}`;
     authorLink.textContent = author;
     if (index > 0) {
       authorLinks.append(' and ');

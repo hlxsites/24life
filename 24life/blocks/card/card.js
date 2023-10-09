@@ -58,7 +58,7 @@ export default function decorate(block) {
     const links = collections.textContent.split(',')
       .map((collectionText) => {
         const a = document.createElement('a');
-        a.href = `/collections/${toClassName(collectionText.trim())}`;
+        a.href = `${window.hlx.codeBasePath}/collections/${toClassName(collectionText.trim())}`;
         a.append(collectionText.trim());
         return a;
       });
@@ -68,7 +68,7 @@ export default function decorate(block) {
 
   const accentColor = ['focus', 'fitness', 'fuel', 'recover']
     .find((sectionText) => block.classList.contains(sectionText)
-      || linkPathname.startsWith(`/${sectionText}/`));
+      || linkPathname.startsWith(`${window.hlx.codeBasePath}/${sectionText}/`));
   if (accentColor) {
     block.style.setProperty('--accent-color', `var(--color-${accentColor})`);
     block.style.setProperty('--category-text-color', `var(--color-${accentColor}-text)`);
@@ -112,7 +112,7 @@ export function createCardBlock(articleInfo, parent) {
   authorLinks.append('By ');
   articleInfo.authors.split(',').forEach((author, index) => {
     const authorLink = document.createElement('a');
-    authorLink.href = `/author/${toClassName(author)}`;
+    authorLink.href = `${window.hlx.codeBasePath}/author/${toClassName(author)}`;
     authorLink.textContent = author;
     if (index > 0) {
       authorLinks.append(' and ');
