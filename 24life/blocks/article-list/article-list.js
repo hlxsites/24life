@@ -8,7 +8,7 @@ import { createCardBlock } from '../card/card.js';
 export default async function decorate(block) {
   const filters = removeEmptyKeyOrValue(readBlockConfig(block));
   const isEmptyFilter = Object.keys(filters).length === 0;
-  if (isEmptyFilter && document.location.pathname.startsWith('/category/')) {
+  if (isEmptyFilter && document.location.pathname.startsWith(`${window.hlx.codeBasePath}/category/`)) {
     // auto-detect category, e.g. https://www.24life.com/category/lifestyle
     const parts = document.location.pathname.split('/');
     const askedCategory = parts[parts.length - 1];
@@ -16,10 +16,10 @@ export default async function decorate(block) {
     const firstContainer = document.createElement('div');
     firstContainer.innerHTML = `<h1>IN: ${filters.categories.toUpperCase()}</h1>`;
     block.before(firstContainer);
-  } else if (isEmptyFilter && document.location.pathname.startsWith('/author/')) {
+  } else if (isEmptyFilter && document.location.pathname.startsWith(`${window.hlx.codeBasePath}/author/`)) {
     // auto-detect author, e.g. https://www.24life.com/author/24life
     filters.authors = getMetadata('og:title');
-  } else if (isEmptyFilter && document.location.pathname.startsWith('/collections/')) {
+  } else if (isEmptyFilter && document.location.pathname.startsWith(`${window.hlx.codeBasePath}/collections/`)) {
     filters.collections = new URL(document.location).pathname.split('/').pop();
     filters.collections = filters.collections?.replace(/-/g, ' ');
   }
