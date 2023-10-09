@@ -21,7 +21,14 @@ requireNodeVersion(20);
 
 let files = (await readdir(sourceDirectory, {recursive: true}))
   .filter((file) => file.endsWith(".docx"))
-// .filter((file) => file.startsWith("magazine"))
+  .filter((file) => !file.startsWith("24life/drafts/"))
+
+function is24LifeSite(url) {
+  return url.hostname.includes("24life.com") ||
+    url.hostname.includes("24life--hlxsites.hlx.page")
+    || url.hostname.includes("24life--hlxsites.hlx.live");
+
+}
 
 // processing files in parallel
 await Promise.all(files.map(async (file) => {
@@ -37,33 +44,36 @@ await Promise.all(files.map(async (file) => {
     const links = await getAllLinks(sourceFilePath);
     for (let link of links) {
       const url = new URL(link, baseUrlForRelativePaths);
-      const siteHostnames = ["www.24life.com", "main--24life--hlxsites.hlx.page", "main--24life--hlxsites.hlx.live"];
 
       // ### Add your transformations here ###
 
       // fetch redirects.json and apply them.
-      if (siteHostnames.includes(url.hostname)
+      if (is24LifeSite(url)
           && redirects[url.pathname]) {
           const newLink = new URL(link, baseUrlForRelativePaths);
           newLink.pathname = redirects[url.pathname];
           newLink.hostname = "main--24life--hlxsites.hlx.page";
           newLink.protocol = "https";
+        if(newLink.toString() !== url.toString()) {
           await changeLink(sourceFilePath, outputFilePath, link, newLink.toString());
           continue; // apply only one rewrite for each link
+        }
       }
       // same as above, but also try with a trailing slash
-      if (siteHostnames.includes(url.hostname)
+      if (is24LifeSite(url)
           && redirects[url.pathname + "/"] ) {
           const newLink = new URL(link, baseUrlForRelativePaths);
           newLink.pathname = redirects[url.pathname + "/"];
           newLink.hostname = "main--24life--hlxsites.hlx.page";
           newLink.protocol = "https";
-          await changeLink(sourceFilePath, outputFilePath, link, newLink.toString());
-          continue; // apply only one rewrite for each link
+          if(newLink.toString() !== url.toString()) {
+            await changeLink(sourceFilePath, outputFilePath, link, newLink.toString());
+            continue; // apply only one rewrite for each link
+          }
       }
 
       // add /24life prefix to all links
-      if (siteHostnames.includes(url.hostname) && !url.pathname.startsWith("/24life")) {
+      if (is24LifeSite(url) && !url.pathname.startsWith("/24life")) {
         const newLink = new URL(link, baseUrlForRelativePaths);
         newLink.pathname = "/24life" + newLink.pathname;
         newLink.hostname = "main--24life--hlxsites.hlx.page";
@@ -71,6 +81,16 @@ await Promise.all(files.map(async (file) => {
         await changeLink(sourceFilePath, outputFilePath, link, newLink.toString());
         continue; // apply only one rewrite for each link
       }
+
+      // if (siteHostnames.includes(url.hostname) && url.pathname.startsWith("/24life/authors/")) {
+      //   const newLink = new URL(link, baseUrlForRelativePaths);
+      //   newLink.pathname = newLink.pathname.replace("/24life/authors/", "/24life/author/");
+      //   newLink.hostname = "main--24life--hlxsites.hlx.page";
+      //   newLink.protocol = "https";
+      //   await changeLink(sourceFilePath, outputFilePath, link, newLink.toString());
+      //   continue; // apply only one rewrite for each link
+      // }
+
       // add more link rewrites here
 
     }
@@ -82,6 +102,7 @@ async function changeLink(sourceFilePath, outputFilePath, link, newLink) {
   function escapeRegex(string) {
     return string.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
   }
+
 
   console.log(`---\n${sourceFilePath}: \nchanging ${link} to ${newLink}`)
 
