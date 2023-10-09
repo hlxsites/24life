@@ -20,7 +20,7 @@ export default function decorate(block) {
   const authorName = document.createElement('p');
   authorName.classList.add('author-name');
   const authorLink = document.createElement('a');
-  authorLink.href = `/author/${toClassName(authorString)}`;
+  authorLink.href = `${window.hlx.codeBasePath}/author/${toClassName(authorString)}`;
   authorLink.innerText = authorString;
   authorName.append(authorLink);
   rightSide.append(authorName);
