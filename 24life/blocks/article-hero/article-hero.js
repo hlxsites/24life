@@ -19,7 +19,7 @@ export default function decorate(block) {
   const links = data.collections?.split(',')
     .map((collectionText) => {
       const a = document.createElement('a');
-      a.href = `/collections/${toClassName(collectionText.trim())}`;
+      a.href = `${window.hlx.codeBasePath}/collections/${toClassName(collectionText.trim())}`;
       a.append(collectionText.trim());
       return a;
     });
@@ -36,7 +36,7 @@ export default function decorate(block) {
   authorLinks.append('By ');
   data.authors.split(',').forEach((author, index) => {
     const authorLink = document.createElement('a');
-    authorLink.href = `/author/${toClassName(author)}`;
+    authorLink.href = `${window.hlx.codeBasePath}/author/${toClassName(author)}`;
     authorLink.textContent = author;
     if (index > 0) {
       authorLinks.append(' and ');

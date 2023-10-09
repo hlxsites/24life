@@ -136,7 +136,7 @@ export default async function decorate(block) {
         const navSection = document.createElement('li');
         navSection.classList.add('section', `color-${toClassName(sectionTitle)}`);
         const a = document.createElement('a');
-        a.href = `/${sectionTitle.toLowerCase()}`;
+        a.href = `${window.hlx.codeBasePath}/${sectionTitle.toLowerCase()}`;
         a.textContent = sectionTitle;
         const icon = document.createElement('span');
         icon.classList.add('icon', 'icon-arrow-down');
