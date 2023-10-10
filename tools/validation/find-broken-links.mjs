@@ -13,6 +13,10 @@ import pLimit from 'p-limit';
 const sourceDirectory = `/Users/wingeier/Library/CloudStorage/OneDrive-Adobe/24life`;
 const baseUrlForRelativePaths = "https://main--24life--hlxsites.hlx.live/";
 const limitConcurrency = pLimit(15);
+function isLocalLink(url) {
+  return url.hostname.includes("24life--hlxsites.hlx.page")
+    || url.hostname.includes("24life--hlxsites.hlx.live");
+}
 // ###  end of configuration ###
 
 requireNodeVersion(20);
@@ -20,17 +24,6 @@ requireNodeVersion(20);
 let files = (await readdir(sourceDirectory, {recursive: true}))
   .filter((file) => file.endsWith(".docx"))
   .filter((file) => !file.startsWith("24life/drafts/"))
-
-function is24LifeSite(url) {
-  return url.hostname.includes("24life.com") ||
-    url.hostname.includes("24life--hlxsites.hlx.page")
-    || url.hostname.includes("24life--hlxsites.hlx.live");
-}
-
-function fileExists(pathname) {
-  return fs.existsSync(path.join(sourceDirectory, pathname)) ||
-    fs.existsSync(path.join(sourceDirectory, pathname + ".docx"));
-}
 
 // processing files in parallel
 await Promise.all(files.map(async (file) => {
@@ -42,7 +35,7 @@ await Promise.all(files.map(async (file) => {
       const url = new URL(link, baseUrlForRelativePaths);
 
       // fetch redirects.json and apply them.
-      if (is24LifeSite(url)) {
+      if (isLocalLink(url)) {
 
         if(url.pathname.includes("/media_")){
           // ignore for now
@@ -54,7 +47,6 @@ await Promise.all(files.map(async (file) => {
           continue;
         }
 
-        // does document exist?
         if (!fileExists(url.pathname)) {
           console.log("---")
           console.log(sourceFilePath)
@@ -99,3 +91,9 @@ function execShellCommand(cmd) {
     });
   });
 }
+
+function fileExists(pathname) {
+  return fs.existsSync(path.join(sourceDirectory, pathname)) ||
+    fs.existsSync(path.join(sourceDirectory, pathname + ".docx"));
+}
+
