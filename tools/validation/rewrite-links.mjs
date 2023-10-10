@@ -30,6 +30,14 @@ function is24LifeSite(url) {
 
 }
 
+function createLinkWithPath(link, pathname) {
+  const newLink = new URL(link, baseUrlForRelativePaths);
+  newLink.pathname = pathname;
+  newLink.hostname = "main--24life--hlxsites.hlx.page";
+  newLink.protocol = "https";
+  return newLink;
+}
+
 // processing files in parallel
 await Promise.all(files.map(async (file) => {
   await (limitConcurrency(async () => {
@@ -37,7 +45,7 @@ await Promise.all(files.map(async (file) => {
     const outputFilePath = path.join(outputDir, file);
 
     if (sourceFilePath !== outputFilePath && fs.existsSync(outputFilePath)) {
-      console.log(`skipped ${sourceFilePath} because ${outputFilePath} already exists`)
+      console.log(`skipped, ${outputFilePath} already exists`)
       return;
     }
 
@@ -80,6 +88,94 @@ await Promise.all(files.map(async (file) => {
         newLink.protocol = "https";
         await changeLink(sourceFilePath, outputFilePath, link, newLink.toString());
         continue; // apply only one rewrite for each link
+      }
+
+      if (is24LifeSite(url) && url.pathname.includes('%E2%80%9D')) {
+        const newLink = new URL(link, baseUrlForRelativePaths);
+        newLink.pathname = url.pathname.replaceAll('%E2%80%9D', '');
+        newLink.hostname = "main--24life--hlxsites.hlx.page";
+        newLink.protocol = "https";
+        await changeLink(sourceFilePath, outputFilePath, link, newLink.toString());
+        continue; // apply only one rewrite for each link
+      }
+
+      if(link==="https://main--24life--hlxsites.hlx.page/24life/Library/Containers/com.microsoft.Word/Data/Downloads/ryanserhant.com") {
+        await changeLink(sourceFilePath, outputFilePath, link, "https://ryanserhant.com/");
+      }
+
+      if(url.pathname.startsWith("/24life/author/rory-j") || url.pathname.startsWith("/24life/author/rory-o")) {
+        const newLink = createLinkWithPath(link, "/24life/author/rory-oconnor");
+        if(newLink.toString() !== url.toString()) {
+          await changeLink(sourceFilePath, outputFilePath, link, newLink.toString());
+          continue; // apply only one rewrite for each link
+        }
+      }
+
+      if(url.pathname.startsWith("/24life/author/dr.")) {
+        const newLink = createLinkWithPath(link, "/24life/author/kelly-starrett");
+        if(newLink.toString() !== url.toString()) {
+          await changeLink(sourceFilePath, outputFilePath, link, newLink.toString());
+          continue; // apply only one rewrite for each link
+        }
+      }
+      if(url.pathname.startsWith("/24life/author/robert-%22")) {
+        const newLink = createLinkWithPath(link, "/24life/author/robert-cappuccio");
+        if(newLink.toString() !== url.toString()) {
+          await changeLink(sourceFilePath, outputFilePath, link, newLink.toString());
+          continue; // apply only one rewrite for each link
+        }
+      }
+
+      if (is24LifeSite(url) && [
+        "/24life/fitness/2018/body-gone-bbarreless",
+        "/24life/fitness/2018/bring-2017-on-strong",
+        "/24life/fitness/2018/jump-your-bones-and-work-that-skeleton-for-lifelong-health",
+        "/24life/fitness/2018/movement-basics-for-a-healthier-2017",
+        "/24life/fitness/2018/seven-workout-trends-youll-see-in-2017",
+        "/24life/fitness/2019/spartan-total-body-conditioning",
+        "/24life/fitness/2019/tabata-kickstart",
+        "/24life/fitness/2020/seven-self-care-stretches-before-bed",
+        "/24life/fitness/2021/short-circuit-fat-burn",
+        "/24life/focus/2018/alex-carneiro-raises-a-goal",
+        "/24life/focus/2018/excuse-busters",
+        "/24life/focus/2018/kwik-success-goals-from-the-heart-with-jim-kwik",
+        "/24life/focus/2018/motivation-mastery",
+        "/24life/focus/2019/naveen-jain-says-the-sky-is-not-the-limit-when-it-comes-to-well-being",
+        "/24life/focus/2019/spartan-more-than-a-race",
+        "/24life/focus/2019/spartan-up",
+        "/24life/focus/2020/a-fitness-coach-and-social-influencers-three-tips-for-healthier-self-talk",
+        "/24life/focus/2020/kelly-mcgonigal-on-falling-back-in-love-with-movement",
+        "/24life/focus/2020/new-year-new-advice-from-top-social-media-fitness-influencers",
+        "/24life/focus/2020/sophia-amoruso-wants-women-to-own-their-career",
+        "/24life/fuel/2018/crack-the-diet-code",
+        "/24life/fuel/2018/fitness-in-the-kitchen-with-jorge-cruise",
+        "/24life/fuel/2018/heres-what-happens-when-you-eat-in-silence",
+        "/24life/fuel/2020/5-easy-ways-to-save-money-in-2020",
+        "/24life/fuel/2020/unpack-your-excuses-for-success-with-nick-routson",
+        "/24life/fuel/2020/what-does-a-plant-based-diet-really-mean",
+        "/24life/fuel/2021/mini-trifles-for-two",
+        "/24life/recover/2018/get-back-into-your-body",
+        "/24life/recover/2018/reset-your-body-for-a-fresh-start",
+        "/24life/recover/2019/busting-through-barriers-with-spartan-adaptive-athlete-misty-diaz",
+      ].includes(url.pathname)) {
+        // these are invalid, find correct mapping
+        const lastPart = url.pathname.split("/").pop();
+        const newLink = new URL(link, baseUrlForRelativePaths);
+        const newPathName = `/24life/${lastPart}/`;
+        if(redirects[newPathName]) {
+          newLink.pathname = redirects[newPathName];
+          newLink.hostname = "main--24life--hlxsites.hlx.page";
+          newLink.protocol = "https";
+          if(newLink.toString() !== url.toString()) {
+            await changeLink(sourceFilePath, outputFilePath, link, newLink.toString());
+            continue; // apply only one rewrite for each link
+          }
+        } else {
+          console.log("--- warn: no alternative found for " + url.pathname)
+        }
+
+
+
       }
 
       // if (siteHostnames.includes(url.hostname) && url.pathname.startsWith("/24life/authors/")) {
