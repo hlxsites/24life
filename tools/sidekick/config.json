@@ -6,7 +6,7 @@
         "id": "library",
         "title": "Library",
         "environments": ["edit"],
-        "url": "/24life/tools/sidekick/library.html",
+        "url": "/tools/sidekick/library.html",
         "includePaths": ["**.docx**"]
       }
     ]
