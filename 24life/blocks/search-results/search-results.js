@@ -1,5 +1,6 @@
 import { createCardBlock } from '../card/card.js';
 import { loadBlock, toClassName } from '../../scripts/lib-franklin.js';
+import ffetch from '../../scripts/ffetch.js';
 
 export default async function decorate(block) {
   block.innerHTML = '';
@@ -26,8 +27,11 @@ function searchItems(searchTerm) {
 }
 
 async function loadResults(tokenizedSearchWords, resultsDiv) {
-  const allData = await fetch(`${window.location.origin}/articles.json?sheet=full`);
-  const jsonData = await allData.json();
+  const jsonData = await ffetch(`${window.hlx.codeBasePath}/articles.json`)
+    .sheet('full')
+    .chunks(1000)
+    .all();
+
   const matches = filterMatches(tokenizedSearchWords, jsonData);
   resultsDiv.parentNode.querySelector('.results-loading-spinner').remove();
   if (matches.length === 0) {
@@ -40,7 +44,7 @@ async function loadResults(tokenizedSearchWords, resultsDiv) {
 function filterMatches(tokenizedSearchWords, jsonData) {
   const allMatches = [];
   tokenizedSearchWords.forEach((searchTerm) => {
-    const matches = jsonData.data.filter((entry) => (
+    const matches = jsonData.filter((entry) => (
       entry.title
       + entry.content
       + entry.path
@@ -105,13 +109,12 @@ function noResults(resultsDiv) {
     <div class="search-wrapper">
      <div class='search-form'>
       <form action='${window.hlx.codeBasePath}/search' method='get'>
-        <input type='search' name='q' class='search-input' placeholder="TYPE HERE"/>
+        <input type='search' name='s' class='search-input' placeholder="TYPE HERE"/>
       </form>
      </div>
     </div>
    </div>
  `;
-  resultsDiv.parentNode.querySelector('.block.search-results.card-container.three-columns .results-div').classList.add('no-results-div');
 }
 
 function updateH1(block, title) {
