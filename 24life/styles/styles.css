@@ -304,7 +304,8 @@ main .section {
 
 .newsletter main .hero h1 {
   position: relative;
-  top: 20vh;
+  top: 25vh;
+  font-size: 20px;
 }
 
 .newsletter .section.cards-container {
@@ -330,6 +331,7 @@ main .section {
     position: relative;
     top: 30vh;
     margin-left: 5vw;
+    font-size: 40px;
   }
 }
 
@@ -352,6 +354,7 @@ main .section {
     position: relative;
     top: 45vh;
     margin-left: 5vw;
+    font-size: 40px;
   }
   
   
@@ -376,6 +379,7 @@ main .section {
     position: relative;
     top: 60vh;
     margin-left: 5vw;
+    font-size: 40px;
   }
 
 }
