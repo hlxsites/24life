@@ -187,6 +187,16 @@ await Promise.all(files.map(async (file) => {
       //   continue; // apply only one rewrite for each link
       // }
 
+      const youtubeVideoId  = getYoutubeVideoId(link);
+      if(link.includes("https://www.youtube.com/embed/") && youtubeVideoId){
+        const newLink = `https://www.youtube.com/watch?v=${youtubeVideoId}`;
+        if(newLink !== url.toString()) {
+          await changeLink(sourceFilePath, outputFilePath, link, newLink);
+          await changeText(sourceFilePath, outputFilePath, link, newLink);
+          continue; // apply only one rewrite for each link
+        }
+      }
+
       // add more link rewrites here
 
     }
@@ -215,6 +225,32 @@ async function changeLink(sourceFilePath, outputFilePath, link, newLink) {
   fs.copyFileSync(outputFilePath, tempFile);
 
   const command = `docxtools '${tempFile}' replace-links '^${escapeRegex(link)}$' '${(newLink)}' '${outputFilePath}'`;
+  console.debug(command)
+  console.log(await execShellCommand(command))
+  fs.unlinkSync(tempFile);
+}
+
+async function changeText(sourceFilePath, outputFilePath, sourceText, newText) {
+  function escapeRegex(string) {
+    return string.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
+  }
+
+
+  console.log(`---\n${sourceFilePath}: \nchanging ${sourceText} to ${newText}`)
+
+  const outputParentDir = outputFilePath.substring(0, outputFilePath.lastIndexOf("/"));
+  const tempFile = `${outputFilePath}.tmp`;
+
+  fs.mkdirSync(outputParentDir, {recursive: true});
+
+  if (!fs.existsSync(outputFilePath)) {
+    fs.copyFileSync(sourceFilePath, outputFilePath);
+  }
+
+  // make temp copy, to support in-place replacement of files.
+  fs.copyFileSync(outputFilePath, tempFile);
+
+  const command = `docxtools '${tempFile}' _replace '^${escapeRegex(sourceText)}$' '${(newText)}' '${outputFilePath}'`;
   console.debug(command)
   console.log(await execShellCommand(command))
   fs.unlinkSync(tempFile);
@@ -263,4 +299,15 @@ function execShellCommand(cmd) {
       resolve(stdout ? stdout : stderr);
     });
   });
+}
+
+export function getYoutubeVideoId(url) {
+  const link = url.replaceAll("\\_", "_");
+  if (link.includes('youtube.com/watch?v=')) {
+    return new URL(link).searchParams.get('v');
+  }
+  if (link.includes('youtube.com/embed/') || link.includes('youtu.be/')) {
+    return new URL(link).pathname.split('/').pop();
+  }
+  return null;
 }
