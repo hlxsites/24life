@@ -294,10 +294,38 @@ main .section {
   padding: 64px 16px;
 }
 
+.newsletter p img {
+  width: 100%;
+}
+
+.newsletter main .hero {
+  aspect-ratio: auto 1600 / 1067;
+}
+
+.newsletter main .hero h1 {
+  position: relative;
+  top: 20vh;
+}
+
 @media (min-width: 768px) {
   .section > div {
     max-width: 595px;
     margin: auto;
+  }
+
+  .newsletter main .section {
+    padding: 0;
+  }
+
+  .newsletter .section > div {
+    max-width: 100%;
+    margin: auto;
+  }
+
+  .newsletter main .hero h1 {
+    position: relative;
+    top: 30vh;
+    margin-left: 5vw;
   }
 }
 
@@ -306,6 +334,23 @@ main .section {
     max-width: 780px;
     margin: auto;
   }
+
+  .newsletter main .section {
+    padding: 0;
+  }
+
+  .newsletter .section > div {
+    max-width: 100%;
+    margin: auto;
+  }
+
+  .newsletter main .hero h1 {
+    position: relative;
+    top: 45vh;
+    margin-left: 5vw;
+  }
+  
+  
 }
 
 @media (min-width: 1200px) {
@@ -313,6 +358,22 @@ main .section {
     max-width: 945px;
     margin: auto;
   }
+
+  .newsletter main .section {
+    padding: 0;
+  }
+
+  .newsletter .section > div {
+    max-width: 100%;
+    margin: auto;
+  }
+
+  .newsletter main .hero h1 {
+    position: relative;
+    top: 60vh;
+    margin-left: 5vw;
+  }
+
 }
 
 
