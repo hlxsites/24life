@@ -1,6 +1,5 @@
-// eslint-disable-next-line no-unused-vars
 export default function decorate(block) {
-  block.innerHTML = `<form id="subForm" style="line-height: 1.5em;" action="http://newsletter.culturefoundry.com/t/r/s/hruuutt/" method="post">
+  block.innerHTML = `<form id="subForm" style="line-height: 1.5em;" action="https://newsletter.culturefoundry.com/t/r/s/hruuutt/" method="post">
   <div id="email-container"><label><strong>Email</strong></label><input id="fieldEmail" style="width: 300px; font-size: 14px;" name="cm-hruuutt-hruuutt" required="" type="text" /></div>
   <div class="td-pb-row margin">
   <p><label><strong>Which topics are you most interested in reading about? (Choose all that apply.)</strong></label><br /><br />
