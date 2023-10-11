@@ -307,6 +307,10 @@ main .section {
   top: 20vh;
 }
 
+.newsletter .section.cards-container {
+  text-align: center;
+}
+
 @media (min-width: 768px) {
   .section > div {
     max-width: 595px;
