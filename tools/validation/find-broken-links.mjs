@@ -11,8 +11,8 @@ import pLimit from 'p-limit';
 
 // ### configuration ###
 const sourceDirectory = `/Users/wingeier/Library/CloudStorage/OneDrive-Adobe/24life`;
-const baseUrlForRelativePaths = "https://main--24life--hlxsites.hlx.live/";
-const limitConcurrency = pLimit(15);
+const baseUrl = "https://main--24life--hlxsites.hlx.live"; // without trailing slash, must be .live domain
+const limitConcurrency = pLimit(5);
 function isLocalLink(url) {
   return url.hostname.includes("24life--hlxsites.hlx.page")
     || url.hostname.includes("24life--hlxsites.hlx.live");
@@ -32,22 +32,21 @@ await Promise.all(files.map(async (file) => {
 
     const links = await getAllLinks(sourceFilePath);
     for (let link of links) {
-      const url = new URL(link, baseUrlForRelativePaths);
+      const url = new URL(link, baseUrl);
 
       // fetch redirects.json and apply them.
       if (isLocalLink(url)) {
 
         if(url.pathname.includes("/media_")){
-          // ignore for now
-          continue;
-        }
-
-        if(url.pathname.startsWith("/24life/category")){
+          const response = await fetch(baseUrl + url.pathname);
+          if (! response.ok) {
+            console.log("---")
+            console.log(sourceFilePath)
+            console.log(` 404: ${url.pathname} `)
+          }
+        } else if(url.pathname.startsWith("/24life/category")){
           // ignore
-          continue;
-        }
-
-        if (!fileExists(url.pathname)) {
+        } else if (!fileExists(url.pathname)) {
           console.log("---")
           console.log(sourceFilePath)
           console.log(` 404: ${url.pathname} `)
