@@ -10,7 +10,6 @@ import {
   loadHeader,
   loadScript,
   sampleRUM,
-  buildBlock,
   waitForLCP,
 } from './lib-franklin.js';
 
@@ -28,17 +27,6 @@ export function linkSmallImagesToFullImages(container) {
     link.href = picture.querySelector('img').src;
     link.innerHTML = picture.outerHTML;
     picture.replaceWith(link);
-  }
-}
-
-function buildHeroBlock(main) {
-  const h1 = main.querySelector('h1');
-  const picture = main.querySelector('picture');
-  // eslint-disable-next-line no-bitwise
-  if (h1 && picture && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)) {
-    const section = document.createElement('div');
-    section.append(buildBlock('hero', { elems: [picture, h1] }));
-    main.prepend(section);
   }
 }
 
@@ -155,15 +143,6 @@ function decorateSpotifyLinks(main) {
  * @param {Element} main The container element
  */
 function buildAutoBlocks(main) {
-  const templateName = getMetadata('template');
-  if (templateName === 'newsletter') {
-    try {
-      buildHeroBlock(main);
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Auto Blocking failed', error);
-    }
-  }
   try {
     decorateLinkedPictures(main, false);
   } catch (error) {
