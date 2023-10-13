@@ -3,6 +3,10 @@ import { getYoutubeVideoId } from '../../scripts/scripts.js';
 
 export default function decorate(block) {
   const data = readBlockConfig(block);
+  const getMetaInfo = getMetadata('authors');
+  if (!getMetaInfo) {
+    block.classList.add('article-hero-video-newsletter');
+  }
   // Get the image element from the block before we clear it
   const picture = block.querySelector('picture');
   block.innerText = '';
@@ -71,16 +75,18 @@ export default function decorate(block) {
 
   const authorLinks = document.createElement('p');
   authorLinks.classList.add('authors');
-  authorLinks.append('By ');
-  getMetadata('authors').trim().split(',').forEach((author, index) => {
-    const authorLink = document.createElement('a');
-    authorLink.href = `${window.hlx.codeBasePath}/author/${toClassName(author)}`;
-    authorLink.textContent = author;
-    if (index > 0) {
-      authorLinks.append(' and ');
-    }
-    authorLinks.append(authorLink);
-  });
+  if (getMetaInfo) {
+    authorLinks.append('By ');
+    getMetadata('authors').trim().split(',').forEach((author, index) => {
+      const authorLink = document.createElement('a');
+      authorLink.href = `${window.hlx.codeBasePath}/author/${toClassName(author)}`;
+      authorLink.textContent = author;
+      if (index > 0) {
+        authorLinks.append(' and ');
+      }
+      authorLinks.append(authorLink);
+    });
+  }
 
   titleContainer.append(section);
   titleContainer.append(title);

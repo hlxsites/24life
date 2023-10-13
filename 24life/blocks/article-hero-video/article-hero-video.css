@@ -14,6 +14,17 @@ div.article-hero-video {
   --current-link-color: var(--text-color-on-black-background);
 }
 
+div.article-hero-video-container .article-hero-video-newsletter {
+  width: 100vw;
+  animation-timing-function: linear;
+  margin: 0 0 5rem;
+  height: auto;
+  background-color: var(--footer-background-color);
+  position: relative;
+
+  --current-link-color: var(--text-color-on-black-background);
+}
+
 div.article-hero-video-wrapper {
   margin: 0;
 }
