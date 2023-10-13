@@ -14,17 +14,6 @@ div.article-hero-video {
   --current-link-color: var(--text-color-on-black-background);
 }
 
-div.article-hero-video-container .article-hero-video-newsletter {
-  width: 100vw;
-  animation-timing-function: linear;
-  margin: 0 0 5rem;
-  height: auto;
-  background-color: var(--footer-background-color);
-  position: relative;
-
-  --current-link-color: var(--text-color-on-black-background);
-}
-
 div.article-hero-video-wrapper {
   margin: 0;
 }
@@ -53,14 +42,6 @@ div.article-hero-video-wrapper {
 
 .article-hero-video h1.article-hero-video-title {
   font-size: 6vw;
-  line-height: 1;
-  font-weight: 100;
-  margin-top: 0;
-  letter-spacing: 1px;
-}
-
-.article-hero-video article-hero-video-title-newsletter {
-  font-size: 40px;
   line-height: 1;
   font-weight: 100;
   margin-top: 0;

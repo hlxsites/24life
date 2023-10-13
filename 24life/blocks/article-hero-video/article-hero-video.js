@@ -3,10 +3,6 @@ import { getYoutubeVideoId } from '../../scripts/scripts.js';
 
 export default function decorate(block) {
   const data = readBlockConfig(block);
-  const getMetaInfo = getMetadata('authors');
-  if (!getMetaInfo) {
-    block.classList.add('article-hero-video-newsletter');
-  }
   // Get the image element from the block before we clear it
   const picture = block.querySelector('picture');
   block.innerText = '';
@@ -70,28 +66,21 @@ export default function decorate(block) {
   section.append(`${sectionName}`);
 
   const title = document.createElement('h1');
-  // if (!getMetaInfo) {
-  //   title.classList.add('article-hero-video-title-newsletter');
-  // }
-  // title.classList.add('article-hero-video-title');
-  // eslint-disable-next-line no-unused-expressions
-  (!getMetaInfo) ? title.classList.add('article-hero-video-title-newsletter') : title.classList.add('article-hero-video-title');
+  title.classList.add('article-hero-video-title');
   title.innerText = data?.title.trim();
 
   const authorLinks = document.createElement('p');
   authorLinks.classList.add('authors');
-  if (getMetaInfo) {
-    authorLinks.append('By ');
-    getMetadata('authors').trim().split(',').forEach((author, index) => {
-      const authorLink = document.createElement('a');
-      authorLink.href = `${window.hlx.codeBasePath}/author/${toClassName(author)}`;
-      authorLink.textContent = author;
-      if (index > 0) {
-        authorLinks.append(' and ');
-      }
-      authorLinks.append(authorLink);
-    });
-  }
+  authorLinks.append('By ');
+  getMetadata('authors').trim().split(',').forEach((author, index) => {
+    const authorLink = document.createElement('a');
+    authorLink.href = `${window.hlx.codeBasePath}/author/${toClassName(author)}`;
+    authorLink.textContent = author;
+    if (index > 0) {
+      authorLinks.append(' and ');
+    }
+    authorLinks.append(authorLink);
+  });
 
   titleContainer.append(section);
   titleContainer.append(title);
