@@ -5,7 +5,7 @@ on:
     types: [ opened, synchronize ]
 
 env:
-  TEST_PATHS: "/ /collections /collections/get-started /focus /fitness /fuel /recover /magazine /magazine/volume-6-issue-2 /focus/2019/the-change-master-john-berardis-second-act-will-help-you-too /fuel/2020/snack-attack"
+  TEST_PATHS: "/24life/ /24life/collections /24life/collections/get-started /24life/focus /24life/fitness /24life/fuel /24life/recover /24life/magazine /24life/magazine/volume-6-issue-2 /24life/focus/2019/the-change-master-john-berardis-second-act-will-help-you-too /24life/fuel/2020/snack-attack"
   TEST_PATHS_INDEXES: "/block-library/library.json "
   DOMAIN_MAIN: "main--24life--hlxsites.hlx.live"
   DOMAIN_BRANCH: "${{github.head_ref}}--24life--hlxsites.hlx.live"

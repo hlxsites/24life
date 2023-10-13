@@ -9,7 +9,7 @@ indices:
       - /block-library/**
       - /template-*
       - /tools/**
-    target: /query-index.json
+    target: /24life/query-index.json
     properties:
       lastModified:
         select: none
@@ -47,7 +47,7 @@ indices:
       - /focus/**
       - /fuel/**
       - /recover/**
-    target: /articles.json
+    target: /24life/articles.json
     properties:
       lastModified:
         select: none
@@ -87,7 +87,7 @@ indices:
       - /author/**
     exclude:
       - /author/template-*
-    target: /authors.json
+    target: /24life/authors.json
     properties:
       lastModified:
         select: none
@@ -113,7 +113,7 @@ indices:
   magazines:
     include:
       - /magazine/*
-    target: /magazines.json
+    target: /24life/magazines.json
     properties:
       title:
         select: head > meta[property="og:title"]

@@ -11,7 +11,7 @@ const limitConcurrency = pLimit(5);
 const DOMAIN = "https://main--24life--hlxsites.hlx.live";
 
 async function main() {
-    const response = await fetch("https://main--24life--hlxsites.hlx.page/articles.json?limit=9999");
+    const response = await fetch("https://main--24life--hlxsites.hlx.page/24life/articles.json?limit=9999");
     const json = await response.json();
     const urls = json.data.map(row => DOMAIN + row.path)
 

@@ -21,7 +21,7 @@ class MyReporter implements Reporter {
 
     let summary = ''
     if (failures.length > 0) {
-      summary += `### :small_orange_diamond: ${failures.length} visual difference${failures.length > 1 ? 's' : ''} detected\n`;
+      summary += `### :small_orange_diamond: This branch has ${failures.length} visual difference${failures.length > 1 ? 's' : ''} compared to the main branch.\n`;
       for (const [id, result] of failures) {
         const test: TestCase = this.testCases[id];
         if (result.status !== 'passed') {
@@ -31,7 +31,7 @@ class MyReporter implements Reporter {
 
       if(process.env.GITHUB_SERVER_URL) {
       summary += '\n\n' +
-        `The diff images are [attached in the artifact](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})`;
+        `See [diff images in the artifact "screenshots"](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})`;
       }
     } else {
       summary += `All ${Object.keys(this.testResults).length} tests passed.\n`;

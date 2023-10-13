@@ -7,10 +7,10 @@ import fs from 'fs';
 const feeds = [
   {
     title: '24life',
-    targetFile: `../../feed.xml`,
-    source: 'https://main--24life--hlxsites.hlx.live/articles.json',
-    siteRoot: "https://www.24life.com",
-    link:	"https://main--24life--hlxsites.hlx.live/feed.xml",
+    targetFile: `../../24life/feed.xml`,
+    source: 'https://main--24life--hlxsites.hlx.live/24life/articles.json',
+    siteRoot: "https://www.24hourfitness.com/24life/",
+    link:	"https://main--24life--hlxsites.hlx.live/24life/feed.xml",
     language:	"en",
     description: "Your best self now"
   }
