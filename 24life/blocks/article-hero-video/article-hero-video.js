@@ -70,7 +70,12 @@ export default function decorate(block) {
   section.append(`${sectionName}`);
 
   const title = document.createElement('h1');
-  title.classList.add('article-hero-video-title');
+  // if (!getMetaInfo) {
+  //   title.classList.add('article-hero-video-title-newsletter');
+  // }
+  // title.classList.add('article-hero-video-title');
+  // eslint-disable-next-line no-unused-expressions
+  (!getMetaInfo) ? title.classList.add('article-hero-video-title-newsletter') : title.classList.add('article-hero-video-title');
   title.innerText = data?.title.trim();
 
   const authorLinks = document.createElement('p');

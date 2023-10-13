@@ -59,6 +59,14 @@ div.article-hero-video-wrapper {
   letter-spacing: 1px;
 }
 
+.article-hero-video article-hero-video-title-newsletter {
+  font-size: 40px;
+  line-height: 1;
+  font-weight: 100;
+  margin-top: 0;
+  letter-spacing: 1px;
+}
+
 .article-hero-video a.article-hero-video-section {
   font-size: 14px;
   line-height: 18px;
