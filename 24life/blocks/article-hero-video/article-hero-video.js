@@ -84,7 +84,7 @@ export default function decorate(block) {
 
   titleContainer.append(section);
   titleContainer.append(title);
-  titleContainer.append(authorLinks);
+  if (getMetadata('authors')) titleContainer.append(authorLinks);
   block.append(titleContainer);
 }
 

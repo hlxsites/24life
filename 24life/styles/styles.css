@@ -315,7 +315,6 @@ main .section {
   }
 }
 
-
 .color-focus {
   --accent-color: var(--color-focus);
   --accent-text-color: var(--color-focus-text);
@@ -352,6 +351,10 @@ main .section.no-gap {
 
 main .section.no-gap + .section {
   padding-top: 0;
+}
+
+main .section.center {
+  text-align: center;
 }
 
 main .section.small-images .default-content-wrapper img {
