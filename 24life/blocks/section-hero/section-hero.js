@@ -1,9 +1,11 @@
 import {
-  createOptimizedPicture, decorateIcons, getMetadata, readBlockConfig, toClassName,
+  decorateIcons, getMetadata, readBlockConfig, toClassName,
 } from '../../scripts/lib-franklin.js';
 
 export default function decorate(block) {
   const data = readBlockConfig(block);
+  // it's more efficient to use the picture element from the block instead of creating a new one
+  const picture = block.querySelector('picture');
   const link = block.querySelector('a');
   block.innerText = '';
 
@@ -23,12 +25,7 @@ export default function decorate(block) {
   // create image container
   const imageContainer = document.createElement('div');
   imageContainer.classList.add('image-container');
-  // create image
-  imageContainer.append(createOptimizedPicture(
-    data.image,
-    data.article,
-    true,
-  ));
+  imageContainer.append(picture);
   leftContainer.append(imageContainer);
 
   // create article container
