@@ -89,10 +89,6 @@ div.article-hero-video-wrapper {
   filter: brightness(0.80);
 }
 
-.cards-container:has(+ .newsletter-form-container){
-  text-align: center;
-}
-
 @media screen and (min-width: 900px) {
   .article-hero-video p.authors {
     font-size: 24px;

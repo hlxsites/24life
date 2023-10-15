@@ -353,6 +353,10 @@ main .section.no-gap + .section {
   padding-top: 0;
 }
 
+main .section.center {
+  text-align: center;
+}
+
 main .section.small-images .default-content-wrapper img {
   width: 22%;
 }

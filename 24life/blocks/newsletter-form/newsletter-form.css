@@ -1,10 +1,5 @@
 /* styles go here */
 
-.newsletter-form.block {
-    margin-left: 0;
-    margin-top: 5vh;
-}
-
 .newsletter-form.block input {
     display: inline-block;
     width: auto;
