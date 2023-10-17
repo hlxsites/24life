@@ -4,7 +4,6 @@ import {
 
 export default function decorate(block) {
   const data = readBlockConfig(block);
-  // it's more efficient to use the picture element from the block instead of creating a new one
   const picture = block.querySelector('picture');
   const link = block.querySelector('a');
   block.innerText = '';
