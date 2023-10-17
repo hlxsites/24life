@@ -30,7 +30,7 @@ export default function decorate(block) {
     data.image,
     data.article,
     true,
-    null,
+    undefined,
     picture,
   ));
   leftContainer.append(imageContainer);
