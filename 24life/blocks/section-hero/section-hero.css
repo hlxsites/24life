@@ -1,16 +1,11 @@
 div.section-hero-container{
   padding: 0;
   margin: 0;
+  background-color: var(--accent-color);
 }
 
 .section-hero.block .right-container{
-  padding: 20px;
-}
-
-div.section-hero-container > div:first-child{
-  max-width: 100vw;
-  padding: 0;
-  margin: 0;
+  padding: 30px;
 }
 
 .section-hero.block {
@@ -18,7 +13,7 @@ div.section-hero-container > div:first-child{
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: var(--accent-color);
+  padding-top: 30px;
 }
 
 /* define bright and dark text colors: */
@@ -89,7 +84,7 @@ div.section-hero-container > div:first-child{
 
 .section-hero.block .right-container .social-media-buttons {
   text-align: center;
-  margin-top: 32px;
+  height: 2.5em;
 }
 
 .section-hero.block .right-container .social-media-buttons .icon{
@@ -118,6 +113,15 @@ div.section-hero-container > div:first-child{
     align-items: flex-start;
   }
 
+  .section-hero .right-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 80%;
+  }
+
   .section-hero.block .right-container h1.section-name {
     font-size: 56px;
     letter-spacing: 17px;
@@ -127,19 +131,11 @@ div.section-hero-container > div:first-child{
   .section-hero.block .left-container {
     display: flex;
     flex-direction: column;
-    height: 65vh;
   }
 
   .section-hero.block .left-container .image-container {
     height: 75%;
   }
 
-  .section-hero .right-container{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-  }
+
 }

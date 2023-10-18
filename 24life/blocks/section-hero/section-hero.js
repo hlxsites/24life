@@ -4,6 +4,7 @@ import {
 
 export default function decorate(block) {
   const data = readBlockConfig(block);
+  const picture = block.querySelector('picture');
   const link = block.querySelector('a');
   block.innerText = '';
 
@@ -28,6 +29,8 @@ export default function decorate(block) {
     data.image,
     data.article,
     true,
+    undefined,
+    picture,
   ));
   leftContainer.append(imageContainer);
 
@@ -110,8 +113,10 @@ function updateSocialLink(e) {
 
 function createSocialMediaButtons() {
   const socialMediaButtons = document.createElement('div');
-  socialMediaButtons.innerHTML = `
-  <div class="social-media-buttons">
+  socialMediaButtons.classList.add('social-media-buttons');
+  // delay loading of social media buttons to give priority to loading other things
+  setTimeout(() => {
+    socialMediaButtons.innerHTML = `
           <a aria-label="share this page on twitter" href="https://twitter.com/share?url=">
               <span class="icon icon-twitter"></span>
           </a>
@@ -122,12 +127,14 @@ function createSocialMediaButtons() {
 
           <a aria-label="share this page on pinterest" href="http://pinterest.com/pin/create/button/?url=">
               <span class="icon icon-pinterest"></span>
-          </a>
-  </div>`;
-  socialMediaButtons.querySelectorAll('a').forEach((a) => {
-    a.onclick = updateSocialLink;
-  });
-  // noinspection JSIgnoredPromiseFromCall
-  decorateIcons(socialMediaButtons);
+          </a>`;
+    socialMediaButtons.querySelectorAll('a').forEach((a) => {
+      a.onclick = updateSocialLink;
+    });
+
+    // noinspection JSIgnoredPromiseFromCall
+    decorateIcons(socialMediaButtons);
+  }, 300);
+
   return socialMediaButtons;
 }
