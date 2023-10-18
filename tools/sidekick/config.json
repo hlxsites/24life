@@ -1,6 +1,6 @@
 {
     "project": "24life",
-    "host": "https://webdev.24hourfitness.com/",
+    "host": "https://www.24hourfitness.com/",
     "plugins": [
       {
         "id": "library",
