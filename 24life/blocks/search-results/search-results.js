@@ -28,7 +28,7 @@ function searchItems(searchTerm) {
 
 async function loadResults(tokenizedSearchWords, resultsDiv) {
   const jsonData = await ffetch(`${window.hlx.codeBasePath}/articles.json`)
-    .sheet('full')
+    .sheet('search')
     .chunks(1000)
     .all();
 
