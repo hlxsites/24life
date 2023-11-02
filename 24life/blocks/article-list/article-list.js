@@ -18,7 +18,10 @@ export default async function decorate(block) {
     block.before(firstContainer);
   } else if (isEmptyFilter && document.location.pathname.startsWith(`${window.hlx.codeBasePath}/author/`)) {
     // auto-detect author, e.g. https://www.24life.com/author/24life
-    filters.authors = getMetadata('og:title');
+    // some names have a comma, e.g. "ELLE PENNER, MPH RD", in which case we only
+    // want the first part
+    const [nameWithoutTitle] = getMetadata('og:title').split(',');
+    filters.authors = nameWithoutTitle;
   } else if (isEmptyFilter && document.location.pathname.startsWith(`${window.hlx.codeBasePath}/collections/`)) {
     filters.collections = new URL(document.location).pathname.split('/').pop();
     filters.collections = filters.collections?.replace(/-/g, ' ');
