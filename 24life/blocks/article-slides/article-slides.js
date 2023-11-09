@@ -37,17 +37,28 @@ export default async function decorate(block) {
 
     const imageSizes = [
       // desktop
-      { media: '(min-width: 600px)', height: '600' },
-      // tablet and mobile sizes:
-      { media: '(min-width: 400px)', height: '600' },
-      { width: '400' },
+      { media: '(min-width: 1350px)', width: 1350 * 0.66 },
+      { media: '(min-width: 1200px)', width: 1200 * 0.66 },
+      { media: '(min-width:  900px)', width: 900 * 0.66 },
+      // tablet sizes:
+      { media: '(min-width:  800px)', width: 800 * 0.66 },
+      { media: '(min-width:  600px)', width: 600 * 0.66 },
+      // mobile sizes:
+      { width: '600' },
     ];
-    const picture = article.picture || createOptimizedPicture(
-      article.image,
-      article.title,
-      index === 0,
-      imageSizes,
-    );
+    let { picture } = article;
+    const isDesktop = window.matchMedia('(min-width: 900px)').matches;
+    if (!picture || isDesktop) {
+      // on mobile, use the picture from the block as it is propably already fetched.
+      // On desktop, get an optimized picture.
+      picture = createOptimizedPicture(
+        article.image || picture.querySelector('img').src,
+        article.title,
+        index === 0,
+        imageSizes,
+        picture,
+      );
+    }
     slide.innerHTML = `
       <div class="image">${picture.outerHTML}</div>
       <div class="text">
@@ -125,7 +136,7 @@ function setupSlideControls(block) {
 
   block.addEventListener('touchstart', gestureStart, { passive: true });
 
-  autoplaySlides();
+  // autoplaySlides();
   return { goToSlide };
 }
 
