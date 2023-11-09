@@ -68,7 +68,7 @@
 }
 
 .card .card-author {
-  margin-top: 0.4em;
+  margin-top: 8px;
   font-size: var(--body-font-size-author);
 }
 
