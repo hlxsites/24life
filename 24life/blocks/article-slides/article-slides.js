@@ -4,17 +4,6 @@
  * @param block
  */
 export default async function decorate(block) {
-  // const articles = [...block.children].map((row) => {
-  //   const rightColumn = row.children[1];
-  //   return {
-  //     path: rightColumn.querySelector('a').href,
-  //     picture: row.querySelector('picture'),
-  //     title: rightColumn.querySelector('a').textContent,
-  //     section: rightColumn.querySelector('p:nth-child(1)').textContent,
-  //     authors: rightColumn.querySelector('p:nth-child(3)').textContent,
-  //   };
-  // });
-  // block.textContent = '';
   const { goToSlide } = setupSlideControls(block);
 
   const slideshowButtons = document.createElement('div');
