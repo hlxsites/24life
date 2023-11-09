@@ -68,7 +68,7 @@
 }
 
 .card .card-author {
-  margin-top: 8px;
+  margin-top: 12px;
   font-size: var(--body-font-size-author);
 }
 
@@ -77,7 +77,7 @@
     /* From PageSpeed Insights: Interactive elements like buttons and links should be large enough (48x48px),
     or have enough space around them, to be easy enough to tap without overlapping onto other elements.
     */
-    padding: 5px 3px;
+    padding: 8px 4px;
 }
 
 .card-container {
