@@ -14,7 +14,7 @@ import {
 } from './lib-franklin.js';
 
 const LCP_BLOCKS = ['section-hero',
-  // 'article-slides'
+  'article-slides',
 ];
 
 export function linkSmallImagesToFullImages(container) {
