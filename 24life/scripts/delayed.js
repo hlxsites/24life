@@ -12,7 +12,7 @@ async function loadAdobeLaunch() {
   if (window.location.hostname === 'www.24hourfitness.com') {
     // PROD
     url = 'https://assets.adobedtm.com/57921990a5e5/01b20556a634/launch-EN899f16b777754991924d45661d0c60bb.min.js';
-  } else if (window.location.host.includes('localhost')) {
+  } else if (window.location.host.includes('localhost') || window.location.hostname === 'main--24life--hlxsites.hlx.live') {
     // DEV
     url = 'https://assets.adobedtm.com/57921990a5e5/01b20556a634/launch-EN95eda61e2ae9436886ce63d7d3dcb671-development.min.js';
   }
