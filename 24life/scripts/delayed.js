@@ -9,7 +9,7 @@ sampleRUM('cwv');
 async function loadAdobeLaunch() {
   // Stage
   let url = 'https://assets.adobedtm.com/57921990a5e5/01b20556a634/launch-EN1720538a14c5448383dbc3a400a4f55a-staging.min.js';
-  if (window.location.hostname === 'www.24hourfitness.com') {
+  if (window.location.hostname === 'www.24hourfitness.com' || window.location.hostname === 'main--24life--hlxsites.hlx.live') {
     // PROD
     url = 'https://assets.adobedtm.com/57921990a5e5/01b20556a634/launch-EN899f16b777754991924d45661d0c60bb.min.js';
   } else if (window.location.host.includes('localhost')) {
