@@ -198,6 +198,6 @@ export default async function decorate(block) {
       for (const section of ['focus', 'fitness', 'fuel', 'recover', 'magazine']) {
         buildSectionMenuContent(block.parentNode, section);
       }
-    }, 600);
+    }, 1500);
   }
 }
