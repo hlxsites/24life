@@ -23,8 +23,8 @@
 }
 
 .card .card-collections {
-  margin-top: 0.5em;
-  margin-bottom: 0;
+  margin-top: 16px;
+  margin-bottom: 8px;
   line-height: 1;
   min-height: 0.5em;
 }
@@ -39,7 +39,7 @@
   /* From PageSpeed Insights: Interactive elements like buttons and links should be large enough (48x48px),
   or have enough space around them, to be easy enough to tap without overlapping onto other elements.
   */
-  padding: 10px 5px 10px 0;
+  padding: 10px 5px 8px 0;
 }
 
 .card .card-collections a:hover {
@@ -48,7 +48,7 @@
 
 .card .card-title {
   line-height: 1.2;
-  margin-top: 0.4em;
+  margin-top: 15px;
   margin-bottom: 0;
   font-family: var(--heading-font-family);
   font-weight: 600;
@@ -60,7 +60,7 @@
     /* From PageSpeed Insights: Interactive elements like buttons and links should be large enough (48x48px),
     or have enough space around them, to be easy enough to tap without overlapping onto other elements.
     */
-    padding: 10px 0;
+  padding: 4px 0 0;
 }
 
 .card .card-title a:hover {
@@ -68,7 +68,7 @@
 }
 
 .card .card-author {
-  margin-top: 0.4em;
+  margin-top: 12px;
   font-size: var(--body-font-size-author);
 }
 
@@ -77,7 +77,7 @@
     /* From PageSpeed Insights: Interactive elements like buttons and links should be large enough (48x48px),
     or have enough space around them, to be easy enough to tap without overlapping onto other elements.
     */
-    padding: 10px 3px;
+    padding: 8px 4px;
 }
 
 .card-container {

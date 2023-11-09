@@ -10,6 +10,8 @@
     font-size: 14px;
     padding: 0 32px;
     text-transform: uppercase;
+    height: 48px;
+    line-height: 48px;
 }
 
 .collections-explorer .explore span.msg {
