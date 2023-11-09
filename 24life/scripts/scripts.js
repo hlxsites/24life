@@ -13,9 +13,7 @@ import {
   waitForLCP,
 } from './lib-franklin.js';
 
-const LCP_BLOCKS = ['section-hero',
-  'article-slides',
-];
+const LCP_BLOCKS = ['section-hero'];
 
 export function linkSmallImagesToFullImages(container) {
   for (const picture of container.querySelectorAll('.section.small-images picture')) {
