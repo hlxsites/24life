@@ -1,6 +1,5 @@
 /**
- * Slideshow with recent articles. Supports swiping on touch screens.
- * Also supports manually adding content into the block.
+ * Slideshow with articles. Supports swiping on touch screens.
  * @param block
  */
 export default async function decorate(block) {
@@ -20,14 +19,14 @@ export default async function decorate(block) {
     slide.append(...row.children);
     slide.firstChild.classList.add('image');
 
-    const textElement = slide.lastChild;
-    textElement.classList.add('text');
-    textElement.children[0].classList.add('subtitle');
+    const textDiv = slide.lastChild;
+    textDiv.classList.add('text');
+    textDiv.children[0].classList.add('subtitle');
 
-    textElement.children[1].innerHTML = articleLink.innerHTML;
-    textElement.children[1].classList.add('title');
-    textElement.children[2].classList.add('author');
-    textElement.children[2].prepend('BY ');
+    textDiv.children[1].innerHTML = articleLink.innerHTML;
+    textDiv.children[1].classList.add('title');
+    textDiv.children[2].classList.add('author');
+    textDiv.children[2].prepend('BY ');
 
     row.replaceWith(slide);
 
