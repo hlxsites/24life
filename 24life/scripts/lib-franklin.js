@@ -594,7 +594,11 @@ export function decorateButtons(element) {
 export async function waitForLCP(lcpBlocks) {
   const block = document.querySelector('.block');
   const hasLCPBlock = (block && lcpBlocks.includes(block.dataset.blockName));
-  if (hasLCPBlock) await loadBlock(block);
+  let loadBlockPromise;
+  if (hasLCPBlock) {
+    // load the LCP block and LCP image in parallel
+    loadBlockPromise = loadBlock(block);
+  }
 
   document.body.style.display = null;
   const lcpCandidate = document.querySelector('main img');
@@ -607,6 +611,7 @@ export async function waitForLCP(lcpBlocks) {
       resolve();
     }
   });
+  await loadBlockPromise;
 }
 
 /**
