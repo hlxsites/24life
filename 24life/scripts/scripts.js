@@ -75,7 +75,6 @@ export function decorateLinkedPictures(container, processInBlocks = true) {
  * load fonts.css and set a session storage flag
  */
 async function loadFonts() {
-  return;
   await loadCSS(`${window.hlx.codeBasePath}/styles/fonts.css`);
   try {
     if (!window.location.hostname.includes('localhost')) sessionStorage.setItem('fonts-loaded', 'true');
