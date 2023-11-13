@@ -1,37 +1,64 @@
+import { createOptimizedPicture, readBlockConfig } from '../../scripts/lib-franklin.js';
+
 /**
- * Slideshow with articles. Supports swiping on touch screens.
+ * Slideshow with recent articles. Supports swiping on touch screens.
+ * Also supports manually adding content into the block.
  * @param block
  */
 export default async function decorate(block) {
+  const config = readBlockConfig(block);
+  let articles;
+  if (config.limit) {
+    // if the limit is defined, fetch the recent articles
+    articles = await fetchArticles(config);
+  } else {
+    // or for optimized performance, use the articles inside the block
+    articles = [...block.children].map((row) => {
+      const rightColumn = row.children[1];
+      return {
+        path: rightColumn.querySelector('a').href,
+        picture: row.querySelector('picture'),
+        title: rightColumn.querySelector('a').textContent,
+        section: rightColumn.querySelector('p:nth-child(1)').textContent,
+        authors: rightColumn.querySelector('p:nth-child(3)').textContent,
+      };
+    });
+  }
+  block.textContent = '';
   const { goToSlide } = setupSlideControls(block);
 
   const slideshowButtons = document.createElement('div');
   slideshowButtons.classList.add('slideshow-buttons');
 
-  [...block.children].forEach((row, index) => {
-    const articleLink = row.querySelector('a');
-    const articlePath = articleLink.href;
-    const articleTitle = articleLink.textContent;
+  articles.forEach((article, index) => {
     const slide = document.createElement('a');
     slide.classList.add('slide');
-    slide.href = articlePath;
+    slide.href = article.path;
 
-    slide.append(...row.children);
-    slide.firstChild.classList.add('image');
-
-    const textDiv = slide.lastChild;
-    textDiv.classList.add('text');
-    textDiv.children[0].classList.add('subtitle');
-
-    textDiv.children[1].innerHTML = articleLink.innerHTML;
-    textDiv.children[1].classList.add('title');
-    textDiv.children[2].classList.add('author');
-    textDiv.children[2].prepend('BY ');
-
-    row.replaceWith(slide);
+    const imageSizes = [
+      // desktop
+      { media: '(min-width: 600px)', height: '600' },
+      // tablet and mobile sizes:
+      { media: '(min-width: 400px)', height: '600' },
+      { width: '400' },
+    ];
+    const picture = article.picture || createOptimizedPicture(
+      article.image,
+      article.title,
+      index === 0,
+      imageSizes,
+    );
+    slide.innerHTML = `
+      <div class="image">${picture.outerHTML}</div>
+      <div class="text">
+          <p class="subtitle">${plainText(article.section)}</p>
+          <p class="title">${plainText(article.title)}</p>
+          <p class="author">BY ${plainText(article.authors)}</p>
+      </div> `;
+    block.append(slide);
 
     const button = document.createElement('button');
-    button.ariaLabel = `go to slide ${articleTitle}`;
+    button.ariaLabel = `go to slide ${article.title}`;
     button.addEventListener('click', () => goToSlide(index));
     slideshowButtons.append(button);
 
@@ -42,6 +69,12 @@ export default async function decorate(block) {
   });
 
   block.append(slideshowButtons);
+}
+
+async function fetchArticles(config) {
+  const resp = await fetch(`${window.hlx.codeBasePath}/articles.json?limit=${config.limit || 9}`);
+  // eslint-disable-next-line no-return-await
+  return (await resp.json()).data;
 }
 
 function setupSlideControls(block) {
@@ -57,7 +90,6 @@ function setupSlideControls(block) {
   }
 
   let autoSlideInterval = null;
-
   function autoplaySlides() {
     clearInterval(autoSlideInterval);
     autoSlideInterval = setInterval(() => advanceSlides(+1), 6000);
@@ -95,4 +127,15 @@ function setupSlideControls(block) {
 
   autoplaySlides();
   return { goToSlide };
+}
+
+/**
+ * make text safe to use in innerHTML
+ * @param text any string
+ * @return {string} sanitized html string
+ */
+function plainText(text) {
+  const fragment = document.createElement('div');
+  fragment.append(text);
+  return fragment.innerHTML;
 }
