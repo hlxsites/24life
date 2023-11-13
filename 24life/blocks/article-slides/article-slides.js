@@ -9,11 +9,6 @@ export default async function decorate(block) {
   slideshowButtons.classList.add('slideshow-buttons');
 
   [...block.children].forEach((row, index) => {
-    if (index > 0) {
-      row.remove();
-      return;
-    }
-
     const articleLink = row.querySelector('a');
     const articlePath = articleLink.href;
     const articleTitle = articleLink.textContent;
