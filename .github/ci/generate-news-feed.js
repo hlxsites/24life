@@ -9,7 +9,7 @@ const feeds = [
     title: '24life',
     targetFile: `../../24life/feed.xml`,
     source: 'https://www.24hourfitness.com/24life/articles.json',
-    siteRoot: "https://www.24hourfitness.com/24life/",
+    siteRoot: "https://www.24hourfitness.com",
     link:	"https://www.24hourfitness.com/24life/feed.xml",
     language:	"en",
     description: "Your best self now"
