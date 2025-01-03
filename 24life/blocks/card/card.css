@@ -24,7 +24,7 @@
 
 .card .card-collections {
   margin-top: 16px;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
   line-height: 1;
   min-height: 0.5em;
 }
@@ -39,7 +39,7 @@
   /* From PageSpeed Insights: Interactive elements like buttons and links should be large enough (48x48px),
   or have enough space around them, to be easy enough to tap without overlapping onto other elements.
   */
-  padding: 10px 5px 8px 0;
+  padding: 10px 5px 7px 0;
 }
 
 .card .card-collections a:hover {
