@@ -1,7 +1,7 @@
 version: 1
 sitemaps:
   default:
-    origin: https://www.24hourfitness.com/24life
+    origin: https://www.24hourfitness.com
     source: /24life/query-index.json
     destination: /24life/sitemap.xml
     lastmod: YYYY-MM-DD
