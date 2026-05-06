@@ -35,3 +35,7 @@ main .section.h2-color-fuel h2 {
 main .section.h2-color-recover h2 {
   color: var(--color-recover-text);
 }
+
+#usntA42Toggle #usntA42Link{
+  margin: 0;
+}
