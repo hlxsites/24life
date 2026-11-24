@@ -134,6 +134,10 @@ footer li a:hover {
   color: var(--text-color-on-black-background);
 }
 
+.footer-container .row-2 .trademark-container {
+  margin: 0 20px;
+}
+
 .footer-container .row-2 .trademark-container .trade-mark a:any-link {
   color: var(--text-color-on-black-background);
   opacity: 0.5;
