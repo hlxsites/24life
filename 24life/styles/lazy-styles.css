@@ -36,6 +36,8 @@ main .section.h2-color-recover h2 {
   color: var(--color-recover-text);
 }
 
-#usntA42Toggle #usntA42Link{
+/* IDs come from the third-party UsableNet (ADA) widget and cannot be renamed */
+/* stylelint-disable-next-line selector-id-pattern */
+#usntA42Toggle #usntA42Link {
   margin: 0;
 }
